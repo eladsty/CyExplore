@@ -27,11 +27,12 @@ float GivePower(int n)
 int FlipDigits(int n)
 {
 
-	int flipped;
+	int flipped = 0;
 
 	while( n > 0 )
 	{
-		flipped = flipped * 10 + n%10;
+		flipped = flipped * 10;
+		flipped += n%10;
 		n /= 10;
 	}
 

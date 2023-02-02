@@ -4,7 +4,7 @@
 
 int main()
 {
-	printf("all of function tested!");
+	printf("%d", FlipDigits(12340));
 	return 0;
 }
 
