@@ -1,0 +1,7 @@
+*
+!.gitignore
+!dummy.md
+!*/
+!*.h
+!*.c
+!.myfuncs
