@@ -41,8 +41,9 @@ int FlipDigits(int n)
 
 void SwapValues(int *a, int *b)
 {
-	int temp = *a;
-	assert( a != NULL && b != NULL );
+	int temp;
+	assert(a != NULL && b != NULL);
+	temp = *a;
 	*a = *b;
 	*b = temp;
 }
