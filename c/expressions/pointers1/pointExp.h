@@ -52,6 +52,30 @@ int Printer()
 	return 0;
 }
 
+void SwapSizet(size_t *size1 ,size_t *size2)
+{
+	size_t temp=0;
+	assert(size1 != NULL);
+	assert(size2 != NULL);
+	
+	temp = *size1;
+	*size1 = *size2;
+	*size2 = temp;
+	
+}
+
+void SwapSizetptr(size_t **size1, size_t **size2)
+{
+	size_t *temp;
+	assert(size1 != NULL);
+	assert(size2 != NULL);
+	
+	temp = *size1;
+	*size1 = *size2;
+	*size2 = temp;
+}
+
+
 
  
  
