@@ -47,3 +47,14 @@ void SwapValues(int *a, int *b)
 	*a = *b;
 	*b = temp;
 }
+
+
+int InfLoop()
+{
+	while (1)
+	{
+		printf("1");
+	}
+
+	return 0;
+}
