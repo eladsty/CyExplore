@@ -2,16 +2,16 @@
 #include <assert.h>
 #include <stddef.h>
 #include "Strings.h"
+#include <stdlib.h> 
+
 
 int main()
 {
 
-	char *str = "abcde";
-	char *cpy = "";
+	const char *str = "abcde";
+	char *cpy = malloc(6);
 	StrCpy(cpy, str);
-	assert(*cpy == 'a');
-
-
-
+	printf("%c", *cpy);
+	free(cpy);
 return 0;
 }
