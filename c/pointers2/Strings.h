@@ -29,6 +29,8 @@ char *Strchr(const char *str, int c);
 /* copy and return pointer to that copy*/
 char *Strdup(const char *str);
 
+/* concatenates strings*/
+char *Strcat(char *destination, const char *source)
 
 
 

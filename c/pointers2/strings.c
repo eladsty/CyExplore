@@ -170,6 +170,60 @@ char *Strdup(const char *str)
 	return cpy;
 }
 
+ 
+char *Strcat(char *destination, const char *source)
+{
+	char *dest_begin_p = destination; 
+	
+	while(*destination != '\0')
+	{
+		++destination;
+	}
+	
+	while(*source != '\0')
+	{
+		*destination = *source;
+		++source;
+		++destination;
+	}
+	
+	*destination = '\0';
+
+	return dest_begin_p;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

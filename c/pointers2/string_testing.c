@@ -9,7 +9,7 @@
 int main()
 {
 	  
-
+		
 	 	char *s1 = "L";
 		char *s2 = "elad";
 		char *s3 = "ela";
@@ -24,7 +24,7 @@ int main()
 	 	char cpy1[20];
 	    char src[10] = "abcde";		
 	    char src2[10] = "nimrod";			 	
-	    char src3[10] = "wefio";		
+	    char src3[30] = "wefio";		
 	
  	assert(strchr(s2, 'a') == Strchr(s2, 'a') );
   
@@ -39,8 +39,8 @@ int main()
  /* check if length is the same*/
  	
 
- 
- 	
+  	printf("%s\n", Strcat(src3, src));
+
  	
 	assert(*strchr(s2, 'a') == *Strchr(s2, 'a') );
 
