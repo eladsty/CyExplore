@@ -1,7 +1,4 @@
 
-#ifndef __POINTERS_H__
-#define __POINTERS_H__
-
 #include <stddef.h>
 
 size_t Strlen(const char *str);
@@ -30,8 +27,14 @@ char *Strchr(const char *str, int c);
 char *Strdup(const char *str);
 
 /* concatenates strings*/
-char *Strcat(char *destination, const char *source)
+char *Strcat(char *destination, const char *source);
 
+/* find first occurence of needle*/
+char *StrStr(const char *haystack, const char *needle);
 
+/* return size of the matching characters from the letters banks*/
+size_t StrSpn(const char *str1, const char *charactersToMatch);
 
-#endif
+/* check if a string is a palindrom, 0 means false, 1 means true*/
+int IsPalindrome(const char *str);
+
