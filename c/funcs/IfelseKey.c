@@ -1,5 +1,6 @@
 #ifndef __IFELSEKEY_H_CR4__
 #define __IFELSEKEY_H_CR4__
+
 /* This function prints A-Pressed!.
 **	status:		approved
 **	reviewer:	Amir
@@ -8,12 +9,40 @@
 */
 
 
-
 typedef void(*table)(void);
 
 #include <stdio.h>  /* to use printf*/
-#include <stdlib.h> /*for exit*/
-#include "IfelseKey.h"
+#include <stdlib.h> /*for exit(0)*/
+#include "IfelseKey.h" /* my function decleration*/
+
+
+void IfPrintAorT()
+{
+	char c;
+	while(27 != c)
+	{
+
+	c = getchar();
+	if('A' == c)
+	{
+		printf("A Pressed");			
+	}
+	else if('T' == c)
+	{
+		printf("T Pressed");
+	}
+
+	else if(27 == c)
+	{
+		exit(0);
+	}
+	else
+	{
+		printf("\n");				
+	}
+
+	}
+}
 
 void TOrA1()
 	{

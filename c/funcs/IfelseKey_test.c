@@ -8,7 +8,7 @@
 int main()
 {
 	system("stty -icanon -echo");
-	TOrA2();
+IfPrintAorT();
 	system("stty icanon echo");
 	return 0;
 }
