@@ -119,21 +119,40 @@ unsigned ByteMirror(unsigned N)
 }
 
 
-unsigned char ByteMirrorNoLoop(unsigned char b) {
-   b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
-   b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
-   b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
-   return b;
+unsigned int ByteMirrorNoLoop(unsigned int c) 
+{
+	c = ((c & 0xf0) >> 4) | ((c & 0x0f) << 4);
+	c = ((c & 0xcc) >> 2) | ((c & 0x33) << 2);
+	c = ((c & 0xaa) >> 1) | ((c & 0x55) << 1);
+	
+   return c;
 }
 
 
+unsigned IsBothOn(unsigned char c)
+{
+	return ((c>>1)&1 && (c>>5)&1);
+}
 
 
+unsigned IsOneOn(unsigned char c)
+{
+	return ((c>>1)&1 || (c>>5)&1);
+}
 
+unsigned SwapBits(unsigned num)
+{
+	
 
+	
+}
 
-
-
+unsigned Divisible16(unsigned num)
+{
+	 return (n & 65520);
+	
+	return 0;
+}
 
 
 
