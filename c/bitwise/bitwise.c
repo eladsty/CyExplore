@@ -1,6 +1,7 @@
 
 
 #include <stdio.h> /* printf*/
+#include <string.h> /*strcat*/
 
 
 
@@ -114,7 +115,7 @@ void ThreeBitsOn(const unsigned *arr, unsigned n)
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer: Amir
  * Description:  find mirror representation of a binary with loop
  * Return :   
  */
@@ -140,24 +141,25 @@ unsigned ByteMirror(unsigned N)
 
 
 /* Status: In development;
- * Reviewer:  
+ * Reviewer:   Amir 
  * Description:  find mirror representation of a binary without loop
  * Return :   
  */
-unsigned int ByteMirrorNoLoop(unsigned char c) 
+unsigned int ByteMirrorNoLoop(unsigned int n) 
 {
-	c = ((c & 170) >> 1) | ((c & 85) << 1);
-	c = ((c & 204) >> 2) | ((c & 51) << 2);
-	c = ((c & 240) >> 4) | ((c & 15) << 4);
-	
-   return c;
+    n = (n & 0x55555555) <<  1 | (n & 0xAAAAAAAA) >>  1; 
+    n = (n & 0x33333333) <<  2 | (n & 0xCCCCCCCC) >>  2; 
+    n = (n & 0x0F0F0F0F) <<  4 | (n & 0xF0F0F0F0) >>  4; 
+    n = (n & 0x00FF00FF) <<  8 | (n & 0xFF00FF00) >>  8; 
+    n = (n & 0x0000FFFF) << 16 | (n & 0xFFFF0000) >> 16;
+    return n;
 }
 
 
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer:  Amir
  * Description:  check if both the second and the 6th bit is on (1)
  * Return :   
  */
@@ -169,7 +171,7 @@ unsigned IsBothOn(unsigned char c)
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer:  Amir
  * Description:  check if at least one is 1 between 2 and 6 
  * Return :   
  */
@@ -181,7 +183,7 @@ unsigned IsOneOn(unsigned char c)
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer:  Amir
  * Description:  swap between the 3rd and 5th bits and return new number
  * Return :   
  */
@@ -199,7 +201,7 @@ unsigned SwapBits(unsigned num)
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer:  Amir
  * Description: swap between two variables. 
  * Return :   
  */
@@ -216,7 +218,7 @@ void Swap(int *x, int *y)
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer:  Amir
  * Description:  closest smaller number that is devisible by 16 without remainder
  * Return :   
  */
@@ -229,7 +231,7 @@ unsigned Divisible16(unsigned num)
 
 
 /* Status: READY;
- * Reviewer:  
+ * Reviewer:  Amir
  * Description:  count bits set to 1 
  * Return :   
  */
@@ -253,7 +255,7 @@ unsigned CountSetBits(unsigned num)
 
 
 /* Status: READY;
-* Reviewer:  
+* Reviewer:  Amir
 * Description:  count bit without loop
 * Return :   
 */
@@ -268,29 +270,24 @@ int CountSetBitsNoLoop(unsigned int x)
 }
 
 
+ 
+
+
 
 /* Status: reasearch;
-* Reviewer:  
+* Reviewer:  Amir
 * Description: receive float and print it's bits  
 * Return :   
-*/
+  */
 void FloatAnalysis(float *f)
 {
-	char *p_float_binary = "";
+ 	unsigned int *p1 = (void*)(f);
+ 	printf("%b\n",*p1);
  	
- 
-   
-   while(f)
-   {
-  		(1 == f&1 ? strcat(p_float_binary, "1") : strcat(p_float_binary, "0"));
-  		f>>1;
-   }
-   
-    printf("the Binary representation of the floater is: %f \n", p_float_binary);
 }
 
 
-
+ 
 
 
 

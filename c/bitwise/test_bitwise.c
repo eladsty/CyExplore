@@ -10,7 +10,7 @@ int main()
 	unsigned i = 0;
 	unsigned arr[] = {22, 20, 1414, 52, 78, 48, 56, 21, 14987, 67, 8, 0};
 	int x = 9873, y = 1507;
-
+	float f =  -8.5;
  	
  	
  	
@@ -41,7 +41,7 @@ int main()
  
 	assert(3 == ByteMirror(12));
 	assert(313 == ByteMirror(1252));
-	
+ 
 	/*byte mirror no loop*/
 
 	
@@ -55,8 +55,8 @@ int main()
    	assert(9873 == y);
    	assert(1507 == x);
    	
-   	FloatAnalysis(4.341);
-   	FloatAnalysis(-4.341);
+   	FloatAnalysis(&f);
+ 
 		 
 	return 0;
 }
