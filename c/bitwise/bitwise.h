@@ -1,5 +1,5 @@
-#ifndef __STRINGS_H__
-#define __STRINGS_H__
+#ifndef __STRINGS_H__CR4
+#define __STRINGS_H__CR4
 
  
 long Pow2(unsigned int x, unsigned int y);
@@ -30,7 +30,7 @@ unsigned CountSetBits(unsigned num);
 
 int CountSetBitsNoLoop(unsigned int x);
 
-
+float FloatAnalysis(float f);
 
 
 #endif
