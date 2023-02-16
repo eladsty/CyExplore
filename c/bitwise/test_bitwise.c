@@ -55,8 +55,8 @@ int main()
    	assert(9873 == y);
    	assert(1507 == x);
    	
-   	
-   	
+   	FloatAnalysis(4.341);
+   	FloatAnalysis(-4.341);
 		 
 	return 0;
 }

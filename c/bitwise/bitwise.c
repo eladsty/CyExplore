@@ -274,10 +274,19 @@ int CountSetBitsNoLoop(unsigned int x)
 * Description: receive float and print it's bits  
 * Return :   
 */
-float FloatAnalysis(float f)
+void FloatAnalysis(float *f)
 {
-
-
+	char *p_float_binary = "";
+ 	
+ 
+   
+   while(f)
+   {
+  		(1 == f&1 ? strcat(p_float_binary, "1") : strcat(p_float_binary, "0"));
+  		f>>1;
+   }
+   
+    printf("the Binary representation of the floater is: %f \n", p_float_binary);
 }
 
 
