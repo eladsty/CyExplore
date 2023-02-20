@@ -4,8 +4,26 @@
 #include <stdlib.h> /* malloc  and free */
 #include <string.h> /* strlen */
 
-
+/* Status: READY;
+ * Reviewer: Hen 
+ * Description:  
+ * Return : maximum number and size of var and size of type
+ */
+#define MAX2(a,b) a > b ? a : b
  
+#define MAX3(a,b,c) ( MAX2(a,b) > c?  MAX2(a,b) :c)
+
+#define SIZEOF_VAR(var) (size_t)(&var+1) - (size_t)&var
+
+#define SIZEOF_TYPE(var) (size_t)(((var*)0)+1)
+ struct X 
+ {
+  	double d;
+ 	int i;
+ 	short s;
+ 	char c;
+ 
+ };
 
 typedef struct check
 {
@@ -30,5 +48,12 @@ typedef struct check
 	/* Cleanup */
 	void CleanStr(void *p);
 
-
+union car 
+ 	{
+ 		char name[49];
+ 		double price;
+ 	};
+ 	
+ 	
 #endif
+

@@ -5,7 +5,8 @@
 int main()
 {
 	check check_arr[3];
-	
+		union car car1;
+		struct X x;
 	int num = 8;
 	float num_float = 9.6;
 	char *str;
@@ -41,8 +42,16 @@ int main()
 	
 	check_arr[2].cleanup(check_arr[2].p);
 
-
+    printf("%ld\n",SIZEOF_VAR(num));
+    printf("%ld\n", SIZEOF_TYPE(int));
+ 
+ 	 
+ 
+ 
+printf("size of car is %ld\n", sizeof(car1));
+printf("size ofstruct %ld\n", sizeof(x));
 	return 0;
 }
+
 
 
