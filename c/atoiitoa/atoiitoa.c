@@ -187,13 +187,13 @@ int TestAtoi()
 
 
 /*
-	status: 
-	description:  
-	Reviewer:   
-	Return:  
+	status: READY
+	description:  print character that appear in arr1 and 2 but not 3
+	Reviewer:   Shani
+	Return:  print
 */
 
-char *InTwoOutOfThree(char *arr1, char *arr2, char *arr3)
+void *InTwoOutOfThree(char *arr1, char *arr2, char *arr3)
 {
  
 	char my_buffer[128] = {0};
@@ -225,7 +225,6 @@ char *InTwoOutOfThree(char *arr1, char *arr2, char *arr3)
 		++arr2;
 	}
 	
-	return my_buffer;
 }
  
  
