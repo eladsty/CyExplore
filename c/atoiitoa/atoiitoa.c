@@ -3,9 +3,15 @@
 
 #include "atoiitoa.h"
 
+/*
+	status:approved
+	description:turn int to string
+	Reviewer: Nawi
+	Return: pointer
+
+*/
  
- 
-char* Itoa(int val, char* buffer, int base)
+char* Itoa(int val, char* buffer, int base )
 {
 	char *bufCpy = buffer;
 	int valCopy;
@@ -38,10 +44,19 @@ char* Itoa(int val, char* buffer, int base)
 	
  	while(0 < valCopy)
  	{
- 		*bufCpy = (char)(valCopy % base) + 48;
+ 		if(valCopy % base > 9 && valCopy % base < 36)
+ 		{
+ 			*bufCpy = (char)((valCopy % base) + 55);
+ 		}
+ 		else
+ 		{
+ 			*bufCpy = (char)((valCopy % base) + 48);
+ 		}
+ 		
  		valCopy /= base;
  		--bufCpy;
  	}
+ 	
  	if(isNegative)
  	{
  		*bufCpy = '-';
@@ -52,31 +67,77 @@ char* Itoa(int val, char* buffer, int base)
 	return (char *)bufCpy;
 }
  
+ /*
+	status: READY
+	description:turn string into int  
+	Reviewer: Nawi  
+	Return: int
+*/
+
 int Atoi(const char *str)
 {
-	short isNegative = 0;
+	short isNegative = 1;
 	int num = 0;
 	const char* p_str = str;
 	assert(NULL != str);
 	
 	if(*p_str == '-')
 	{
-		++isNegative;
+		isNegative = -1;
 		++p_str;
 	}
-
+	
+	
 	while('\0' != *p_str && *p_str >= '0' && *p_str <= '9')
 	{
 		num = num*10 + ((int)*p_str - 48);
 		++p_str;
 	}
 
-	if(isNegative)
-	{
-		num *= -1;
-	}
 		
-	return num;	
+	return num*isNegative;	
+}
+
+
+/*
+	status: READY
+	description:turn string to int in any base
+	Reviewer:  Elad
+	Return: int
+
+*/
+ 
+int Atoi36(const char *str, int base)
+{
+	short is_negative = 1;
+	int result = 0;
+	char base_bank[] = {"2223456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+	
+	if (*str == '-')
+	{
+		is_negative = -1;
+		++str;
+	}	
+	
+	while ('\0' != *str && *str < base_bank[base]) 
+	{
+		if(!((*str >= 'A' && *str <= 'Z') ||( *str >= '0' && *str <= '9')))
+		{
+			return result;
+		}
+		
+		if (*str >= '0' && *str <= '9')
+		{
+			result = (result * base) + (*str - 48);
+		}	
+		else if(*str >= 'A' && *str <= 'Z')
+		{
+			result = (result * base) + (*str - 55);
+		}
+		++str;
+	}	
+		
+	return result * is_negative;
 }
 
  
