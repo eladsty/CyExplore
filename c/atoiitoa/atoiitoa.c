@@ -1,5 +1,6 @@
 #include <stddef.h> /*to use NULL*/
 #include <stdlib.h> /* for AtoiVsAtoi to use atoi()*/
+#include <stdio.h>/* printf */
 
 #include "atoiitoa.h"
 
@@ -39,7 +40,6 @@ char* Itoa(int val, char* buffer, int base )
 	
 	*bufCpy = '\0';
  	--bufCpy;
- 	
 	valCopy = val;
 	
  	while(0 < valCopy)
@@ -66,6 +66,8 @@ char* Itoa(int val, char* buffer, int base )
  	++bufCpy;
 	return (char *)bufCpy;
 }
+ 
+ 
  
  /*
 	status: READY
@@ -111,7 +113,7 @@ int Atoi36(const char *str, int base)
 {
 	short is_negative = 1;
 	int result = 0;
-	char base_bank[] = {"2223456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+	char base_bank[] = {"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 	
 	if (*str == '-')
 	{
@@ -144,9 +146,8 @@ int Atoi36(const char *str, int base)
 /*
 	status: 
 	description: compares output of Atoi and standard atoi.
-	Reviewer:  
+	Reviewer:  Shani
 	Return: 1 if output is the same, 0 if not.
-
 */
 
 int AtoiVsAtoi(const char *str)
@@ -158,6 +159,14 @@ int AtoiVsAtoi(const char *str)
 	
 	return 0;
 }
+
+
+/*
+	status: 
+	description: compares output of Atoi and standard atoi w builed in test cases.
+	Reviewer:  Shani
+	Return: 1 if output is the same, 0 if not.
+*/
 
 int TestAtoi()
 {
@@ -174,5 +183,51 @@ int TestAtoi()
 	
 	return 1;
 }
+ 
+
+
+/*
+	status: 
+	description:  
+	Reviewer:   
+	Return:  
+*/
+
+char *InTwoOutOfThree(char *arr1, char *arr2, char *arr3)
+{
+ 
+	char my_buffer[128] = {0};
+	
+	assert(NULL != arr1 && NULL != arr2 && NULL != arr3);
+	
+	while('\0' != *arr1)
+	{	
+		++my_buffer[(int)*arr1];	
+		++arr1;
+	}
+	
+	while('\0' != *arr3)
+	{
+		if(my_buffer[(int)*arr3])
+		{
+			my_buffer[(int)*arr3] = 0;
+		}
+		++arr3;
+	}
+	
+	while('\0' != *arr2)
+	{
+		if(my_buffer[(int)*arr2])
+		{
+			printf("%c is common between array 1st and 2nd but not 3rd\n", *arr2); 
+			my_buffer[(int)*arr2] = 0;
+		}
+		++arr2;
+	}
+	
+	return my_buffer;
+}
+ 
+ 
  
  

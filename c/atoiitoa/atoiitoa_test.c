@@ -9,8 +9,13 @@ int main()
 {
 	char buffer[5] = {0};
 	int i = 0;
- 	char *strings[] = {"-1424","14-24","0","99","","53a22"};  
- 
+ 	char *strings[] = {"-1424","14-24","0","99","","53a22"}; 
+ 	 
+ 	char *arr1[] = {"heeelllo lords","filter","123456","123456"};
+ 	char *arr2[] = {"hallo world","filter","123456",""};
+ 	char *arr3[] = {"hahaha","filter","23456","123456"};
+ 	
+ 	
  	printf("%s\n",  Itoa(312, buffer, 10));
  	printf("%s\n",  Itoa(-144, buffer, 10));
  	
@@ -34,6 +39,15 @@ int main()
 	}
 	
 	assert(1 == TestAtoi());
+	i = 0;
+ 
+	for(;i<4;++i)
+	{
+		InTwoOutOfThree(arr1[i], arr2[i], arr3[i]);
+	}
+ 
 	
+	
+	InTwoOutOfThree("abc","bcd","dfg");
  	return 0;
 }
