@@ -12,4 +12,10 @@ int Atoi(const char *str);
 /* convert string to number up to base*/
 int Atoi36(const char *str, int base);
 
+/* compares output of Atoi to atoi */
+int AtoiVsAtoi(const char *str);
+
+/*   */
+int TestAtoi();
+
 #endif

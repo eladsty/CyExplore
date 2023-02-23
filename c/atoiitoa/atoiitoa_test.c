@@ -1,12 +1,15 @@
+ 
 
 #include <string.h>/*str cmp*/
 #include <stdio.h> /*printf*/
 
 #include "atoiitoa.h"
  
-main()
+int main()
 {
 	char buffer[5] = {0};
+	int i = 0;
+ 	char *strings[] = {"-1424","14-24","0","99","","53a22"};  
  
  	printf("%s\n",  Itoa(312, buffer, 10));
  	printf("%s\n",  Itoa(-144, buffer, 10));
@@ -24,6 +27,13 @@ main()
 	printf(" Atoi36 %d \n",Atoi36("-B", 16));     
 	printf("Atoi36  %d \n",Atoi36("80", 10));   
 	printf("Atoi36  %d \n",Atoi36("1030", 2));   
-  	  
+  	
+  	for(;i<6; i++) 
+  	{ 
+	assert(1 == AtoiVsAtoi(strings[i]));
+	}
+	
+	assert(1 == TestAtoi());
+	
  	return 0;
 }

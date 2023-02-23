@@ -1,5 +1,5 @@
 #include <stddef.h> /*to use NULL*/
-
+#include <stdlib.h> /* for AtoiVsAtoi to use atoi()*/
 
 #include "atoiitoa.h"
 
@@ -102,7 +102,7 @@ int Atoi(const char *str)
 /*
 	status: READY
 	description:turn string to int in any base
-	Reviewer:  Elad
+	Reviewer:  Shani
 	Return: int
 
 */
@@ -140,4 +140,38 @@ int Atoi36(const char *str, int base)
 	return result * is_negative;
 }
 
+
+/*
+	status: 
+	description: compares output of Atoi and standard atoi.
+	Reviewer:  
+	Return: 1 if output is the same, 0 if not.
+
+*/
+
+int AtoiVsAtoi(const char *str)
+{
+	if(Atoi(str) == atoi(str))
+	{
+		return 1;
+	}
+	
+	return 0;
+}
+
+int TestAtoi()
+{
+ 	char *strings[] = {"-1424","14-24","0","99","","53a22"};  
+ 	
+ 	for(;i<6; i++) 
+  	{ 
+		if(1 != AtoiVsAtoi(strings[i]))
+		{
+			return 0;
+		}
+	}
+	
+	return 1;
+}
+ 
  
