@@ -162,6 +162,7 @@ int AtoiVsAtoi(const char *str)
 int TestAtoi()
 {
  	char *strings[] = {"-1424","14-24","0","99","","53a22"};  
+ 	int i = 0;
  	
  	for(;i<6; i++) 
   	{ 
