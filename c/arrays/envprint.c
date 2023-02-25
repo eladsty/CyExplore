@@ -93,8 +93,6 @@ void freeBuffer(char** buffer)
 int main(int argc, char *argv[], char *envp[])
 {
   
-
-	
  	freeBuffer(PrintEnvpLow(envp));
     return 0;
 }

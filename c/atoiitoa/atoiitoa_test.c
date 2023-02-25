@@ -46,8 +46,9 @@ int main()
 		InTwoOutOfThree(arr1[i], arr2[i], arr3[i]);
 	}
  
-	
-	
 	InTwoOutOfThree("abc","bcd","dfg");
+	
+	printf("little endian = 1, big endian = 0,  result is:%d\n", IsLittleEndian()); 
+	printf("macro: %d", IS_LITTLE_ENDIAN);
  	return 0;
 }

@@ -4,10 +4,15 @@
 
 #include "atoiitoa.h"
 
+
+
+
+
+
 /*
 	status:approved
 	description:turn int to string
-	Reviewer: Nawi
+	Reviewer: Nave
 	Return: pointer
 
 */
@@ -195,7 +200,6 @@ int TestAtoi()
 
 void *InTwoOutOfThree(char *arr1, char *arr2, char *arr3)
 {
- 
 	char my_buffer[128] = {0};
 	
 	assert(NULL != arr1 && NULL != arr2 && NULL != arr3);
@@ -224,9 +228,22 @@ void *InTwoOutOfThree(char *arr1, char *arr2, char *arr3)
 		}
 		++arr2;
 	}
-	
 }
  
+ 
+/*
+	status: READY
+	description:  check if little endian and return 1 else 0l
+	Reviewer:   Shlomi 
+	Return:  1 or 0.
+*/
+int IsLittleEndian()
+{
+	short n = 1;
+	return (*(char *)&n == 1? 1: 0);
+}
+
+
  
  
  

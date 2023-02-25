@@ -1,6 +1,8 @@
 #ifndef __ATOIITOA_H__CR4
 #define __ATOIITOA_H__CR4
 
+#define IS_LITTLE_ENDIAN ((int)(char)1 == 0) ? 0 : 1
+
 #include <assert.h>
 
 /*integer to string tested up to base 36*/
@@ -19,7 +21,9 @@ int AtoiVsAtoi(const char *str);
 int TestAtoi();
 
 /*  return only letters that appear on first 2 arrays but not on the third */
-char *InTwoOutOfThree(char arr1[], char arr2[], char arr3[]);
+void *InTwoOutOfThree(char arr1[], char arr2[], char arr3[]);
 
+/*  check if little endian or not */
+int IsLittleEndian();
 
 #endif
