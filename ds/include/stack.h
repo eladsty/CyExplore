@@ -1,6 +1,7 @@
  #include <stddef.h> /*size_t*/
- 
- 
+#ifndef __STACK_H__CR4__
+#define __STACK_H__CR4__
+  
 typedef struct stack stack_t;
 
 /* create stack*/
@@ -26,3 +27,7 @@ size_t StackSize(stack_t *stack);
 
 /* return capacity*/
 size_t StackCapacity(stack_t *stack);
+
+
+
+#endif

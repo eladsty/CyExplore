@@ -20,7 +20,7 @@ TESDIR := $(OBJDIR)/test/vector
 .PHONY: clean all
 
 $(TARGET): $(OBJS) 
-	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/vector.h -lm
+	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/vector.h
  
 vector_test.o: $(TESDIR)/vector_test.c $(INCDIR)/vector.h
 	cc $(CFLAGS) -c $< -o $@ 

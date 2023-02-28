@@ -13,6 +13,13 @@ struct stack
 	void *start;
 };
 
+/*
+	status:approved
+	description: create new stack and return pointer to it (if not NULL)
+	Reviewer: Nimrod
+	Return: stack_t pointer
+
+*/
 stack_t *StackCreate(size_t size, size_t elemsize)
 {
 	stack_t *new_stack = (stack_t *)malloc(sizeof(stack_t));
@@ -33,6 +40,14 @@ stack_t *StackCreate(size_t size, size_t elemsize)
 	return new_stack;
 }
 
+
+/*
+	status:approved
+	description:  free a stack from memory
+	Reviewer: Nimrod
+	Return:  none
+
+*/
 void StackDestroy(stack_t *stack)
 {
 	free((char *)stack->start - stack->element_size * stack->current_size);
@@ -41,6 +56,13 @@ void StackDestroy(stack_t *stack)
 	stack = NULL;
 }
 
+/*
+	status:approved
+	description: add new data to the stack
+	Reviewer: Nimrod
+	Return: none
+
+*/
 void StackPush(stack_t *p_stack, void *data)
 {
 	if(p_stack->current_size >= p_stack->capacity)
@@ -53,7 +75,13 @@ void StackPush(stack_t *p_stack, void *data)
 	memcpy(p_stack->start, data, p_stack->element_size);
 }
 
+/*
+	status:approved
+	description: remove item from the stack.
+	Reviewer: Nimrod
+	Return: none
 
+*/
 void StackPop(stack_t *stack)
 {
 	if (0 == stack->current_size)
@@ -65,13 +93,26 @@ void StackPop(stack_t *stack)
 	stack->current_size = stack->current_size - 1;; 
 }
 
+/*
+	status:approved
+	description: check the top item on the stack
+	Reviewer: Nimrod
+	Return: void pointer
+
+*/
 void *StackPeek(stack_t *stack)
 {
 	return stack->start;
 }
 
 
+/*
+	status:approved
+	description: check if stack is empty, if it does return 1 else 0
+	Reviewer: Nimrod
+	Return: int
 
+*/
 int StackIsEmpty(stack_t *stack)
 {
 	if(0 == stack->current_size) 
@@ -84,13 +125,25 @@ int StackIsEmpty(stack_t *stack)
 	}
 }
 
+/*
+	status:approved
+	description: number of items on the stack
+	Reviewer: Nimrod
+	Return: size_t 
 
+*/
 size_t StackSize(stack_t *stack)
 {
 	return stack->current_size;
 }
 
+/*
+	status:approved
+	description: check stack capactiy
+	Reviewer: Nimrod
+	Return: size_t
 
+*/
 size_t StackCapacity(stack_t *stack)
 {
 	return stack->capacity;

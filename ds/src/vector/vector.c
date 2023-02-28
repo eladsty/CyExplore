@@ -17,10 +17,10 @@ struct vector
 };
 
 /*
-	status: 
-	description:   
+	status: APPROVED
+	description:   create a vector stack with 4 fields (3 for size and last for void pointer)
 	Reviewer:  nimrod zelzer
-	Return:   
+	Return:   vector_t type of struct.
 
 */
 vector_t *VectorCreate(size_t element_amount, size_t element_size)
@@ -43,20 +43,19 @@ vector_t *VectorCreate(size_t element_amount, size_t element_size)
 	new_vector->capacity = (element_size*element_amount);
 	
 	return new_vector;
-	
 }
  
 /*
-	status: 
-	description:   
+	status: APPROVED
+	description:   free the vector.
 	Reviewer:  nimrod zelzer
-	Return:   
+	Return: none
 */
 
 void VectorDestroy(vector_t *vector)
 {
 	assert(NULL != vector->head);
-	free((char *)vector->head);
+	free(vector->head);
 	vector->head = NULL;
 	assert(NULL != vector);
 	free(vector);
@@ -66,18 +65,14 @@ void VectorDestroy(vector_t *vector)
 
 
 /*
-	status: 
-	description:  
-	Reviewer:  
-	Return:  
+	status: APPROVED
+	description: add data to vector  and increase size by growth factor of 1.25
+	Reviewer: nimrod zelzer 
+	Return:  int 0 if fail, 1 for success
 
 */
 
-/*
-Jump twice as much as needed \/
-
-
-*/
+ 
 int VectorPush(vector_t *vector, const void *data)
 {
 	char *temp = NULL;
@@ -104,10 +99,10 @@ int VectorPush(vector_t *vector, const void *data)
  
  
 /*
-	status: 
-	description:  
+	status: APPROVED
+	description: return pointer to the index give from the user, if element doesn't exist, return NULL
 	Reviewer:  nimrod zelzer
-	Return:  
+	Return: void pointer
 
 */ 
 void *VectorAcessIndex(vector_t *vector, size_t index)
@@ -129,10 +124,10 @@ void *VectorAcessIndex(vector_t *vector, size_t index)
 
 
 /*
-	status: 
-	description:  
+	status: APPROVED
+	description: remove an element from the vector stack. 
 	Reviewer:  nimrod zelzer
-	Return:  1 
+	Return:  0 if failed and 1 if not.
 
 */
 int VectorPop(vector_t *vector)
@@ -159,7 +154,7 @@ int VectorPop(vector_t *vector)
 
 
 /*
-	status:  
+	status:  APPROVED
 	description:  return the current number of elements
 	Reviewer:  nimrod zelzer
 	Return:  size_t number represent number of elements
@@ -175,7 +170,7 @@ size_t VectorSize(vector_t *vector)
 
 
 /*
-	status:  
+	status:  APPROVED
 	description: reallocating new memory size to the head. 
 	Reviewer:  nimrod zelzer
 	Return: 1 - fail, 0 - success.
