@@ -1,3 +1,8 @@
+/*
+
+approved by shani.
+*/
+
 #include <assert.h>
 #include <string.h>
 

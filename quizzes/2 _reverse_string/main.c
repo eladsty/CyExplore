@@ -1,3 +1,7 @@
+/*
+approved by shani.
+*/
+
 #include "header.h"
 
 int main()

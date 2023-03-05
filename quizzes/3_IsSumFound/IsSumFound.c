@@ -2,8 +2,8 @@
 
 
 /*
-Status: 
-Reviewer: 
+Status: approved
+Reviewer: Shani
 Description: recieve sorted array of ints and a sum, return 1 if it finds 2 numbers in the array that sum up to the sum provided to the function, and their indexes, return 0 otherwise.
 Return: 1 if two numbers
 */
