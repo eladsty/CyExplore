@@ -1,12 +1,10 @@
 #include <stddef.h> /*size_t*/
 #include <stdlib.h>/*malloc*/
 #include <string.h>/*memcpy*/
-#include <assert.h>
+#include <assert.h>/*asserts*/
 #include "vector.h"
 
 #define GROWTH_FACTOR 1.25
-
-
 
 struct vector 
 {
@@ -69,7 +67,7 @@ void VectorDestroy(vector_t *vector)
 	description: add data to vector  and increase size by growth factor of 1.25
 	Reviewer: nimrod zelzer 
 	Return:  int 0 if fail, 1 for success
-
+	time complexity: O(n)
 */
 
  
@@ -128,7 +126,7 @@ void *VectorAcessIndex(vector_t *vector, size_t index)
 	description: remove an element from the vector stack. 
 	Reviewer:  nimrod zelzer
 	Return:  0 if failed and 1 if not.
-
+	time complexity: O(1)
 */
 int VectorPop(vector_t *vector)
 {
@@ -158,7 +156,7 @@ int VectorPop(vector_t *vector)
 	description:  return the current number of elements
 	Reviewer:  nimrod zelzer
 	Return:  size_t number represent number of elements
-
+	time complexity: O(1)
 */
 size_t VectorSize(vector_t *vector)
 {
@@ -174,6 +172,7 @@ size_t VectorSize(vector_t *vector)
 	description: reallocating new memory size to the head. 
 	Reviewer:  nimrod zelzer
 	Return: 1 - fail, 0 - success.
+	time complexity: O(1)
 
 */
 int VectorRealloc(vector_t  *vector, size_t new_size)
