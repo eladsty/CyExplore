@@ -26,21 +26,21 @@ int main()
 	char s[][40] = {"1111111", "22222", "33333333",
 				 "", "long long ling long string", 
 				"just one string"};
-	char *find = "22222";
-	char *action = "success";
-	slist_iter_t func = NULL;
-	int arr[500][1];
+	char *find = "1111111";
+	char *action = "\nsuccess";
+	slist_iter_t iter = NULL;
+	int arr[300][1];
 	size_t j = 0;
 	
 	slist_iter_t i = SListStart(list);
-	for (j = 0; j < 100; j++)
+	for (j = 0; j < 300; j++)
 	{
 		arr[j][0] = j * 2;
 		i = SListInsertBefore(i, arr[j]); 
 	}
 	
 	i = SListStart(list);
-	for (j = 0; j < 100; j++)
+	for (j = 0; j < 300; j++)
 	{
 		printf("%d\n", *(int *)SListGetData(i));
 	}
@@ -55,7 +55,7 @@ int main()
 		printf("\nsize of elements in list: %ld\n", SListSize(list));	
 	}
 	
-	printf("\n*********************Create, insert, Size, Delete******************* \n\n");
+	printf("\n********************is_match_t*Create, insert, Size, Delete******************* \n\n");
 	
 	i = SListStart(list);
 	for (j = 0; j < 7; ++j)
@@ -85,10 +85,10 @@ int main()
 	}
 	
 	printf("***************************Checking SListFind:**************************\n\n");
-	func = SListFind(SListStart(list), SListEnd(list), CompareStrings, find);
-	if (func != SListEnd(list))
+	iter = SListFind(SListStart(list), SListEnd(list), CompareStrings, find);
+	if (iter != SListEnd(list))
 	{
-		printf("Found! --> %s\n", (char *)SListGetData(func));
+		printf("Found! --> %s\n", (char *)SListGetData(iter));
 	}
 	else
 	{

@@ -4,6 +4,11 @@
 
 #include "slist.h"
 
+/*
+
+approved by 
+
+*/
 
  
 struct slist
@@ -162,15 +167,15 @@ int SListIterIsEqual(slist_const_iter_t elem1, slist_const_iter_t elem2)
 
 slist_iter_t SListFind(slist_const_iter_t from, slist_const_iter_t to, is_match_t CompareFunc, void *param)
 {
-	
+ 
 	slist_iter_t iter = SListNext(from);
-	while ( iter != to )
+	while (iter != to)
 	{
-			if ( 0 == CompareFunc((SListGetData(iter)), param))
-			{
-				return iter;
-			}
-			iter = SListNext(iter);
+		if ( 0 == CompareFunc(SListGetData(iter), param))
+		{
+			return iter;
+		}
+		iter = SListNext(iter);
 	}
 	
 	return iter;
@@ -180,14 +185,14 @@ slist_iter_t SListFind(slist_const_iter_t from, slist_const_iter_t to, is_match_
 int SListForEach(slist_iter_t from, slist_const_iter_t to, action_t ActionFunc, void *param)
 {
 	slist_iter_t iter = SListNext(from);
-	int error_flag = 0;
-	while (iter != to && (0 == error_flag))
+	int error = 0;
+	while (iter != to && (0 == error))
 	{
-			error_flag = ActionFunc((SListGetData(iter)), param);
+			error = ActionFunc((SListGetData(iter)), param);
 			iter = SListNext(iter);
 	}
 	
-	return error_flag;
+	return error;
 }
 
 
