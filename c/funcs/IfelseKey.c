@@ -22,47 +22,47 @@ void IfPrintAorT()
 	while(27 != c)
 	{
 
-	c = getchar();
-	if('A' == c)
-	{
-		printf("A Pressed");			
-	}
-	else if('T' == c)
-	{
-		printf("T Pressed");
-	}
+		c = getchar();
+		if('A' == c)
+		{
+			printf("A Pressed");			
+		}
+		else if('T' == c)
+		{
+			printf("T Pressed");
+		}
 
-	else if(27 == c)
-	{
-		exit(0);
-	}
-	else
-	{
-		printf("\n");				
-	}
+		else if(27 == c)
+		{
+			exit(0);
+		}
+		else
+		{
+			printf("\n");				
+		}
 
-	}
+		}
 }
 
 void TOrA1()
 	{
-			char c;
+		char c;
 		while(27 != c)
 		{
 	 
-			c = getchar();
-			switch(c) 
-			{
-				case 'A':
-					printf("A Pressed");
-					break;
-				case 'T':
-					printf("T Pressed");
-					break;
-				default:
-					printf("\n");
-			}
-			}
+		c = getchar();
+		switch(c) 
+		{
+			case 'A':
+				printf("A Pressed");
+				break;
+			case 'T':
+				printf("T Pressed");
+				break;
+			default:
+				printf("\n");
+		}
+		}
 	}
 void CharA()
 {
