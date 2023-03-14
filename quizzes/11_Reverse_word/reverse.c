@@ -16,20 +16,17 @@ char *ReverseString(char *src_str, char *copy_reversed )
         /* If a word is found */ 
         if(' ' == src_str[word_start])
         {
- 
             i = word_start + 1;
             while(i <= word_end)
             {
                 copy_reversed[index] = src_str[i];
 
-                i++;
-                index++;
+                ++i;
+                ++index;
             }
             copy_reversed[index++] = ' ';
-
             word_end = word_start - 1;
         }
-
         --word_start;
     }
 
