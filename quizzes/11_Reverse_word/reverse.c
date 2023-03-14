@@ -6,7 +6,6 @@ char *ReverseString(char *src_str, char *copy_reversed )
 {
     size_t len, i = 0, index = 0, word_start = 0, word_end = 0;
     len   = strlen(src_str);
-    index = 0;
 
     /* Start checking of words from the end of string*/ 
     word_start = len - 1;
