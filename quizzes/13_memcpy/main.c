@@ -17,9 +17,9 @@ void *MemCpy(void *dest, const void *src, size_t n)
 			n-= sizeof(size_t);
 		}
 		
-	 while (n > 0)
+	 while(n > 0)
 	{	
-		*((char*)dest) = *((char *)src);
+		*((char*)dest)  = *((char *)src);
 		src = (char *)src + 1;
 		dest = (char *)dest + 1;
 		--n;

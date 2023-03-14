@@ -2,10 +2,8 @@
 #include <string.h>
 
 
-void ReverseString(char *src_str, char *copy_reversed )
+char *ReverseString(char *src_str, char *copy_reversed )
 {
-	
-	 
     size_t len, i = 0, index = 0, word_start = 0, word_end = 0;
     len   = strlen(src_str);
     index = 0;
@@ -17,18 +15,18 @@ void ReverseString(char *src_str, char *copy_reversed )
     while(word_start > 0)
     {
         /* If a word is found */ 
-        if(' ' == str[word_start])
+        if(' ' == src_str[word_start])
         {
-            // Add the word to the reverse string
+ 
             i = word_start + 1;
             while(i <= word_end)
             {
-                reverse[index] = src_str[i];
+                copy_reversed[index] = src_str[i];
 
                 i++;
                 index++;
             }
-            reverse[index++] = ' ';
+            copy_reversed[index++] = ' ';
 
             word_end = word_start - 1;
         }
@@ -36,15 +34,15 @@ void ReverseString(char *src_str, char *copy_reversed )
         --word_start;
     }
 
-    // Finally add the last word
+ 
     for(i=0; i<=word_end; i++)
     {
-        copy_reversed[index] = str[i];
+        copy_reversed[index] = src_str[i];
         index++;
     }
 
-    // Add NULL character at the end of reverse string
-    reverse[index] = '\0'; 
+ 
+    copy_reversed[index] = '\0'; 
     
     
     return copy_reversed;
@@ -52,10 +50,11 @@ void ReverseString(char *src_str, char *copy_reversed )
  
 int main()
 {
-    char string[] = " ";
+    char string[] = "hello my name is luka";
+    char copy_rev[30];
+    
 	printf("%s\n",string);
-    ReverseString(string);
-	printf("after reverseing: %s\n",string);
+	printf("after reverseing: %s\n", ReverseString(string,copy_rev));
     return 0;
 }
 
