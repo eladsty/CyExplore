@@ -2,24 +2,57 @@
 #include <string.h>
 
 
-void ReverseString(char *str )
+void ReverseString(char *src_str, char *copy_reversed )
 {
-	size_t len = strlen(str);
-	size_t i = 0, j = 0, len = 0, startIndex = 0, endIndex = 0;
-	char temp_word[100];
- 
-  	len = strlen(str);
-  	endIndex = len - 1;
-  	
-  	for(i = len - 1; i >= 0; i--)
-	{
+	
+	 
+    size_t len, i = 0, index = 0, word_start = 0, word_end = 0;
+    len   = strlen(src_str);
+    index = 0;
 
-	}		 
+    /* Start checking of words from the end of string*/ 
+    word_start = len - 1;
+    word_end   = len - 1;
+
+    while(word_start > 0)
+    {
+        /* If a word is found */ 
+        if(' ' == str[word_start])
+        {
+            // Add the word to the reverse string
+            i = word_start + 1;
+            while(i <= word_end)
+            {
+                reverse[index] = src_str[i];
+
+                i++;
+                index++;
+            }
+            reverse[index++] = ' ';
+
+            word_end = word_start - 1;
+        }
+
+        --word_start;
+    }
+
+    // Finally add the last word
+    for(i=0; i<=word_end; i++)
+    {
+        copy_reversed[index] = str[i];
+        index++;
+    }
+
+    // Add NULL character at the end of reverse string
+    reverse[index] = '\0'; 
+    
+    
+    return copy_reversed;
 }
  
 int main()
 {
-    char string[] = "This string is not reversed.";
+    char string[] = " ";
 	printf("%s\n",string);
     ReverseString(string);
 	printf("after reverseing: %s\n",string);
