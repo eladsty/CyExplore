@@ -3,6 +3,9 @@
 #include <stddef.h>
 
 
+#include "fsa.h"
+
+
 typedef struct fsa_block fsa_block_t;
 typedef struct fsa fsa_t;
 
@@ -27,10 +30,6 @@ struct fsa
  * Time Complexity - O(1).
  * Space Complexity - O(1).
  */
- 
- size_t block_size = 12;
-    size_t block_count = 10;
-    printf("%ld\n", FSASuggestSize(block_size, block_count));
  
 size_t FSASuggestSize(size_t block_size, size_t block_count)
 {
@@ -89,4 +88,14 @@ void FSAFree(void *block, fsa_t *fsa)
  
 }
 
+int main(void)
+{
+ 
+ size_t block_size = 12;
+    size_t block_count = 10;
+    printf("%ld\n", FSASuggestSize(block_size, block_count));
+ 
+	
+	return 0;
+}
 
