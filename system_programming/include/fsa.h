@@ -5,22 +5,8 @@
 #include <stddef.h> /* Used for size_t type */
 typedef struct fsa_block fsa_block_t;
 typedef struct fsa fsa_t;
-
-/* suggested using linked list lib for this implementation */
-/* this section is   NOT  part of the API - remove it to your source */
-/* struct fsa_block  
-{
-	void *next;
-	void *block; /* ptr to allocated block - same as you would get when using malloc() */
-/*};
-
-struct fsa
-{
-	void *head_lemi_sherozte;
-	void *tail_lemi_sherozte;
-	size_t count_lemi_sherozte;
-};*/
-
+ 
+ 
 
 /*--------------------------------------------------------*/
 /* Status : 
