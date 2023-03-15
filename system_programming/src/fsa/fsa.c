@@ -1,22 +1,18 @@
+#include <stdio.h>	/*printf*/
+#include <assert.h> /*asserts*/
+#include <stddef.h> /*size_t*/
+
+#include "fsa.h" 
 
 #define WORDSIZE sizeof(size_t)
-#include <stddef.h>
+#define ALIGNED_BLOCK(num) (num = (((num >> 3) << 3) + WORDSIZE))
 
-
-typedef struct fsa_block fsa_block_t;
-typedef struct fsa fsa_t;
-
-struct fsa_block  
-{
-	size_t offset;
-};
-
+ 
 struct fsa
 {
+	size_t element_count;
 	size_t next_free;
-	size_t count;
 };
-
 
 /*--------------------------------------------------------*/
 /* Status : 
@@ -28,19 +24,10 @@ struct fsa
  * Space Complexity - O(1).
  */
  
- size_t block_size = 12;
-    size_t block_count = 10;
-    printf("%ld\n", FSASuggestSize(block_size, block_count));
- 
-size_t FSASuggestSize(size_t block_size, size_t block_count)
+ size_t FSASuggestSize(size_t block_size, size_t block_count)
 {
-	if(0 != block_size % WORDSIZE)
-	{
-		return (block_size + (WORDSIZE - block_size % WORDSIZE));
-	}
-	return block_size * block_count + sizeof(fsa_t);
+	return ((ALIGNED_BLOCK(block_size) * block_count) + sizeof(fsa_t));  
 }
-
 
 
 /*--------------------------------------------------------*/
@@ -52,12 +39,25 @@ size_t FSASuggestSize(size_t block_size, size_t block_count)
  * Time Complexity - O(n).
  * Space Complexity - O(1). 
  */
-fsa_t *FSAInit(void *memory_p, size_t memory_size, size_t block_size)
+ 
+fsa_t *FSAInit(void *memory_pool, size_t memory_size, size_t block_size)
 {
-	fsa_t
+	fsa_t *new_fsa = NULL;
+	assert(NULL != memory_pool);
+	
+	/*
+	
+	ALIGNED_BLOCK(memory_pool);
+	
+	*/ 
+	new_fsa = (fsa_t *)((char *)memory_pool);
+	new_fsa->next_free = sizeof(fsa_t);
+	new_fsa->element_count = ((memory_size - sizeof(fsa_t)) / ALIGNED_BLOCK(block_size));
+	
+	return new_fsa;
 }
-
-
+ 
+ 
 /*--------------------------------------------------------*/
 /* Status : 
  * Reviewer : 
@@ -67,11 +67,23 @@ fsa_t *FSAInit(void *memory_p, size_t memory_size, size_t block_size)
  * Time Complexity - O(1).
  * Space Complexity - O(1).
  */
+ 
+ /*
 void *FSAAlooc(fsa_t *fsa)
 {
-	 
+	size_t offset_next_element = fsa->next_free;
+	void *block_p = NULL;
+ 
+	if(0 == fsa->element_count || NULL == fsa)
+	{
+		return NULL;
+	}
+ 	block_p = (sizeof(fsa_t) + fsa->next_free));
+ 	
+	fsa->element_count = fsa->element_count - 1;
+	return (void *)((char *)fsa + offset_next_element);
 }
-
+*/
 
 /*--------------------------------------------------------*/
 /* Status : 
@@ -89,4 +101,4 @@ void FSAFree(void *block, fsa_t *fsa)
  
 }
 
-
+ 
