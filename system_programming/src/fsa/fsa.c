@@ -5,15 +5,21 @@
 #include "fsa.h" 
 
 #define WORDSIZE sizeof(size_t)
-#define ALIGNED_BLOCK(num) (num = (((num >> 3) << 3) + WORDSIZE))
-
+#define ALIGNED_BLOCK(num) (WORDSIZE - ((size_t)memory_pool % 8))
  
+ /*
+struct fsa_block
+{
+    size_t next;
+};
+ */
+
 struct fsa
 {
-	size_t element_count;
+	/*size_t element_count; */
 	size_t next_free;
 };
-
+ 
 /*--------------------------------------------------------*/
 /* Status : 
  * Reviewer : 
@@ -42,22 +48,38 @@ struct fsa
  
 fsa_t *FSAInit(void *memory_pool, size_t memory_size, size_t block_size)
 {
-	fsa_t *new_fsa = NULL;
+	fsa_t *fsa_start_point = NULL;
+	size_t avail_size = 0;
+	size_t aligned_block_size = ALIGNED_BLOCK(block_size);
+	size_t offset_from_0 = sizeof(fsa_t);
+	short bytes_to_align = (WORDSIZE - ((size_t)memory_pool % 8));
+	fsa_t *start_new_fsa = NULL;
 	assert(NULL != memory_pool);
 	
-	/*
+	if(bytes_to_align)
+	{
+		 memory_pool = (char *)memory_pool + bytes_to_align;
+		 memory_size -= bytes_to_align;
+	}
+	start_new_fsa = (fsa_t *)((char *)memory_pool);
+	start_new_fsa->next_free = sizeof(fsa_t);
+	fsa_start_point = (fsa_t *)(char *)start_new_fsa + sizeof(fsa_t);
 	
-	ALIGNED_BLOCK(memory_pool);
+	while(memory_size >= aligned_block_size)
+	{
+		*((size_t *)fsa_start_point) = offset_from_0;
+		offset_from_0 += aligned_block_size;
+		fsa_start_point->next = offset_from_0;
+		fsa_start_point = (char *)fsa_start_point + aligned_block_size;
+		memory_size -= ALIGNED_BLOCK(block_size); 
+	}
+	fsa_start_point = (char *)fsa_start_point - aligned_block_size;
+	fsa_start_point->next = 0;
 	
-	*/ 
-	new_fsa = (fsa_t *)((char *)memory_pool);
-	new_fsa->next_free = sizeof(fsa_t);
-	new_fsa->element_count = ((memory_size - sizeof(fsa_t)) / ALIGNED_BLOCK(block_size));
-	
-	return new_fsa;
+	return start_new_fsa;
 }
  
- 
+
 /*--------------------------------------------------------*/
 /* Status : 
  * Reviewer : 
@@ -67,23 +89,22 @@ fsa_t *FSAInit(void *memory_pool, size_t memory_size, size_t block_size)
  * Time Complexity - O(1).
  * Space Complexity - O(1).
  */
+
  
- /*
 void *FSAAlooc(fsa_t *fsa)
 {
-	size_t offset_next_element = fsa->next_free;
 	void *block_p = NULL;
- 
-	if(0 == fsa->element_count || NULL == fsa)
+ 	size_t next_free_offset = fsa->next_free;
+	if(NULL == fsa || 0 == next_free_offset)
 	{
 		return NULL;
 	}
- 	block_p = (sizeof(fsa_t) + fsa->next_free));
+	
+ 	block_p = ((sizeof(fsa_t) + fsa->next_free));
  	
 	fsa->element_count = fsa->element_count - 1;
 	return (void *)((char *)fsa + offset_next_element);
 }
-*/
 
 /*--------------------------------------------------------*/
 /* Status : 
@@ -98,7 +119,11 @@ void *FSAAlooc(fsa_t *fsa)
  */
 void FSAFree(void *block, fsa_t *fsa)
 {
- 
+	size_t next_free_block = fsa->next_free;
+	*((size_t *)block) = next_free_block;
+	/*using the variable to save the offset of the current freed block*/
+	next_free_block = ((size_t)block - (size_t)fsa + sizeof(fsa_t));
+	fsa->next_free = next_free_block;
 }
-
+ 
  
