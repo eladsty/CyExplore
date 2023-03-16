@@ -1,17 +1,14 @@
-#include <assert.h>
-#include <stdio.h>/*printf*/
+ #include <stdio.h>/*printf*/
 #include <stddef.h> /*size_t*/
-
-/* while(free)  check pointers arithmetic */
+ 
 int FindNum(int *num_arr, int n, size_t arr_size)
 {
-	size_t i = 0;
-	while(n != num_arr[i] && arr_size > 0)
+	while(n != *num_arr && arr_size > 0)
 	{
-		++i;
+		++num_arr;
 		--arr_size;
 	}
-	if(num_arr[i] == n)
+	if(*num_arr == n)
 	{
 		return 1;
 	}
