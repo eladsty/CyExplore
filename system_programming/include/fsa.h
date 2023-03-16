@@ -9,8 +9,8 @@ typedef struct fsa fsa_t;
  
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/* Status : Approved
+ * Reviewer : Shlomi  
  * Description : recieve the requested block size and number of blocks requires by user, 
  				 and outputs the number of consecutive memory blocks needed for this module.
 	
@@ -24,8 +24,8 @@ size_t FSASuggestSize(size_t block_size, size_t block_count);
 
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/* Status : Approved
+ * Reviewer : Shlomi
  * Description : recieves memory block, initiates free list and returns pointer to pool.
 	
  * Arguments : recieves a pointer to allocated memory by user, block size and the total 
@@ -39,8 +39,8 @@ fsa_t *FSAInit(void *memory_p, size_t memory_size, size_t block_size);
 
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/* Status : Approved
+ * Reviewer : Shlomi
  * Description : allocates one block to user.
 	
  * Arguments : fsa_pool pointer.
@@ -49,12 +49,12 @@ fsa_t *FSAInit(void *memory_p, size_t memory_size, size_t block_size);
  * Time Complexity - O(1).
  * Space Complexity - O(1).
  */
-void *FSAAlooc(fsa_t *fsa_pool);
+void *FSAAlloc(fsa_t *fsa_pool);
 
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/* Status : Approved
+ * Reviewer : Shlomi
  * Description : frees one block from user.
 	
  * Arguments : void pointer to block and pool pointer.
