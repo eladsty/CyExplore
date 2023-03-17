@@ -2,12 +2,13 @@
 
 #include "comparison_sorts.h"
 
-static void swap(int *n1, int *n2)
+static void SwapWTemp(int *n1, int *n2)
 {
-	*n1 ^= *n1 ^ *n2;
-	*n2 ^= *n1 ^ *n2;
-	*n1 ^= *n1 ^ *n2;
+	int temp = *n1;
+ 	*n1 = *n2;
+ 	*n2 = temp;
 }
+
 /*
 	status: 
 	description: sorts the given array.
@@ -15,6 +16,23 @@ static void swap(int *n1, int *n2)
 	Return:  
 
 */
+static void SwapWBitwise(int *n1, int *n2)
+{
+	if(*n1 == *n2)
+	{
+		return;
+	}
+	*n1 ^= *n1 ^ *n2;
+	*n2 ^= *n1 ^ *n2;
+	*n1 ^= *n1 ^ *n2;
+}
+static void SwapWArit(int *n1, int *n2)
+{
+	*n1 = *n1 + *n2;
+	*n2 = *n1 - *n2;
+	*n1 = *n1 - *n2;
+}
+
 int BubbleSort(int *array, size_t len)
 {
 	size_t i = 0, j = 0;
@@ -22,15 +40,14 @@ int BubbleSort(int *array, size_t len)
 	{
 		for(j=0; j<len-1-i; ++j)
 		{
-			if(array[j+1] < array[j])
+			if(array[j] > array[j+1])
 			{
-			 swap(&array[j], &array[j+1]);
+			 	SwapWTemp(&array[j],&array[j+1]);
 			}
 		}
 	}
 	return 0;
 }
-
 
 /*
 	status: 
@@ -56,7 +73,7 @@ int SelectionSort(int *array, size_t len)
 		}
 		if(array[i_curr_small] != array[i])
 		{
-			swap(&array[i_curr_small],&array[i]);
+			SwapWTemp(&array[i_curr_small],&array[i]);
 		}
  
 	}
@@ -79,7 +96,7 @@ int InsertionSort(int *array, size_t len)
     	j = i;
     	while(j > 0 && array[j-1] > array[j])
     	{
-			swap(&array[j],&array[j-1]);
+			SwapWTemp(&array[j],&array[j-1]);
 			--j;
     	}
     }
