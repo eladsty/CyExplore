@@ -29,8 +29,8 @@ struct fsa
 
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/* Status : Approved
+ * Reviewer : Hen 
  * Description : recieves memory block, initiates free list and returns pointer to pool.	
  * Arguments : recieves a pointer to allocated memory by user, block size and the total amount of allocated memory in bytes.
  * Return : pointer to pool.
@@ -56,8 +56,8 @@ fsa_t *FSAInit(void *memory_pool, size_t memory_size, size_t block_size)
  
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/*  Status : Approved
+ * Reviewer : Hen
  * Description : allocates one block to user.
  * Arguments : fsa_pool pointer.
  * Return : void pointer to block start. NULL if pool is empty.
@@ -79,8 +79,8 @@ void *FSAAlloc(fsa_t *fsa)
 }
 
 /*--------------------------------------------------------*/
-/* Status : 
- * Reviewer : 
+/* Status : Approved
+ * Reviewer : Hen
  * Description : frees one block from user.
 	
  * Arguments : void pointer to block and pool pointer.
@@ -97,7 +97,17 @@ void FSAFree(void *block, fsa_t *fsa)
 }
  
  
- 
+ /*--------------------------------------------------------*/
+/* Status : Approved
+ * Reviewer : Hen
+ * Description : frees one block from user.
+	
+ * Arguments : void pointer to block and pool pointer.
+	
+ * Return : void.
+ * Time Complexity - O(1).
+ * Space Complexity - O(1).
+ */
 size_t FSACountFree(const fsa_t *fsa_pool)
 {
 	size_t cnt = 0;

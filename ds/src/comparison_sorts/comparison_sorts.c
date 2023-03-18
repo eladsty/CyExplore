@@ -1,7 +1,13 @@
 #include <stddef.h>
 
 #include "comparison_sorts.h"
+/*
+	status: APPROVED
+	description: sorts the given array.
+	Reviewer: Hen 
+	Return: 0
 
+*/
 static void SwapWTemp(int *n1, int *n2)
 {
 	int temp = *n1;
@@ -9,26 +15,19 @@ static void SwapWTemp(int *n1, int *n2)
  	*n2 = temp;
 }
 
-/*
-	status: 
-	description: sorts the given array.
-	Reviewer:  
-	Return:  
 
-*/
 static void SwapWBitwise(int *n1, int *n2)
 {
-	if(*n1 == *n2)
+	if(*n1 != *n2)
 	{
-		return;
+		*n1 ^= *n2;
+		*n2 ^= *n1;
+		*n1 ^= *n2; 
 	}
-	*n1 = *n1 ^ *n2;
-	*n2 = *n2 ^ *n1;
-	*n1 = *n1 ^ *n2;
 }
 static void SwapWArit(int *n1, int *n2)
 {
-	*n1 = *n1 + *n2;
+	*n1 += *n2;
 	*n2 = *n1 - *n2;
 	*n1 = *n1 - *n2;
 }
@@ -50,10 +49,10 @@ int BubbleSort(int *array, size_t len)
 }
 
 /*
-	status: 
+	status: READY
 	description: sorts the given array.
-	Reviewer:  
-	Return:  
+	Reviewer:  heb
+	Return: 0  
 
 */
 int SelectionSort(int *array, size_t len)
