@@ -14,6 +14,10 @@ int main(void)
 	void *block1 = NULL, *block2 = NULL, *block3 = NULL, *block4 = NULL, *block5 = NULL, *block6 = NULL;
 	fsa_t *fsa = NULL;
 	
+	 
+	
+	
+	
 	if (NULL == memory)
 	{
 		return 1;
@@ -40,6 +44,7 @@ int main(void)
 	FSAFree(block1, fsa);
 	FSAFree(block2, fsa);
 	FSAFree(block3, fsa);
+	printf("there are %ld free blocks of memory available\n", FSACountFree(fsa)); 
 	FSAFree(block4, fsa);
 	FSAFree(block5, fsa);
 	
