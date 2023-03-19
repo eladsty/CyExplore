@@ -40,7 +40,17 @@ int FibonacciRecursively(int element_index)
 		
 }
 
+
 Node *FlipList(Node *node)
 {
-	
+	Node* node_rev = NULL;
+
+	if(NULL == node->next)
+	{
+		return node;
+	} 
+ 	node_rev = FlipList(node->next);
+	node->next->next = node;
+	node->next = NULL;
+	return node_rev;
 }
