@@ -8,7 +8,7 @@
 
  
  /* status: 
-reviewer: 
+reviewer: Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -33,7 +33,7 @@ int FibonacciIteratively(int element_index)
 	return n3;
 }
 /* status: 
-reviewer: 
+reviewer: Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -54,26 +54,24 @@ int FibonacciRecursively(int element_index)
 		
 }
 /* status: 
-reviewer: Ran 
+reviewer: Ran klein
 description: checks if stack is empty
 return : int boolean
 */
  Node *FlipList(Node *node)
 { 
-	Node *new_next = NULL;
-
 	if(NULL == node->next || NULL == node)
 	{
 		printf("this is the last node:  %p \n",node);
 		return node;
 	}
-	new_next = FlipList(node->next);
+	FlipList(node->next);
 	node->next->next = node;
 	node->next = NULL;
 }
 
 /* status: 
-reviewer: 
+reviewer:  Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -86,7 +84,7 @@ size_t StrLenRecursive(const char *str)
 	return (1 + StrLenRecursive(str+1));
 }
 /* status: 
-reviewer: 
+reviewer:  Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -101,7 +99,7 @@ int  StrCmpRecursive(char *str1, char *str2)
 }
 
 /* status: 
-reviewer: 
+reviewer:  Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -120,7 +118,7 @@ char *StrCpyRecursive(char *dest, const char *src)
  }
 
 /* status: 
-reviewer: 
+reviewer:  Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -140,7 +138,7 @@ return : int boolean
  }
 
 /* status: 
-reviewer: 
+reviewer:  Ran klein
 description: checks if stack is empty
 return : int boolean
 */
@@ -162,7 +160,11 @@ char *StrStrRecursive(const char *haystack, const char *needle)
 	return StrStrRecursive(++haystack, needle);
 
 }
-
+/* status: 
+reviewer:  Ran klein
+description: checks if stack is empty
+return : int boolean
+*/
 
 void *InsertSorted(struct stack *stack, void *item)
 {
@@ -181,7 +183,11 @@ void *InsertSorted(struct stack *stack, void *item)
 			*(int *)StackPeek(stack) = temp_head;
 	}
 }
-
+/* status: 
+reviewer:  Ran klein
+description: checks if stack is empty
+return : int boolean
+*/
 void SortStack(stack_t *stack)
 {
 	if(!StackIsEmpty(stack))
