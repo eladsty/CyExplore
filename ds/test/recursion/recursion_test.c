@@ -1,9 +1,7 @@
-#include <stddef.h> /*size_t*/
-#include <stdlib.h>/*malloc*/
-#include <string.h>/*memcpy*/
-#include <stdio.h>/*printf*/
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "stack.h"
+#include "recursion.h"
 
 struct stack 
 {
@@ -154,7 +152,85 @@ size_t StackCapacity(stack_t *stack)
 {
 	return stack->capacity;
 }
+void PrintStack(stack_t *stack)
+{
+        size_t i = 0;
+        void *curr_data = NULL;
+        void *arr[10] = {NULL};
+        while (!StackIsEmpty(stack))
+        {
+                curr_data = StackPeek(stack);
+                printf("%d --> ", *((int *)curr_data));
+                StackPop(stack);
+                arr[i] = curr_data;
+                ++i;
+        }
+        while (i)
+        {
+                StackPush(stack, arr[i - 1]);
+                --i;
+        }
+        printf(" END OF STACK\n");
+}
+
+  
+int main()
+{
+ 	Node *n1 = (Node *)malloc(sizeof(Node));
+ 	Node *n2 = (Node *)malloc(sizeof(Node));
+ 	Node *n3 = (Node *)malloc(sizeof(Node));
+	char dest[] = {"helo"};
+    char needle[] = "lo";
+	char copy[40] = "" ;
+	char copy2[40] = "hello " ;
+	char source[] = "elad" ;
+	char source2[] = "elad" ;
+		int i = 0;
+
+	int arr[] = {11,33,-4,5,77,26,14,51,87,123};
+
+	stack_t *num_stack = NULL;
+	num_stack = StackCreate(10 ,sizeof(int)); 
+	for(i = 0; i<7; ++i)
+	{
+		printf("for %d, iterative fibonannci : %d\n",i,FibonacciIteratively(i));
+		printf("for %d, recursive fibonannci: %d\n",i,FibonacciRecursively(i));
+	}
+	
+	n1->next = n2;
+	n2->next = n3;
+	n3->next = NULL;
+
+	printf("should be null %p,\n, this: %p should be the same as: %p \n",n3->next, n1->next, n2);
+	FlipList(n1); 
+	printf("should be null %p,\n, this: %p should be the same as: %p \n",n1->next, n3->next ,  n2);
 
 
+	for(i=0; i<7;++i)
+	{
+		StackPush(num_stack, &arr[i]);
+	}
+	SortStack(num_stack);
+	PrintStack(num_stack);
+	
+ 
 
+ 	 printf("size of string is 5: %ld\n", StrLenRecursive("hello"));  
+ 	 printf("compare 2 strings should be 0: %d\n", StrCmpRecursive("hello","hello"));  
+ 	 printf("compare 2 strings should be non 0: %d\n", StrCmpRecursive("hello4","hello"));  
+ 	 printf("Should print Recursion: %s\n", StrCpyRecursive(copy,source));  
+  	 printf("StrCat(source is Recursion): %s\n",  StrCatRecursive(copy2,source2));  
+ 	 printf("strstr %s \n", StrStrRecursive(dest, needle)); 
 
+	 free(num_stack); 
+	 num_stack = NULL; 
+
+	free(n1);
+	free(n2);
+	free(n3);
+ 	n1 = NULL;
+	n2 = NULL;
+	n3 = NULL;
+	
+	return 0;
+}	

@@ -1,12 +1,11 @@
- 
-#	gd / gc infinity flags
+ #	gd / gc infinity flags
 DEBUG = -ansi -pedantic-errors -Wall -Wextra -g
 RELEASE = -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -O3
 
 CFLAGS = $(DEBUG) -I$(INCDIR)
 CPPFLAGS = 
 
-OBJS = recursion.o recursion_test.o
+OBJS = recursion.o  recursion_test.o
 
 
 TARGET = recursion.out
@@ -20,12 +19,12 @@ TESDIR := $(OBJDIR)/test/recursion
 .PHONY: clean all
 
 $(TARGET): $(OBJS) 
-	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/recursion.h
+	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/recursion.h -L$(INCDIR)/stack.h
  
-recursion_test.o: $(TESDIR)/recursion_test.c $(INCDIR)/recursion.h
+recursion_test.o: $(TESDIR)/recursion_test.c $(INCDIR)/recursion.h $(INCDIR)/stack.h 
 	cc $(CFLAGS) -c $< -o $@ 
 
-recursion.o: $(SRCDIR)/recursion.c $(INCDIR)/recursion.h
+recursion.o: $(SRCDIR)/recursion.c $(INCDIR)/recursion.h  $(INCDIR)/stack.h 
 	cc $(CFLAGS) -c $< -o $@ 
 
 
