@@ -40,12 +40,12 @@ vsa_t *VSAInit(void *memory_p, size_t memory_size)
 {
 	vsa_t *new_vsa = (vsa_t *)((char *)ALIGNTOWORD((size_t)memory_p));
 	size_t aligned_mem = MEMSIZEALIGN(memory_size);
-	if(NULL == memory_p && aligned_mem >= 24)
+	
+	if(NULL == memory_p && aligned_mem <= 24)
 	{	
 		printf("invalid memory address or insufficient memory size.");
-		return;
+		return; /*should exit*/
 	}
-
 	aligned_mem -= (sizeof(vsa_t) + sizeof(vsa_t));
 	/*the block is now free to use*/
 	new_vsa->block_info = -1 * aligned_mem;
@@ -57,6 +57,18 @@ vsa_t *VSAInit(void *memory_p, size_t memory_size)
 
 void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
 {
+	size_t aligned_mem = MEMSIZEALIGN(memory_size);
+	
+	if(NULL == vsa_pool && aligned_mem <= sizeof(vsa_t))
+	{	
+		printf("invalid memory address or insufficient memory size.");
+		return; /*should exit*/
+	}
 
+	while()
+	{
 
+	}
+
+	return NULL;
 }
