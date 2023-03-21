@@ -108,6 +108,7 @@ void FSAFree(void *block, fsa_t *fsa)
  * Time Complexity - O(1).
  * Space Complexity - O(1).
  */
+ /*iterate through the pool, starting from the next free*/
 size_t FSACountFree(const fsa_t *fsa_pool)
 {
 	size_t cnt = 0;

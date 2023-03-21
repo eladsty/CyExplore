@@ -179,6 +179,8 @@ int main()
  	Node *n1 = (Node *)malloc(sizeof(Node));
  	Node *n2 = (Node *)malloc(sizeof(Node));
  	Node *n3 = (Node *)malloc(sizeof(Node));
+	Node *n4 = (Node *)malloc(sizeof(Node));
+
 	char dest[] = {"helo"};
     char needle[] = "lo";
 	char copy[40] = "" ;
@@ -199,11 +201,14 @@ int main()
 	
 	n1->next = n2;
 	n2->next = n3;
-	n3->next = NULL;
-
-	printf("should be null %p,\n, this: %p should be the same as: %p \n",n3->next, n1->next, n2);
+	n3->next = n4;
+	n4->next = NULL;
+ 	printf("should be null %p,\n, this: %p should be the same as: %p \n",n3->next, n1->next, n2);
 	FlipList(n1); 
 	printf("should be null %p,\n, this: %p should be the same as: %p \n",n1->next, n3->next ,  n2);
+
+	printf("*******\nshould be null %p,\n, this: %p should be the same as: %p \n",n1->next, n4->next ,  n3);
+	printf("**ererere*\nshould be null %p,\n, this: %p should be the same as: %p \n",n1->next, n3->next ,  n2);
 
 
 	for(i=0; i<7;++i)
@@ -228,6 +233,8 @@ int main()
 	free(n1);
 	free(n2);
 	free(n3);
+	free(n4);
+ 	n4 = NULL;
  	n1 = NULL;
 	n2 = NULL;
 	n3 = NULL;

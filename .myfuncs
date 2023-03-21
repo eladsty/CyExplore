@@ -1,9 +1,22 @@
-#
-#gcc compilation aliases: c89, c99, debug mode, release mode
-alias gc='gcc -ansi -pedantic-errors -Wall -Wextra -g'
-alias gc='gcc -anso -pedantic-errors -Wall -Wextra -DNDEBUG -03'
+# custom aliases
+#gcc compilation aliases: c89, c99, debug mode, release mode'
+alias gd='gcc -ansi -pedantic-errors -Wall -Wextra -g'
+alias gc='gcc -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -o3'
 alias gd9='gcc -std=c99 -pedantic-errors -Wall -Wextra -g'
-alias gd9='gcc -std=c99 -pedantic-errors -Wall -Wextra -DNDEBUG -03'
+alias gc9='gcc -std=c99 -pedantic-errors -Wall -Wextra -DNDEBUG -o3'
 #
+#Valgrind alias
+alias vlg='valgrind --leak-check=yes --track-origins=yes'
+alias gdbu='gdb -tui'
+alias gdg='gd -g main.c -o main.out'
+alias crli='coredumpctl list'
+#
+#myalias for buildprocess
+
+alias gco='gcc -c'
+
+export PATH=$PATH:./
+alias nd="python3 ~/elad.shem-tov/mkfiles"
+
 #Valgrind alias
 alias vlg ='valgrind --leak-check=yes --track-origins=yes'

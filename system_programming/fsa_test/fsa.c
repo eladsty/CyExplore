@@ -98,64 +98,7 @@ void FSAFree(void *block, fsa_t *fsa)
 
 int main(void)
 {
- 	
-	size_t block_size = BSIZE, block_count = AMOUNT, 
-			memory_size = 0 ,i = 0 , count = 0;
-	void *memory_p = NULL;
-	char *blocks[AMOUNT];
-	char strings[8][40] = {"123123123", "234234234", "345345345","456456456", 
-					"567567567", "zxczxczc", "asdasdasd", "qweqweqwe"};
-	
-	char *action = "  BOOM!!";
-	
-	fsa_t *flist = NULL;
-	memory_size = FSASuggestSize(block_size, block_count);
-	
-	memory_p = malloc(memory_size);
-	if (NULL == memory_p)
-	{
-		printf("malloc failed\n");
-		return 1;
-	}
-	
-	flist = FSAInit(memory_p, memory_size, block_size);
-	
-	printf("user block count is %ld\npool block count is %ld\n", 
-				block_count, FSACountFree(flist));
-	
-	count = FSACountFree(flist);			
-	for (i = 0; i < count; ++i)
-	{
-		blocks[i] = (char *)FSAAlloc(flist);
-		memcpy(blocks[i], strings[i], BSIZE);
-	}	
-	
-	
-	printf("\n\n");
-	for (i = 0; i < block_count; ++i)
-	{
-		printf("%s\n", blocks[i]);
-	}
-	
-	
-	printf("\n\nuser block count after full allocation is: %ld\n", FSACountFree(flist));	
-	
-	FSAFree(blocks[3], flist);
-	FSAFree(blocks[5], flist);
-	printf("\n\nuser block count after 2 free is %ld\n", FSACountFree(flist));	
-	blocks[3] = (char *)FSAAlloc(flist);
-	strcpy(blocks[3], action);
-	blocks[5] = (char *)FSAAlloc(flist);
-	strcpy(blocks[5], action);
 
-	printf("\n\nboth freed blocks were allocated to --> %s \n", action);	
-	printf("\n\nuser block count after full allocation is: %ld\n\n", FSACountFree(flist));	
-	for (i = 0; i < block_count; ++i)
-	{
-		printf("%s\n", blocks[i]);
-	}
-	
-	
 	free(memory_p);
 
 	return 0;
