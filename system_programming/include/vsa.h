@@ -34,7 +34,7 @@ vsa_t *VSAInit(void *memory_p, size_t memory_size);
  * Arguments : vsa_pool - pointer to the pool
  * 			   block_size - size of block to allocate, in bytes.
  * Return : void pointer to block start.
- * 			If no space available - undefined behavior.
+ * 			If no space available - returns NULL.
  * Time Complexity - O(n).
  * Space Complexity - O(1).
  */
