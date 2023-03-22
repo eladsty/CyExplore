@@ -5,6 +5,7 @@
 #define ALIGNTOWORD(num)((0 == num % WORDSIZE) ? num : ((num >> 3) << 3) + WORDSIZE)
 #define MEMSIZEALIGN(mem_size)(0 == mem_size % WORDSIZE ? mem_size : mem_size - (mem_size % WORDSIZE))
 #define ENDOFMEM -97654321
+#define ABS(n)(n < 0 ? n * -1: n)
  /*
  ONOFFMSB  turn on/off the leftmost bit (which represent if a block is occupied).
  Due to leftmost bit being used for this purpose, the largest number of bytes we can use is 2^31
@@ -51,8 +52,7 @@ vsa_t *VSAInit(void *memory_p, size_t memory_size)
 }
 /*
 	send it empty block and get total size of defraged spaced
-	if BlockInfor returns negative, that means the block is free
-*/
+	if BlockInfor returns negative, that means	 the block is free*/
 static size_t Defrag(vsa_t *block)
 {
 	size_t total_size = 0;
@@ -60,11 +60,9 @@ static size_t Defrag(vsa_t *block)
 	iter = (vsa_t *)block;
 	while(iter->block_info < 0 && iter->block_info != ENDOFMEM)
 	{
-		total_size += BlockInfo(iter) * -1;
-		iter = (vsa_t *)(char *)block + total_size;
+		total_size += (iter->block_info * -1);
+ 		iter = (vsa_t *)((char *)block + total_size);
 	}
-	
-	block->block_info = total_size * -1;
 	return total_size;
 }
 
@@ -75,7 +73,7 @@ void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
 	long aligned_block_size = ALIGNTOWORD(block_size) + WORDSIZE;
 	iter = vsa_pool;
 
-	while(BlockInfo(iter) != ENDOFMEM)
+	while(iter->block_info != ENDOFMEM)
 	{
 		available_size = Defrag(iter);
 		if(BlockInfo(iter) < 0 && available_size >= aligned_block_size)
@@ -102,16 +100,14 @@ void VSAFree(void *block)
 size_t VSALargestBlockAvailable(const vsa_t *vsa_pool)
 {
  	vsa_t *iter = (vsa_t *)vsa_pool;
-	long temp;
-	long largest_size = 0;
-	while(0 > BlockInfo(iter) && BlockInfo(iter) != ENDOFMEM)
+	size_t largest_size = 0;
+	while(iter->block_info != ENDOFMEM)
 	{
-		temp = Defrag(iter);
-		if(temp > largest_size)
+		if(0 > iter->block_info && Defrag(iter) > largest_size)
 		{
-			largest_size = temp;
+			largest_size =  Defrag(iter);
 		}
-		iter = (vsa_t *)(char *)iter + iter->block_info;
+		iter = (vsa_t *)((char *)iter + ABS(iter->block_info));
  	}
 	return largest_size;
 }
