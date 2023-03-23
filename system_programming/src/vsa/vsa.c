@@ -2,8 +2,8 @@
 #include <stdlib.h> /* abs  */
 #include <stdio.h> /* printf for debug*/
 #include "../../include/vsa.h"
-
-
+ 
+ 
 #define VSASIZE sizeof(vsa_t)
 #define WORDSIZE sizeof(size_t)
 #define DEADBEEF (3735928559)
@@ -16,7 +16,10 @@
 
 
 #ifndef NDEBUG
+
+
 #include <stdio.h> /* printf */
+
 #define IDENTIFIER (0xabcde)
 #define SET_IDENTIFIER(pointer) { \
             (pointer)->identifier = IDENTIFIER; \

@@ -3,14 +3,12 @@
 DEBUG = -ansi -pedantic-errors -Wall -Wextra -g
 RELEASE = -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -O3
 
-CFLAGS = $(DEBUG) -I$(INCDIR)
+CFLAGS =  -I$(INCDIR)
 CPPFLAGS = 
 
 OBJS = vsa.o vsa_test.o
 
-
 TARGET = vsa.out
-
 
 OBJDIR := /home/el/elad.shem-tov/system_programming
 SRCDIR := $(OBJDIR)/src/vsa
@@ -21,12 +19,12 @@ TESDIR := $(OBJDIR)/test/vsa
 
 $(TARGET): $(OBJS) 
 	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/vsa.h
- 
+	
 vsa_test.o: $(TESDIR)/vsa_test.c $(INCDIR)/vsa.h
-	cc $(CFLAGS) -c $< -o $@ 
+	cc  -c $< -o $@ 
 
 vsa.o: $(SRCDIR)/vsa.c $(INCDIR)/vsa.h
-	cc $(CFLAGS) -c $< -o $@ 
+	cc  -c $< -o $@ 
 
 
 libvsa.a: vsa.o $(INCDIR)/vsa.h
@@ -40,7 +38,7 @@ clean:
 .PHONY : cleanll
 cleanll:
 	rm -f $(OBJS) $(TARGET) libvsa.a
-	
+
 debug: $(OBJS)
 	gcc $(DEBUG) $(OBJS) -o $(TARGET)
 		
