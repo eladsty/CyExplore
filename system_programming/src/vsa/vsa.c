@@ -30,7 +30,7 @@ vsa_t *VSAInit(void *memory_p, size_t memory_size)
 {
 	vsa_t *end = NULL, *new_pool = (vsa_t *)ALIGNED_BLOCK((size_t)memory_p);
 	
-	#ifndef DEDEBUG   /* if there is no definition of DEDEBUG flag, execute the code below. */
+	#ifndef DEBUG   /* if there is no definition of DEBUG flag, execute the code below. */
 	if (!memory_p)
 	{
 		printf("VSAInit --> recieved NULL pointer in file : %s\n", __FILE__); /*__FILE__ is a macro the tell us what file its in */
@@ -89,7 +89,7 @@ void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
 	vsa_t *next = NULL;
 	long int available = vsa_pool->block_size;
     
-    #ifndef DEDEBUG  /* if there is no definition of DEDEBUG flag, execute the code below. */
+    #ifndef DEBUG  /* if there is no definition of DEDEBUG flag, execute the code below. */
 	if (!vsa_pool)
 	{
 		printf("VSAAlloc --> recieved NULL pointer in file : %s\n", __FILE__); /*__FILE__ is a macro the tell us what file its in */
@@ -150,7 +150,7 @@ void VSAFree(void *block)
 {
 	vsa_t *block_to_free = (vsa_t *)block;
 	
-	#ifndef DEDEBUG   /* if there is no definition of DEDEBUG flag, execute the code below. */
+	#ifndef DEBUG   /* if there is no definition of DEBUG flag, execute the code below. */
 	if (!block)
 	{
 		printf("VSAFree --> recieved NULL pointer in file : %s\n", __FILE__);   /*__FILE__ is a macro the tell us what file its in */
@@ -179,7 +179,7 @@ size_t VSALargestBlockAvailable(const vsa_t *vsa_pool)
 	long largest = 0;
 	vsa_t *block = (vsa_t *)vsa_pool;
 	
-	#ifndef DEDEBUG  /* if there is no definition of DEDEBUG flag, execute the code below. */
+	#ifndef DEBUG  /* if there is no definition of DEBUG flag, execute the code below. */
 	if (!vsa_pool)
 	{
 		printf("VSALargestBlockAvailable --> recieved NULL pointer in file : %s\n", __FILE__); 
