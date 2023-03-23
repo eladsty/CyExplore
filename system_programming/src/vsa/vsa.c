@@ -1,6 +1,6 @@
 #include <stddef.h> /* Used for size_t type */
 #include <stdlib.h> /* abs  */
-
+#include <stdio.h> /* printf for debug*/
 #include "../../include/vsa.h"
 
 
@@ -13,6 +13,44 @@
 
 #define ALIGNED_BLOCK(b) (((b) % WORDSIZE) ?\
 	WORDSIZE - (b) % WORDSIZE + (b) : (b))
+
+
+#ifndef NDEBUG
+	#define BLOCKID (0xdeb49)
+	#define SETDEBUG(block) \
+		{ \
+			(block)->debug = BLOCKID; \
+		}
+ 		#define FREEDEBUG(free_p) \
+		{ \
+			if (free_p->block_size > 0) \
+			{ \
+				printf("VSAFree --> block was already freed. : %s\n", __FILE__); \
+				exit(1); \
+			} \
+			if (free_p->debug != BLOCKID) \
+			{ \
+				printf("VSAFree --> This block was never allocated : %s\n", __FILE__); \
+				exit(1); \
+			} \
+		}
+
+#endif
+
+
+
+struct vsa
+{
+	signed long block_size;
+	#ifndef NDEBUG
+    long debug;
+	#endif
+};
+
+
+
+ 
+
 
 
 /*--------------------------------------------------------*/
@@ -99,6 +137,7 @@ void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
     {
     	next = (vsa_t *)((char *)vsa_pool + block_size);
     	next->block_size = (available - block_size);
+		SETDEBUG(available);
     }
     
     vsa_pool->block_size = ((long)block_size * CHANGE_STATUS);
@@ -122,12 +161,12 @@ void VSAFree(void *block)
 {
 	vsa_t *block_to_free = (vsa_t *)block;
 
-	block_to_free -= 1;      /* -1 will move it 8 bytse backwords to block's managment struct.*/	
+	block_to_free -= 1;      /* -1 will move it 8 bytse backwords to block's managment struct.*/
+	FREEDEBUG(free);	
 	block_to_free->block_size *= -1	;
+	return;
 }
 		
-
-
 
 /*--------------------------------------------------------*/
 /* Status : approved
