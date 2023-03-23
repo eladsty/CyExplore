@@ -8,9 +8,9 @@
 
  
  /* status: 
-reviewer: Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer: 
+description:  
+return :  
 */
 int FibonacciIteratively(int element_index)
 {
@@ -33,9 +33,9 @@ int FibonacciIteratively(int element_index)
 	return n3;
 }
 /* status: 
-reviewer: Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:  
+description: 
+return :  
 */
 int FibonacciRecursively(int element_index)
 {
@@ -54,9 +54,9 @@ int FibonacciRecursively(int element_index)
 		
 }
 /* status: 
-reviewer: Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:  
+description:  
+return :  
 */
  Node *FlipList(Node *node)
 { 
@@ -71,9 +71,9 @@ return : int boolean
 }
 
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:   
+description:   
+return :  
 */
 size_t StrLenRecursive(const char *str)
 {
@@ -84,9 +84,9 @@ size_t StrLenRecursive(const char *str)
 	return (1 + StrLenRecursive(str+1));
 }
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:   
+description:  
+return : 
 */
 int  StrCmpRecursive(char *str1, char *str2)
 {
@@ -99,9 +99,9 @@ int  StrCmpRecursive(char *str1, char *str2)
 }
 
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:   
+description:  
+return : 
 */
 char *StrCpyRecursive(char *dest, const char *src)
 {
@@ -118,9 +118,9 @@ char *StrCpyRecursive(char *dest, const char *src)
  }
 
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:  
+description: 
+return :  
 */
  char *StrCatRecursive(char *destination, const char *source)
  {
@@ -138,9 +138,9 @@ return : int boolean
  }
 
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:   
+description:  
+return :  
 */
 char *StrStrRecursive(const char *haystack, const char *needle)
 {
@@ -161,9 +161,9 @@ char *StrStrRecursive(const char *haystack, const char *needle)
 
 }
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:   
+description: 
+return : 
 */
 
 void *InsertSorted(struct stack *stack, void *item)
@@ -184,9 +184,9 @@ void *InsertSorted(struct stack *stack, void *item)
 	}
 }
 /* status: 
-reviewer:  Ran klein
-description: checks if stack is empty
-return : int boolean
+reviewer:   
+description: 
+return : 
 */
 void SortStack(stack_t *stack)
 {

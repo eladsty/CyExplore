@@ -1,6 +1,3 @@
-#include <string.h> /*strlen*/
-#include <stdio.h>
- 
 int StrCmpInRotation(char *str1, char *str2, int n, int len)
 {
 	int i = 0;
@@ -12,7 +9,7 @@ int StrCmpInRotation(char *str1, char *str2, int n, int len)
 		 ++j;
 	}
 	
-	if('\0' == str1[i] && '\0' && strlen(str2) == len)
+	if('\0' == str1[i] && strlen(str2) == len)
 	{
 		return 1;
 	}
@@ -58,3 +55,4 @@ int main()
  		printf("should be 0: %d\n",IsRotation("abcdefg","bcdefgabcde"));
 	return 0;
 }
+

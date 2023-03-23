@@ -1,18 +1,27 @@
 #ifndef __VSA_H_CR4__ 
 #define __VSA_H_CR4__ 
 
-
+#include <stdio.h> /* Used for printing functions */
+#include <stdlib.h> /* Used for malloc and free functions */
 #include <stddef.h> /* Used for size_t type */
+#include <string.h> /* Used for string functions */
+
+/* Status : 
+ * Reviewer : 
+ * Description : 
+	
+ * Arguments : 
+	
+ * Return : 
+ */
+
 
 typedef struct vsa vsa_t;
- 
 
 /* block_size represent the size (in bytes) of the current block,
  * the most segnificant bit represent if the block is free,
  * 1 means free, 0 means allocated */
  
- 
-
 /*--------------------------------------------------------*/
 /* Status : 
  * Reviewer : 
@@ -34,7 +43,7 @@ vsa_t *VSAInit(void *memory_p, size_t memory_size);
  * Arguments : vsa_pool - pointer to the pool
  * 			   block_size - size of block to allocate, in bytes.
  * Return : void pointer to block start.
- * 			If no space available - returns NULL.
+ * 			If no space available - undefined behavior.
  * Time Complexity - O(n).
  * Space Complexity - O(1).
  */
@@ -65,6 +74,4 @@ void VSAFree(void *block);
 size_t VSALargestBlockAvailable(const vsa_t *vsa_pool);
 
 
-/*returns block_info section that is negative if block is occupied, contain the size of available space*/
-long BlockInfo(vsa_t *block);
 #endif /* __VSA_H_CR4__ */
