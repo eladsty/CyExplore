@@ -29,21 +29,6 @@
 vsa_t *VSAInit(void *memory_p, size_t memory_size)
 {
 	vsa_t *end = NULL, *new_pool = (vsa_t *)ALIGNED_BLOCK((size_t)memory_p);
-	
-	#ifndef DEBUG   /* if there is no definition of DEBUG flag, execute the code below. */
-	if (!memory_p)
-	{
-		printf("VSAInit --> recieved NULL pointer in file : %s\n", __FILE__); /*__FILE__ is a macro the tell us what file its in */
-		exit(1);
-	}
-	if (memory_size < (WORDSIZE + (2 * VSASIZE)))
-	{
-		printf("VSAInit --> Memory size is too small (less then %ld) in file : %s\n", 
-		(WORDSIZE + (2 * VSASIZE)), __FILE__);
-		exit(1);
-	}
-	#endif
-
 	memory_size = ALIGNEDOWN(memory_size);
 	
 	new_pool->block_size = ((long)memory_size - (VSASIZE * 2));
@@ -88,19 +73,6 @@ void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
 {
 	vsa_t *next = NULL;
 	long int available = vsa_pool->block_size;
-    
-    #ifndef DEBUG  /* if there is no definition of DEDEBUG flag, execute the code below. */
-	if (!vsa_pool)
-	{
-		printf("VSAAlloc --> recieved NULL pointer in file : %s\n", __FILE__); /*__FILE__ is a macro the tell us what file its in */
-		exit(1);
-	}
-	if (block_size < 1)
-	{
-		printf("VSAAlloc --> Memory size is too small in file : %s\n", __FILE__);
-		exit(1);
-	}
-    #endif
     
 	if (block_size > VSALargestBlockAvailable(vsa_pool))
 	{
@@ -149,14 +121,6 @@ void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
 void VSAFree(void *block)
 {
 	vsa_t *block_to_free = (vsa_t *)block;
-	
-	#ifndef DEBUG   /* if there is no definition of DEBUG flag, execute the code below. */
-	if (!block)
-	{
-		printf("VSAFree --> recieved NULL pointer in file : %s\n", __FILE__);   /*__FILE__ is a macro the tell us what file its in */
-		exit(1);
-	}
-	#endif
 
 	block_to_free -= 1;      /* -1 will move it 8 bytse backwords to block's managment struct.*/	
 	block_to_free->block_size *= -1	;
@@ -178,14 +142,6 @@ size_t VSALargestBlockAvailable(const vsa_t *vsa_pool)
 {
 	long largest = 0;
 	vsa_t *block = (vsa_t *)vsa_pool;
-	
-	#ifndef DEBUG  /* if there is no definition of DEBUG flag, execute the code below. */
-	if (!vsa_pool)
-	{
-		printf("VSALargestBlockAvailable --> recieved NULL pointer in file : %s\n", __FILE__); 
-		exit(1);
-	}
-	#endif
 
 	while (DEADBEEF != block->block_size)
 	{
