@@ -1,119 +1,200 @@
+#include <stddef.h> /* Used for size_t type */
+#include <stdlib.h> /* abs  */
 
-#include "vsa.h"
+#include "../../include/vsa.h"
 
-#define WORDSIZE sizeof(size_t)         
-#define ALIGNTOWORD(num)((0 == num % WORDSIZE) ? num : ((num >> 3) << 3) + WORDSIZE)
-#define MEMSIZEALIGN(mem_size)(0 == mem_size % WORDSIZE ? mem_size : mem_size - (mem_size % WORDSIZE))
-#define ENDOFMEM -97654321
-#define ABS(x) (((x) < 0) ? -(x) :(x))
- /*
- ONOFFMSB  turn on/off the leftmost bit (which represent if a block is occupied).
- Due to leftmost bit being used for this purpose, the largest number of bytes we can use is 2^31
+
+#define VSASIZE sizeof(vsa_t)
+#define WORDSIZE sizeof(size_t)
+#define DEADBEEF (3735928559)
+#define CHANGE_STATUS (-1)
+
+#define ALIGNEDOWN(b) (((b) >> (3)) << (3))
+
+#define ALIGNED_BLOCK(b) (((b) % WORDSIZE) ?\
+	WORDSIZE - (b) % WORDSIZE + (b) : (b))
+
+
+/*--------------------------------------------------------*/
+/* Status : approved.
+ * Reviewer : shlomi.
+ * Description : Recieves memory pool, initiate vsa struct,
+ *				 returns pointer to vsa struct. Minimum size is 24 bytes.
+ * Arguments : memory_p -  a pointer to allocated memory by user.
+ *			   memory_size - the total amount of allocated memory in bytes.
+ * Return : pointer to pool.
+ * Time Complexity - O(1).
+ * Space Complexity - O(1). 
  */
-
- /* 0xDECAF  represent end of memory*/
- 
-struct vsa
-{
-	long block_info;
-};
-
-
-
-/*
-struct vsa 
-{
-	size_t mem_size;
-	unsigned is_free: 1;
-};
-*/
-
-/*
- this function received vsa_t * and retunrs info_block (type long)
-if BlockInfor returns negative, that means the block is free
-
-*/
-long BlockInfo(vsa_t *block)
-{
-	return block->block_info; 
-}
-
 vsa_t *VSAInit(void *memory_p, size_t memory_size)
 {
-	vsa_t *new_vsa = (vsa_t *)((char *)ALIGNTOWORD((size_t)memory_p));
-	size_t aligned_mem = MEMSIZEALIGN(memory_size);
-	vsa_t *end_of_memory = NULL;
-	aligned_mem -= (sizeof(vsa_t));
-	/*the block is now free to use*/
-	new_vsa->block_info = -1 * aligned_mem;
-	/*the offset is now pointing to ENDOFMEM*/
-	end_of_memory = ((vsa_t *)((char *)new_vsa + new_vsa->block_info));
-	end_of_memory->block_info = ENDOFMEM;
-	return new_vsa;
-}
-/*
-returns pointer to vsa_t, after concatenating multiple adjacent empty blocks (if available)
-*/
-static vsa_t *Defrag(vsa_t *block)
-{
-	vsa_t *iter = (vsa_t *)block;
-	  
-	while(iter->block_info < 0 && iter->block_info != ENDOFMEM)
+	vsa_t *end = NULL, *new_pool = (vsa_t *)ALIGNED_BLOCK((size_t)memory_p);
+	
+	#ifndef DEDEBUG   /* if there is no definition of DEDEBUG flag, execute the code below. */
+	if (!memory_p)
 	{
- 		iter = (vsa_t *)((char *)block + ABS(iter->block_info));
-		if(iter->block_info < 0 && iter->block_info != ENDOFMEM)
+		printf("VSAInit --> recieved NULL pointer in file : %s\n", __FILE__); /*__FILE__ is a macro the tell us what file its in */
+		exit(1);
+	}
+	if (memory_size < (WORDSIZE + (2 * VSASIZE)))
+	{
+		printf("VSAInit --> Memory size is too small (less then %ld) in file : %s\n", 
+		(WORDSIZE + (2 * VSASIZE)), __FILE__);
+		exit(1);
+	}
+	#endif
+
+	memory_size = ALIGNEDOWN(memory_size);
+	
+	new_pool->block_size = ((long)memory_size - (VSASIZE * 2));
+	end = (vsa_t *)((char *)new_pool + new_pool->block_size);
+	end->block_size = DEADBEEF;
+	return new_pool;	
+}
+
+
+
+/* helper function */
+static vsa_t *Defrag(vsa_t *curr_block)
+{
+	vsa_t *temp = curr_block;
+	
+	while (DEADBEEF != temp->block_size && temp->block_size > 0)
+	{
+		temp = (vsa_t *)((char *)temp + temp->block_size);
+		if (temp->block_size > 0 && temp->block_size != DEADBEEF)
 		{
-			block->block_info -= iter->block_info;
+			curr_block->block_size += temp->block_size;
 		}
 	}
-	return block;
+	return curr_block;
 }
 
+
+
+
+/*--------------------------------------------------------*/
+/* Status : approved.
+ * Reviewer : shlomi.
+ * Description : Allocates a block to user the size of block_size.
+ * Arguments : vsa_pool - pointer to the pool
+ * 			   block_size - size of block to allocate, in bytes.
+ * Return : void pointer to block start.
+ * 			If no space available - undefined behavior.
+ * Time Complexity - O(n).
+ * Space Complexity - O(1).
+ */
 void *VSAAlloc(vsa_t *vsa_pool, size_t block_size)
 {
-	vsa_t *iter = NULL;
-	long available_size = vsa_pool->block_info; 
-	 /*added wordsize for block_info section*/
-	long aligned_block_size = ALIGNTOWORD(block_size) + WORDSIZE;
-
-	 /*iterate, until First Match or end of memory*/
-	while(available_size < aligned_block_size && iter->block_info != ENDOFMEM)
+	vsa_t *next = NULL;
+	long int available = vsa_pool->block_size;
+    
+    #ifndef DEDEBUG  /* if there is no definition of DEDEBUG flag, execute the code below. */
+	if (!vsa_pool)
 	{
-		vsa_pool = (vsa_t *)((char *)vsa_pool + ABS(iter->block_info));  
-		vsa_pool = Defrag(vsa_pool);  
-		available_size = vsa_pool->block_info;
+		printf("VSAAlloc --> recieved NULL pointer in file : %s\n", __FILE__); /*__FILE__ is a macro the tell us what file its in */
+		exit(1);
 	}
-
-	if(available_size > (long)block_size)
+	if (block_size < 1)
 	{
-		iter = (vsa_t *)((char *)vsa_pool + block_size);
-		iter->block_info = (available_size - block_size);
+		printf("VSAAlloc --> Memory size is too small in file : %s\n", __FILE__);
+		exit(1);
 	}
+    #endif
+    
+	if (block_size > VSALargestBlockAvailable(vsa_pool))
+	{
+		return NULL;
+	}
+    /* align block size + manegment unit */
+    
+    block_size = ALIGNED_BLOCK(block_size) + VSASIZE;
+    
+	/* will go through the pool until first match is foun - using defrag while running */
 	
-	vsa_pool->block_info = ((long)block_size * -1);
+    while (available < (long)block_size && vsa_pool->block_size != DEADBEEF)
+    {
+		vsa_pool = (vsa_t *)((char *)vsa_pool + labs(vsa_pool->block_size));  
+		/* labs presents the absolute number, that way we can move to the next block even if curr block is occupide and represented as minus */
+		
+		/* defrag next block (will return unchanged if occupied or next is occupied */
+        vsa_pool = Defrag(vsa_pool);
+        available = vsa_pool->block_size;
+    }
+    
+    if (available > (long int)block_size)
 
+    {
+    	next = (vsa_t *)((char *)vsa_pool + block_size);
+    	next->block_size = (available - block_size);
+    }
+    
+    vsa_pool->block_size = ((long)block_size * CHANGE_STATUS);
+
+	/* move the block 8 bytes foward so the user won't overrides our mangmant info */
     return (vsa_pool + 1);
 }
 
- 
 
+
+/*--------------------------------------------------------*/
+/* Status : aprroved.
+ * Reviewer : shlomi.
+ * Description : Frees one block from user.
+ * Arguments : block - void pointer to a block.
+ * Return : void.
+ * Time Complexity - O(1).
+ * Space Complexity - O(1).
+ */
 void VSAFree(void *block)
 {
-	*(long *)((char *)block - WORDSIZE) *= -1;
-}
+	vsa_t *block_to_free = (vsa_t *)block;
+	
+	#ifndef DEDEBUG   /* if there is no definition of DEDEBUG flag, execute the code below. */
+	if (!block)
+	{
+		printf("VSAFree --> recieved NULL pointer in file : %s\n", __FILE__);   /*__FILE__ is a macro the tell us what file its in */
+		exit(1);
+	}
+	#endif
 
+	block_to_free -= 1;      /* -1 will move it 8 bytse backwords to block's managment struct.*/	
+	block_to_free->block_size *= -1	;
+}
+		
+
+
+
+/*--------------------------------------------------------*/
+/* Status : approved
+ * Reviewer : shlomi.
+ * Description : provides information about free blocks.
+ * Arguments : vas_pool - pool pointer.
+ * Return : number of bytes in largest available block.
+ * Time Complexity - O(n).
+ * Space Complexity - O(1).
+ */
 size_t VSALargestBlockAvailable(const vsa_t *vsa_pool)
 {
- 	vsa_t *iter = (vsa_t *)vsa_pool;
-	long largest_size = 0;
- 	while(iter->block_info != ENDOFMEM)
+	long largest = 0;
+	vsa_t *block = (vsa_t *)vsa_pool;
+	
+	#ifndef DEDEBUG  /* if there is no definition of DEDEBUG flag, execute the code below. */
+	if (!vsa_pool)
 	{
-		iter = Defrag((vsa_t *)vsa_pool);
-		if(largest_size < ABS(iter->block_info))
+		printf("VSALargestBlockAvailable --> recieved NULL pointer in file : %s\n", __FILE__); 
+		exit(1);
+	}
+	#endif
+
+	while (DEADBEEF != block->block_size)
+	{
+	    block = Defrag(block);
+		if (block->block_size > largest)
 		{
-			largest_size = ABS(iter->block_info);
+			largest = block->block_size;
 		}
-		iter = (vsa_t *)((char *)iter + ABS(iter->block_info));
- 	}
-	return largest_size;
+		block = (vsa_t *)((char *)block + labs(block->block_size));
+	}
+	return (size_t)largest;	
 }
