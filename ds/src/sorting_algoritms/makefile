@@ -6,30 +6,30 @@ RELEASE = -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -O3
 CFLAGS = $(DEBUG) -I$(INCDIR)
 CPPFLAGS = 
 
-OBJS = vsa.o vsa_test.o
+OBJS = sorting.o sorting_test.o
 
 
-TARGET = vsa.out
+TARGET = sorting.out
 
 
-OBJDIR := /home/el/elad.shem-tov/system_programming
-SRCDIR := $(OBJDIR)/src/vsa
+OBJDIR := /home/el/elad.shem-tov/ds
+SRCDIR := $(OBJDIR)/src/sorting
 INCDIR := $(OBJDIR)/include
-TESDIR := $(OBJDIR)/test/vsa
+TESDIR := $(OBJDIR)/test/sorting
 
 .PHONY: clean all
 
 $(TARGET): $(OBJS) 
-	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/vsa.h
+	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/sorting.h
  
-vsa_test.o: $(TESDIR)/vsa_test.c $(INCDIR)/vsa.h
+sorting_test.o: $(TESDIR)/sorting_test.c $(INCDIR)/sorting.h
 	cc $(CFLAGS) -c $< -o $@ 
 
-vsa.o: $(SRCDIR)/vsa.c $(INCDIR)/vsa.h
+sorting.o: $(SRCDIR)/sorting.c $(INCDIR)/sorting.h
 	cc $(CFLAGS) -c $< -o $@ 
 
 
-libvsa.a: vsa.o $(INCDIR)/vsa.h
+libsorting.a: sorting.o $(INCDIR)/sorting.h
 	ar rcs $@ $^
 	rm -f $(OBJS)
 	
@@ -39,7 +39,7 @@ clean:
 	rm -f $(OBJS)
 .PHONY : cleanll
 cleanll:
-	rm -f $(OBJS) $(TARGET) libvsa.a
+	rm -f $(OBJS) $(TARGET) libsorting.a
 	
 debug: $(OBJS)
 	gcc $(DEBUG) $(OBJS) -o $(TARGET)
@@ -52,13 +52,13 @@ vlg:
 
 .PHONY : open
 open: 
-	gedit $(SRCDIR)/vsa.c &
-	gedit $(INCDIR)/vsa.h &
-	gedit $(TESDIR)/vsa_test.c & 
+	gedit $(SRCDIR)/sorting.c &
+	gedit $(INCDIR)/sorting.h &
+	gedit $(TESDIR)/sorting_test.c & 
 
 .PHONY : touch
 touch: 
-	touch vsa.o 
+	touch sorting.o 
 	touch main.o 
 	echo "touch to renew"
 

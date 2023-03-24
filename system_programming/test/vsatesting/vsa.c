@@ -15,7 +15,7 @@
 	WORDSIZE - (b) % WORDSIZE + (b) : (b))
 
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 
 
 #include <stdio.h> /* printf */
@@ -35,7 +35,7 @@
 		if (!IS_ALLOCATES(pointer)) \
 		{ \
 		printf("program: %s:%d: main: pointer was given that was previously freed.\n", __FILE__, __LINE__); \
-		exit(1); \
+				                    exit(1); \
 		} \
 	}
 #else
@@ -60,6 +60,8 @@ struct vsa
     #ifndef NDEBUG
     size_t identifier;
     #endif /* NDEBUG */
+
+ 
 };
 
 
