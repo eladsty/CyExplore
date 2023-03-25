@@ -1,4 +1,5 @@
 #include <stddef.h> /*size_t*/
+#include <stdlib.h>/* mallocls*/
 
 #include "sorting.h"
 
@@ -62,19 +63,20 @@ void Merger(int arr[], int start_i, int mid_i, int end_i)
 	unsigned i, j, k;
 	unsigned left_end = 0, right_end = 0;
 	/* create temp array*/
- 	int left_arr[left_end], right_arr[right_end];
+ 	int *left_arr = malloc(sizeof(int) * (1 + mid_i - start_i));
+	int *right_arr = malloc(sizeof(int) * (1 + end_i - mid_i));
 
 	left_end = mid_i - start_i + 1;
 	right_end = end_i - mid_i;
 	/* copy data to each part*/
 	for(i = 0; i < left_end; ++i)
 	{
-		left_arr[i] = arr[start_i + i];
+		*(left_arr + i) = *(arr + (start_i + i));
 	}
 	
 	for (j = 0; j < right_end; j++)
 	{
-		right_arr[j] = arr[mid_i + 1+ j];
+		*(right_arr + j) = *(arr + (mid_i + 1+ j));
 	}
 			
 	/* merge the temporary arrays */	
@@ -110,17 +112,19 @@ void Merger(int arr[], int start_i, int mid_i, int end_i)
 		j++;
 		k++;
 	}
+	free(left_arr);
+	free(right_arr);
 }
 
 int MergeSort(int *arr_to_sort, size_t num_elements)
 {
-	unsigned i_start = 0, i_end = 0, m = 0;
+	unsigned i_start = 0, i_end = 0, i_mid = 0;
 	i_end = num_elements-1;
 	i_mid = (i_end - i_start)/2;
 
 	if((i_end - i_start) <= 1)
 	{
-		return;
+		return i_end - i_start;
 	}
 
 	/* left side */

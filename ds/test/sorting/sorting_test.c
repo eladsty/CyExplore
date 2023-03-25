@@ -4,7 +4,7 @@
 #define ARRAYLEN(arr)(sizeof(arr) / sizeof(int))
 int main()
 {
-	int unsorted[] = { -11,11,5,666,100,-2626,33,0}; 
+	int unsorted[] = { 333,11,5,666,100,-26,-33,0}; 
  	int results2[] = { -11,11,5,666,100,2626,6267,8888}; 
  	int results1[] = {1,22,3,44,5,66,7,88};
  	int results[] = {11,2,33,4,55,6,77,8};
@@ -35,7 +35,8 @@ int main()
 	{
 		printf("unsorted before sorting: %d \n",unsorted[i] );
 	}
-	MergeSort(unsorted,0,7);
+
+	MergeSort(unsorted, 8);
 	
  	for(i = 0; i < 8; ++i)
 	{
@@ -44,7 +45,7 @@ int main()
 
 
 
-	
+
 	return 0;
 } 
   

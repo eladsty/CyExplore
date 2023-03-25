@@ -8,41 +8,41 @@ Return:  profit
 */
 /*worked but need further testing */
 
-int Bursa(int price[], int len, int profit_buy_sell_i[])
+int Bursa(int price[], int len, int profit_summary[])
 {
-	size_t i = 0, buy_tmp = 0;
-	int profit = 0, diff = 0;
-	
-	result[0] = result[1] = 0;
-	for (; i < size; i++)
+	 unsigned i = 0, buy_i = 0, sell_i = 1, max_profit, temp_profit = 0;
+	 
+	 while(sell_i < len)
 	{
-		diff = price[i] - price[buy_tmp];
-		
-		if (diff > profit)
-		{
-			result[0] = buy_tmp;
-			result[1] = i;
-			profit = diff;
-		}
-		
-		if (price[i] < price[result[0]])
-		{
-			buy_tmp = i;
-		}
+	 	if(price[buy_i] < price[sell_i])
+	 	{
+	 		temp_profit = price[buy_i] - price[sell_i];
+	 		max_profit = (max_profit > temp_profit ? max_profit : temp_profit);
+	 	}
+	 	else
+	 	{
+	 		buy_i = sell_i;
+	 		++sell_i;
+	 	}
 	}
-	return profit;
+	
+	profit_summary[0] = max_profit;
+	profit_summary[1] = buy_i;
+	profit_summary[2] = sell_i;
+	
+ 	return 0;
 }	
 		
 			
 int main(void)
 {
-	int profit_buy_sell_i[3] = {0};
+	int profit_summary[3] = {0};
 	int price[] = {6,12,3,5,1,4,9,2};
 	int len = 8;
  
 	 
-		Bursa(price, len, profit_buy_sell_i);
-		printf("best profit is: %d.\n buy here: %d, sell here: %d\n", profit_buy_sell_i[0],profit_buy_sell_i[1],profit_buy_sell_i[2]);
+		Bursa(price, len, profit_summary);
+		printf("best profit is: %d.\n buy here: %d, sell here: %d\n", profit_summary[0],profit_summary[1],profit_summary[2]);
 		
 	return 0;
 }
