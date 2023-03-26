@@ -3,66 +3,87 @@
 
 #include "sorting.h"
 
+
+
+
+
+
+
+/* Status : Approved
+ * Reviewer : Shlomi
+ * Description : conducts binary search of a sorted array recursivly.
+ * Arguments : array of int, its size and a value to find.
+ * Return : index of found value, -1 if did not find.
+ */
+
+
 int IterativeSearch(int n, int arr[], int len)
 {
-	int i = 0;
-	len = (len % 2 == 0 ? len : len + 1);
-	len /= 2;
-	i = len;
-
-	while (len)
+	int start = 0, end = len - 1, middle = len / 2;
+	while (start != end) 
 	{
-		if (arr[i] == n || arr[i - 1] == n)
+		if (arr[middle] == n)
 		{
-			return 1;
+			return arr[middle];
 		}
-		else if (n > arr[i])
+		else if (arr[middle] < n)
 		{
-			i += (len / 2);
+			start = middle + 1;
+			middle = (start + end) / 2;
 		}
-		else if (n < arr[i])
+		else if((arr[middle]) > n)
 		{
-			i -= (len / 2);
+			end = middle - 1;
+			middle = (start + end) / 2; 
 		}
-		len /= 2;
 	}
-	return 0;
+	return -1;
+
 }
 
  
 
-RecursiveSearch(int n, int arr[], int len)
+/* Status : Approved
+ * Reviewer : Shlomi
+ * Description : conducts binary search of a sorted array recursivly.
+ * Arguments : array of int, its size and a value to find.
+ * Return : index of found value, -1 if did not find.
+ */
+
+int RecursiveSearch(int n, int arr[], int start_i ,int end_i)
 {
-	int i = len/2;
-	if (n == arr[i])
+	int curr_i = (end_i + start_i) / 2;
+	if(end_i < start_i)
 	{
-		return 1;
+		return -1;
 	}
-	else if (len < 2)
+	else if(arr[curr_i] == n)
 	{
-		return (arr[i] == n || n == arr[i + 1] ? 1 : 0);
+		return curr_i;
+	}
+	else if(arr[curr_i] > n ) 
+
+	{
+		RecursiveSearch(n, arr ,start_i,(curr_i - 1));
+	}
+	else
+	{
+		RecursiveSearch(n, arr ,(curr_i + 1) ,end_i );
 	}
 
-	else if (arr[i] < n)
-	{
-		RecursiveSearch(n, (arr + i + 1), len /= 2);
-	}
-
-	else if (arr[i] > n)
-	{
-		RecursiveSearch(n, arr, len /= 2);
-	}
 }
 
  
-
+ 
+ 
+ 
 
 
 
 /* ex 3 - MergeSort
 description:  recieves pointer to start of array of integers and sorts the array .  
 status: impltst   
-reviewer:   
+reviewer: Shlomi
 args: pointer to start of array of integers + num of elements
 return: 0 at finish 
 notes:   

@@ -20,15 +20,15 @@ int main()
  	}
     for(i = 0; i < 8; ++i)
  	{
- 		printf("%d recursive: %d\n",results[i], RecursiveSearch( results[i],int_arr,ARRAYLEN(int_arr))); 
+ 		printf("%d recursive: %d\n",results[i], RecursiveSearch( results[i],int_arr,0, ARRAYLEN(int_arr) -1)); 
  	}
 
 
-
+ 
 
  for(i = 0; i < 8; ++i)
  	{
- 		printf("%d from result: %d\n",results[i], RecursiveSearch( results[i],int_arr,ARRAYLEN(int_arr))); 
+ 		printf("%d from result: %d\n",results[i], RecursiveSearch( results[i],int_arr,0, ARRAYLEN(int_arr) -1)); 
  	}
 	
 	printf(" before sorting\n");

@@ -103,25 +103,30 @@ int InsertionSort(int *array, size_t len)
 }
 
 
- /*
-	status: 
-	description: sorts the given array.
-	Reviewer:  
-	Return:  
+/* Status :
+ * Reviewer :
+ * Description : conducts binary search of a sorted array recursivly.
+ * Arguments : array of int, its size and a value to find.
+ * Return : index of found value, -1 if did not find.
+ */
 
-*/
+
 int IterativeSearch(int n, int arr[], int len)
 {
-	int i = 0;
+	int i = 0, result_i = -1;
 	len = (len % 2 == 0 ? len : len + 1);
 	len /= 2;
 	i = len;
-
+	
 	while (len)
 	{
 		if (arr[i] == n || arr[i - 1] == n)
 		{
-			return 1;
+			if(arr[i] == n)
+			{
+				return i
+			}
+			return (i + 1);
 		}
 		else if (n > arr[i])
 		{
@@ -133,19 +138,19 @@ int IterativeSearch(int n, int arr[], int len)
 		}
 		len /= 2;
 	}
-	return 0;
+	return -1;
 }
 
  
- /*
-	status: 
-	description: sorts the given array.
-	Reviewer:  search for element return 1 if found
-	Return:  
 
-	
-*/
-RecursiveSearch(int n, int arr[], int len)
+/* Status :
+ * Reviewer :
+ * Description : conducts binary search of a sorted array recursivly.
+ * Arguments : array of int, its size and a value to find.
+ * Return : index of found value, -1 if did not find.
+ */
+
+int RecursiveSearch(int n, int arr[], int len)
 {
 	int i = len/2;
 	if (n == arr[i])
@@ -166,6 +171,7 @@ RecursiveSearch(int n, int arr[], int len)
 	{
 		RecursiveSearch(n, arr, len /= 2);
 	}
+	return ;
 }
 
  

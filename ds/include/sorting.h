@@ -7,6 +7,6 @@
  * -------------------------------------------------------------------------- */
 int IterativeSearch(int n ,int arr[], int len);
 
-int RecursiveSearch(int n ,int arr[], int len);
+int RecursiveSearch(int n, int arr[], int start_i ,int end_i);
 
 int MergeSort(int *arr_to_sort, size_t num_elements);
