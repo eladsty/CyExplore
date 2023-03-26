@@ -55,85 +55,132 @@ RecursiveSearch(int n, int arr[], int len)
 }
 
  
- 
-/*((((((((((((((((((((((((((((((((((((((((recursive merge sort))))))))))))))))))))))))))))))))))))))))*/	 
 
-void Merger(int arr[], int start_i, int mid_i, int end_i)
-{	
-	unsigned i, j, k;
-	unsigned left_end = 0, right_end = 0;
-	/* create temp array*/
- 	int *left_arr = malloc(sizeof(int) * (1 + mid_i - start_i));
-	int *right_arr = malloc(sizeof(int) * (1 + end_i - mid_i));
 
-	left_end = mid_i - start_i + 1;
-	right_end = end_i - mid_i;
-	/* copy data to each part*/
-	for(i = 0; i < left_end; ++i)
+
+
+/* ex 3 - MergeSort
+description:  recieves pointer to start of array of integers and sorts the array .  
+status: impltst   
+reviewer:   
+args: pointer to start of array of integers + num of elements
+return: 0 at finish 
+notes:   
+*/
+
+void MergerTwo(int *array , int left , int right, int middle )
+{
+	int i = 0;
+	int j = 0;
+	
+	int k = left;
+	int num_elements_left_arr = middle - left + 1;   /*num elements = index + 1*/ 
+	int num_elements_right_arr = right - middle; 
+	
+	int *left_arr_mem = NULL;
+	int *right_arr_mem = NULL; 
+	
+	/* memory for both arrays */
+	
+	left_arr_mem = (int *)malloc(num_elements_left_arr*sizeof(int));
+	if (left_arr_mem == NULL)
 	{
-		*(left_arr + i) = *(arr + (start_i + i));
+		printf("memory allocation failed, exiting \n");
+		exit(0);
 	}
 	
-	for (j = 0; j < right_end; j++)
+	right_arr_mem = (int *)malloc(num_elements_right_arr*sizeof(int));
+	if (right_arr_mem == NULL)
 	{
-		*(right_arr + j) = *(arr + (mid_i + 1+ j));
+		printf("memory allocation failed, exiting \n");
+		exit(0);
 	}
-			
-	/* merge the temporary arrays */	
- 	i = 0;
-	j = 0;
-	k = left_end;
-	while (i < left_end && j < right_end)
+
+	/*copy left of array to left memory , right of array to right memory */
+	
+	for ( i = 0; i < num_elements_left_arr ; ++i )
 	{
-		if (left_arr[i] <= right_arr[j])
+		left_arr_mem[i] = array[left+i];
+	}
+	
+	for ( i = 0 ; i < num_elements_right_arr ; ++i )
+	{
+		right_arr_mem[i] = array[middle+1+i];
+	}
+	
+	/*merge left and right memory into original array */
+	
+	i = 0;
+	
+	while ( i < num_elements_left_arr && j < num_elements_right_arr )
+	{
+		if (left_arr_mem[i] <= right_arr_mem[j])
 		{
-			arr[k] = left_arr[i];
+			array[k] = left_arr_mem[i];
 			++i;
 		}
+		
 		else
 		{
-			arr[k] = right_arr[j];
+			array[k] = right_arr_mem[j];
 			++j;
 		}
-
+		
 		++k;
 	}
-	/* copy the elemets of the left array */
- 	while (i < left_end)
+	
+
+	
+	/*insert remaining elements from right memory and left memory into array */
+	
+	while (i < num_elements_left_arr)
 	{
-		arr[k] = left_arr[i];
-		i++;
-		k++;
+		array[k] = left_arr_mem[i];
+		++i;
+		++k;
 	}
-	/* copy the elemets of the right array */
-	while (j < right_end)
+
+	while (j < num_elements_right_arr)
 	{
-		arr[k] = right_arr[j];
-		j++;
-		k++;
+		array[k] = right_arr_mem[j];
+		++j;
+		++k;
 	}
-	free(left_arr);
-	free(right_arr);
+	
+	/*free temp memory*/
+
+	free(left_arr_mem);
+	free(right_arr_mem);
+	
 }
+
+
+void MergerOne( int *array , int left, int right )
+{
+	int middle;
+	
+	if (left < right)
+	{
+		middle = left + (right-left)/2;
+		
+		MergerOne(array,left,middle);
+
+		MergerOne(array,middle+1,right);
+
+		MergerTwo(array , left , right , middle);
+	
+	}
+}
+
+
 
 int MergeSort(int *arr_to_sort, size_t num_elements)
 {
-	unsigned i_start = 0, i_end = 0, i_mid = 0;
-	i_end = num_elements-1;
-	i_mid = (i_end - i_start)/2;
+	int left = 0;
+	int right = num_elements-1;
+	
 
-	if((i_end - i_start) <= 1)
-	{
-		return i_end - i_start;
-	}
-
-	/* left side */
-	MergeSort(arr_to_sort, i_mid);
- 
-	/* right side */
-	MergeSort((arr_to_sort + i_mid), (i_mid + 1));
-
-	/* merging */
-	Merger(arr_to_sort , i_start, i_mid, i_end); 
+	MergerOne(arr_to_sort, left, right);
+	
+	return 0;
 }
-

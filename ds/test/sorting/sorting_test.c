@@ -31,20 +31,23 @@ int main()
  		printf("%d from result: %d\n",results[i], RecursiveSearch( results[i],int_arr,ARRAYLEN(int_arr))); 
  	}
 	
+	printf(" before sorting\n");
+
  	for(i = 0; i < 8; ++i)
 	{
-		printf("unsorted before sorting: %d \n",unsorted[i] );
+		printf(" %d, ",unsorted[i] );
 	}
+	printf("\n");
 
 	MergeSort(unsorted, 8);
 	
+	printf(" after sorting\n");
+
+
  	for(i = 0; i < 8; ++i)
 	{
-		printf("unsorted after sorting: %d \n",unsorted[i] );
+		printf(" %d, ",unsorted[i]);
 	}
-
-
-
 
 	return 0;
 } 
