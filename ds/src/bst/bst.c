@@ -129,6 +129,16 @@ void BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *para
 }
  
 */
+
+node_t CreateNewNode(const void *data)
+{
+    node_t new_node = (node_t)malloc(sizeof(struct node));
+    new_node->children[0] = NULL;
+    new_node->children[1] = NULL;
+    new_node->data = (void *)data;
+    return new_node;
+}
+
 node_t InsertInt(node_t iter, const void *data , compfunc_t cmp)
 {
     int cmp_result = (*cmp)((int *)iter->data, (int *)data);
@@ -146,12 +156,8 @@ node_t InsertInt(node_t iter, const void *data , compfunc_t cmp)
     {
         if(NULL == iter->children[0])
         {
-            node_t new_node = (node_t)malloc(sizeof(struct node));
-            new_node->children[0] = NULL;
-            new_node->children[1] = NULL;
-            new_node->data = (void *)data;
-
-            return new_node;
+            iter->children[0] = CreateNewNode(data);
+            return iter;
         }
         InsertInt(iter->children[0], data ,cmp);
     }
@@ -160,11 +166,8 @@ node_t InsertInt(node_t iter, const void *data , compfunc_t cmp)
     {
        if(NULL == iter->children[1])
         {
-            node_t new_node = (node_t)malloc(sizeof(struct node));
-            new_node->children[0] = NULL;
-            new_node->children[1] = NULL;
-            new_node->data = (void *)data;
-            return new_node;   
+             iter->children[1] = CreateNewNode(data);
+            return iter;
         }
         InsertInt(iter->children[1], data ,cmp);
     }
@@ -180,13 +183,9 @@ void BSTInsert(bst_t *bst, const void *data)
     }
  
     if(NULL == bst->root)
-    {
-        node_t new_node = (node_t)malloc(sizeof(struct node));
-        new_node->children[0] = NULL;
-        new_node->children[1] = NULL;
-        new_node->data = (void *)data;
-        bst->root = new_node;
-        return; 
+    {  
+        bst->root = CreateNewNode(data);
+        return ;
     }
     iter = bst->root;  
 
@@ -223,4 +222,23 @@ void BSTPrint(bst_t *bst, int space, int count)
         return;
     } 
     Print((node_t)bst->root, space, count);
+}
+ 
+void HTraverser(node_t node, size_t *h_arr)
+{
+    
+
+}
+
+size_t BSTHeight(const bst_t *bst)
+{
+    size_t h_arr[2] = {0};
+    node_t node = bst->root;
+    if(NULL == bst || NULL == bst->root)
+    {
+        return 0;
+    }
+    HTraverser(node, h_arr);
+
+    return h_arr[1];
 }
