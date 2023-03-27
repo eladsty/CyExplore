@@ -3,6 +3,7 @@
 
 #include "bst.h"
 
+#define MAX(a,b)(a > b ? a : b)
 
 struct bst
 {
@@ -224,11 +225,27 @@ void BSTPrint(bst_t *bst, int space, int count)
     Print((node_t)bst->root, space, count);
 }
  
-void HTraverser(node_t node, size_t *h_arr)
+static void HTraverser(node_t node, size_t *h_arr)
 {
-    
+     if(NULL != node->children[0])
+    {
+        ++h_arr[0];
+        h_arr[1] = MAX(h_arr[0], h_arr[1]);
+        HTraverser(node->children[0], h_arr);
 
+    }
+
+    if(NULL != node->children[1])
+    {
+        ++h_arr[0];
+        h_arr[1] = MAX(h_arr[0], h_arr[1]);
+        HTraverser(node->children[1], h_arr);
+
+    }
+    --h_arr[0];
 }
+
+ 
 
 size_t BSTHeight(const bst_t *bst)
 {
@@ -238,6 +255,7 @@ size_t BSTHeight(const bst_t *bst)
     {
         return 0;
     }
+
     HTraverser(node, h_arr);
 
     return h_arr[1];
