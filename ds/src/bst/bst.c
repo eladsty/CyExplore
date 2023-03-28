@@ -57,6 +57,7 @@ int BSTIsEmpty(const bst_t *bst)
 }
 
  
+ 
 
 int FreeFunc(void *node_p, void *param)
  {
@@ -121,73 +122,52 @@ size_t BSTSize(const bst_t *bst)
     PostTraverse(node, &CountFunc, &i);
     return i;
 }
- 
- 
-/*
-
-void BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
-{
-
-
-}
- 
-*/
+  
 
 node_t CreateNewNode(const void *data)
 {
     node_t new_node = (node_t)malloc(sizeof(struct node));
-    #ifndef NDEBUG 
+ 
     assert(NULL != new_node);
 
-    #endif /*NDEBUG*/
-
+ 
     new_node->children[0] = NULL;
     new_node->children[1] = NULL;
     new_node->data = (void *)data;
     return new_node;
 }
 /* could be any type of data as long as compfunc returns 0, pos, neg nums*/
-void *Insert(node_t iter, const void *data , compfunc_t cmp, node_t node_to_insert)
+void *Insert(node_t *iter, const void *data , compfunc_t cmp, node_t node_to_insert)
 {
-    int cmp_result = (*cmp)(iter->data, data);
+    int cmp_result = 0 ;
+
     /*
      data is the integer that user wanted to insert
      if compare is negative go right(1)
      if positive go left (0)
      */
-    if(0 == cmp_result)
+    if(NULL == (*iter))
     {
-        free(node_to_insert);
-        node_to_insert = NULL;
-        
-        printf("data   exist!, abort.");
-        return NULL;
+        (*iter) = node_to_insert;
+        return (*iter);
     }
+    cmp_result = cmp((*iter)->data, data);
+
     if(0 < cmp_result)
     {
-        if(NULL == iter->children[0])
-        {
-            iter->children[0] = node_to_insert;
-            return iter;
-        }
-        Insert(iter->children[0], data ,cmp ,node_to_insert);
+
+        Insert( &(*iter)->children[0], data ,cmp ,node_to_insert);
     }
 
     if(0 > cmp_result)
     {
-       if(NULL == iter->children[1])
-        {
-            iter->children[1] = node_to_insert;
-            return iter;
-        }
-        Insert(iter->children[1], data ,cmp , node_to_insert);
+        Insert( &(*iter)->children[1], data ,cmp , node_to_insert);
     }
 }
 
 void *BSTInsert(bst_t *bst, const void *data)
 {
-    node_t iter;
-    node_t node_to_insert = CreateNewNode(data);     
+     node_t node_to_insert = CreateNewNode(data);     
     if(NULL == bst || NULL == data)
     {
         return;
@@ -198,9 +178,8 @@ void *BSTInsert(bst_t *bst, const void *data)
         bst->root = node_to_insert;
         return ;
     }
-    iter = bst->root;  
 
-    Insert(iter, data ,bst->cmp, node_to_insert);
+    Insert(&bst->root, data ,bst->cmp, node_to_insert);
 }
  
 
@@ -225,6 +204,7 @@ static void Print(node_t node, int space, int count)
  
     Print(node->children[0], space, count);
 }
+
 void BSTPrint(bst_t *bst, int space, int count)
 {
     if (bst->root == NULL)
@@ -232,7 +212,7 @@ void BSTPrint(bst_t *bst, int space, int count)
         printf("Tree is empty\n");
         return;
     } 
-    Print((node_t)bst->root, space, count);
+    Print((node_t)bst->root, 11, 3);
 }
  
 static void HTraverser(node_t node, size_t *h_arr)
@@ -275,9 +255,9 @@ void *Finder(node_t node,  compfunc_t cmp, const void *data )
 {
     int cmp_result;
  
-    if(NULL == node->data)
+    if(NULL == node)
     {
-        return;
+        return NULL;
     }
     cmp_result = cmp(node->data, data);
 
@@ -285,24 +265,13 @@ void *Finder(node_t node,  compfunc_t cmp, const void *data )
     {
         return (void *)node->data;
     }
-    if(0 < cmp_result)
+    else if(0 < cmp_result)
     {
-        if(NULL == node->children[0])
-        {
-            printf("sorry, but the data was not found.");
-            return NULL;
-        }
         Finder(node->children[0], cmp, data);
     }
 
-    if(0 > cmp_result)
-    {
-       if(NULL == node->children[1])
-        {
-            printf("sorry, but the data was not found.");
-            return NULL;
-        }
-        
+    else if(0 > cmp_result)
+    {   
         Finder(node->children[1], cmp, data);
     }
 
@@ -316,7 +285,7 @@ void *BSTFind(bst_t *bst, const void *data)
     if(NULL == bst || NULL == bst->root)
     {
         printf("BST is empty or doesn't exist.");
-        return;
+        return NULL;
     }
     iter = bst->root;
     cmp_func = bst->cmp;
@@ -335,11 +304,39 @@ bst for each will traverse the tree and will perform certain action on the tree,
 not limited to: remove, find, inert, and print.
 
 
-void BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
+
+*/
+
+InOrder(node_t node, action_t ActionFunc, void *param)
 {
 
+}
+PreOrder()
+{
+    
+}
+PostOrder()
+{
 
 }
 
-*/
+ /* 
  
+int BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
+{
+    switch(order_type)
+    {
+        case: 0;
+
+        break;
+        case: 1;
+
+        break;
+
+        case: 2;
+        break;
+
+    }
+    if()
+
+} */
