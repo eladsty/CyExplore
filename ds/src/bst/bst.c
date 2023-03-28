@@ -5,6 +5,9 @@
 #include "bst.h"
 
 #define MAX(a,b)(a > b ? a : b)
+#define GO_TO_CHILD(res) ((res) > 0 ? LEFT_CHILD : RIGHT_CHILD)
+#define LEFT_CHILD (&(*iter)->children[0])
+#define RIGHT_CHILD (&(*iter)->children[1])
 
 
 struct bst
@@ -136,11 +139,12 @@ node_t CreateNewNode(const void *data)
     new_node->data = (void *)data;
     return new_node;
 }
-/* could be any type of data as long as compfunc returns 0, pos, neg nums*/
-void *Insert(node_t *iter, const void *data , compfunc_t cmp, node_t node_to_insert)
+
+/*******************************************************************************************************************/
+ void *Insert(node_t *iter, const void *data , compfunc_t cmp, node_t node_to_insert)
 {
     int cmp_result = 0 ;
-
+ 
     /*
      data is the integer that user wanted to insert
      if compare is negative go right(1)
@@ -152,25 +156,15 @@ void *Insert(node_t *iter, const void *data , compfunc_t cmp, node_t node_to_ins
         return (*iter);
     }
     cmp_result = cmp((*iter)->data, data);
-
-    if(0 < cmp_result)
-    {
-
-        Insert( &(*iter)->children[0], data ,cmp ,node_to_insert);
-    }
-
-    if(0 > cmp_result)
-    {
-        Insert( &(*iter)->children[1], data ,cmp , node_to_insert);
-    }
+    Insert(GO_TO_CHILD(cmp_result) , data ,cmp ,node_to_insert);
 }
-
+ 
 void *BSTInsert(bst_t *bst, const void *data)
 {
-     node_t node_to_insert = CreateNewNode(data);     
+    node_t node_to_insert = CreateNewNode(data);     
     if(NULL == bst || NULL == data)
     {
-        return;
+        return NULL;
     }
  
     if(NULL == bst->root)
@@ -182,7 +176,7 @@ void *BSTInsert(bst_t *bst, const void *data)
     Insert(&bst->root, data ,bst->cmp, node_to_insert);
 }
  
-
+/* *********************************************************************************************** */
 static void Print(node_t node, int space, int count)
 {
     int i = 0;
@@ -309,7 +303,7 @@ not limited to: remove, find, inert, and print.
 
 InOrder(node_t node, action_t ActionFunc, void *param)
 {
-
+    
 }
 PreOrder()
 {
