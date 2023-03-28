@@ -34,7 +34,7 @@ int main()
 {
     bst_t *bst;
     compfunc_t int_cmp_p = &CompareInt;
-
+    int x = 5, y = 100;
     bst = BSTCreate(int_cmp_p);
     printf("Is empty should be 1: %d\n", BSTIsEmpty(bst));
 
@@ -44,7 +44,16 @@ int main()
         return;
     }
 
+    printf("bst height before insert: %ld\n", BSTHeight(bst));
     InsertRemoveTest(bst);
+    printf("bst height after insert: %ld\n", BSTHeight(bst));
+ 
+    if(NULL == BSTFind(bst, &y))
+    {
+        printf("trying to find 100 resulted in NULL, success!");
+    }
+    printf("should return 5:  %d",  *(int *)BSTFind(bst, &x));
+  
     printf("Is empty should be 0: %d\n", BSTIsEmpty(bst));
 
     BSTDestroy(bst);

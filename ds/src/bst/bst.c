@@ -1,9 +1,11 @@
+#include <assert.h> /* for assert */
 #include <stdlib.h>/*malloc and free*/
 #include <stdio.h>/*printf*/
 
 #include "bst.h"
 
 #define MAX(a,b)(a > b ? a : b)
+
 
 struct bst
 {
@@ -134,15 +136,20 @@ void BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *para
 node_t CreateNewNode(const void *data)
 {
     node_t new_node = (node_t)malloc(sizeof(struct node));
+    #ifndef NDEBUG 
+    assert(NULL != new_node);
+
+    #endif /*NDEBUG*/
+
     new_node->children[0] = NULL;
     new_node->children[1] = NULL;
     new_node->data = (void *)data;
     return new_node;
 }
-
-node_t InsertInt(node_t iter, const void *data , compfunc_t cmp)
+/* could be any type of data as long as compfunc returns 0, pos, neg nums*/
+void *Insert(node_t iter, const void *data , compfunc_t cmp, node_t node_to_insert)
 {
-    int cmp_result = (*cmp)((int *)iter->data, (int *)data);
+    int cmp_result = (*cmp)(iter->data, data);
     /*
      data is the integer that user wanted to insert
      if compare is negative go right(1)
@@ -150,34 +157,34 @@ node_t InsertInt(node_t iter, const void *data , compfunc_t cmp)
      */
     if(0 == cmp_result)
     {
-        printf("data already exist!, abort.");
-        return;
+        printf("data   exist!, abort.");
+        return NULL;
     }
     if(0 < cmp_result)
     {
         if(NULL == iter->children[0])
         {
-            iter->children[0] = CreateNewNode(data);
+            iter->children[0] = node_to_insert;
             return iter;
         }
-        InsertInt(iter->children[0], data ,cmp);
+        Insert(iter->children[0], data ,cmp ,node_to_insert);
     }
 
     if(0 > cmp_result)
     {
        if(NULL == iter->children[1])
         {
-             iter->children[1] = CreateNewNode(data);
+            iter->children[1] = node_to_insert;
             return iter;
         }
-        InsertInt(iter->children[1], data ,cmp);
+        Insert(iter->children[1], data ,cmp , node_to_insert);
     }
 }
 
-void BSTInsert(bst_t *bst, const void *data)
+void *BSTInsert(bst_t *bst, const void *data)
 {
     node_t iter;
-         
+    node_t node_to_insert = CreateNewNode(data);     
     if(NULL == bst || NULL == data)
     {
         return;
@@ -185,12 +192,12 @@ void BSTInsert(bst_t *bst, const void *data)
  
     if(NULL == bst->root)
     {  
-        bst->root = CreateNewNode(data);
+        bst->root = node_to_insert;
         return ;
     }
     iter = bst->root;  
 
-    InsertInt(iter, data ,bst->cmp);
+    Insert(iter, data ,bst->cmp, node_to_insert);
 }
  
 
@@ -260,3 +267,76 @@ size_t BSTHeight(const bst_t *bst)
 
     return h_arr[1];
 }
+ 
+void *Finder(node_t node,  compfunc_t cmp, const void *data )
+{
+    int cmp_result;
+ 
+    if(NULL == node->data)
+    {
+        return;
+    }
+    cmp_result = cmp(node->data, data);
+
+    if(0 == cmp_result)
+    {
+        return (void *)node->data;
+    }
+    if(0 < cmp_result)
+    {
+        if(NULL == node->children[0])
+        {
+            printf("sorry, but the data was not found.");
+            return NULL;
+        }
+        Finder(node->children[0], cmp, data);
+    }
+
+    if(0 > cmp_result)
+    {
+       if(NULL == node->children[1])
+        {
+            printf("sorry, but the data was not found.");
+            return NULL;
+        }
+        
+        Finder(node->children[1], cmp, data);
+    }
+
+}
+   
+void *BSTFind(bst_t *bst, const void *data)
+{
+    node_t iter;
+    int cmp_result;
+    compfunc_t cmp_func;
+    if(NULL == bst || NULL == bst->root)
+    {
+        printf("BST is empty or doesn't exist.");
+        return;
+    }
+    iter = bst->root;
+    cmp_func = bst->cmp;
+     /*
+     data is the integer that user wanted to insert
+     if compare is negative go right(1)
+     if positive go left (0)
+     */
+
+    return Finder(iter, cmp_func, data);
+}
+ 
+  
+/* 
+bst for each will traverse the tree and will perform certain action on the tree, including but
+not limited to: remove, find, inert, and print.
+
+
+void BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
+{
+
+
+}
+
+*/
+ 
