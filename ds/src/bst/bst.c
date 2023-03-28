@@ -157,6 +157,9 @@ void *Insert(node_t iter, const void *data , compfunc_t cmp, node_t node_to_inse
      */
     if(0 == cmp_result)
     {
+        free(node_to_insert);
+        node_to_insert = NULL;
+        
         printf("data   exist!, abort.");
         return NULL;
     }
