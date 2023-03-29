@@ -12,8 +12,10 @@ typedef enum {
 	IN_ORDER, 
 	POST_ORDER
 	} traverse;
+void *NodeData(bst_t bst);
 
 /* 
+	STATUS: APPROVED BY AMIR
  * Description : this function will create a BST, that holds a user's compare function.
  * Arguments : compfunc - void pointer to user's compare function, which is called with two arguments that point
        to the objects being compared. the comparison function must return an integer less than, or  greater
@@ -26,6 +28,7 @@ typedef enum {
 bst_t *BSTCreate(compfunc_t compfunc);
 
 /* 
+***** STATUS: approved by ran
  * Description : this function will destroy the BST.
  * Arguments : bst - pointer to BST.
  * Return : void.
@@ -44,6 +47,7 @@ void BSTDestroy(bst_t *bst);
 size_t BSTSize(const bst_t *bst);
 
 /* 
+APPROVED BY ADIR
  * Description : this function will check if the BST is empty.
  * Arguments : bst - pointer to BST.
  * Return : 1 if empty, 0 if full.
@@ -62,6 +66,8 @@ int BSTIsEmpty(const bst_t *bst);
 size_t BSTHeight(const bst_t *bst);
 
 /* 
+	STATUS: APPROVED BY AMIR
+
  * Description : this function will insert data from user into tree. 
  * Arguments : bst - pointer to BST, data - pointer to data provided by user.
  * Return : pointer to inserted data or NULL if insertion failed.

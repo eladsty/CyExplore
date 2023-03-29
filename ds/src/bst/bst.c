@@ -28,7 +28,7 @@ struct node
 	
  * Return : 
  */
-
+/* 
  static void PostTraverse(node_t node, action_t ActionFunc, void *param)
 {
     if (NULL != node)
@@ -37,7 +37,7 @@ struct node
         PostTraverse(node->children[1], ActionFunc, param);
         ActionFunc(node, param);
     }    
-}
+} */
  
 bst_t *BSTCreate(compfunc_t compfunc)
 {
@@ -64,23 +64,29 @@ int BSTIsEmpty(const bst_t *bst)
 int FreeFunc(void *node_p, void *param)
  {
     node_t node = (node_t)node_p;
+    if(NULL == node_p)
+    {
+        return;
+    }
     free(node);
-    (node) = NULL;
+    node = NULL;
     return 0;
  }
  
 /*  Approved by Ran
- */
+ */  
 void BSTDestroy(bst_t *bst) 
 {
     node_t root_node = NULL;
-    if(NULL == bst)
+    if(NULL == bst || NULL == bst->root)
     {
         return;
     }
     root_node = bst->root;
- 
-    PostTraverse(bst->root, &FreeFunc, root_node);
+
+
+    BSTForEach( (bst_t *)bst, POST_ORDER, &FreeFunc, root_node);
+
     free(bst);
     bst = NULL;
 
@@ -103,13 +109,7 @@ static size_t Traverse(node_t node)
     return cnt;
 }
 
-/* action func for BTSSize */
-static int CountFunc(void *nada, void *x)
-{
-     ++(*(int *)x);
-     return 0;
-}
-
+ 
 /* 
  * Status : 
  * Reviewer :
@@ -119,14 +119,14 @@ static int CountFunc(void *nada, void *x)
  * time complexity : O(n)
  * space complexity : O(height)
  */
-size_t BSTSize(const bst_t *bst)
+/* size_t BSTSize(const bst_t *bst)
 {
-       int i = 0;
+    int i = 0;
     node_t node =  bst->root;
     PostTraverse(node, &CountFunc, &i);
  
      return i;
-}
+} */
   
 
 node_t CreateNewNode(const void *data)
@@ -294,10 +294,9 @@ void *BSTFind(bst_t *bst, const void *data)
 bst for each will traverse the tree and will perform certain action on the tree, including but
 not limited to: remove, find, inert, and print.
 
-  
-
 */
-static int InOrderTraverse(node_t node, action_t ActionFunc, void *param, action_t cmp)
+
+static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
 {
     /* maybe I should check the node children. also should i change from void to int????  */
     if (NULL != node)
@@ -308,7 +307,7 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param, action
     }
 }
 
- static int PreOrderTraverse(node_t node, action_t ActionFunc, void *param, action_t cmp)
+ static int PreOrderTraverse(node_t node, action_t ActionFunc, void *param)
 {
       /* maybe I should check the node children. also should i change from void to int????  */
     if (NULL != node)
@@ -319,7 +318,7 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param, action
     }
 }
 
- static int PostOrderTraverse(node_t node, action_t ActionFunc, void *param, action_t cmp)
+ static int PostOrderTraverse(node_t node, action_t ActionFunc, void *param )
 {
     if (NULL != node)
     {
@@ -329,28 +328,24 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param, action
     }
 }
 
-
-
-int BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
+int BSTForEach( bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
 {
-    int return_val = 0;
-  
     switch (order_type)
     {
     case PRE_ORDER:
-        return PreOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
+        return PreOrderTraverse(bst->root, ActionFunc, param );
         break;
 
     case IN_ORDER:
-        return InOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
+        return InOrderTraverse(bst->root, ActionFunc, param );
         break;
 
     case POST_ORDER:
-        return PostOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
+        return PostOrderTraverse(bst->root, ActionFunc, param );
         break;
 
     default:
-        return PreOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
+        return PreOrderTraverse(bst->root, ActionFunc, param );
         break;
     }
 
@@ -432,3 +427,24 @@ void BSTRemove(bst_t *bst, void *data)
     }
 }
 
+
+/* action func for BTSSize */
+static int CountFunc(void *nada, void *x)
+{
+     ++(*(int *)x);
+     return 0;
+}
+
+
+
+size_t BSTSize(const bst_t *bst)
+{
+    int i = 0;
+    node_t node;
+    if(NULL == bst || NULL == bst->root)
+    {
+        return 0;
+    }
+    node = bst->root;
+    return BSTForEach((bst_t *)bst, POST_ORDER, &CountFunc, &i);
+}
