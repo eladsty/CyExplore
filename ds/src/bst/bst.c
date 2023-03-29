@@ -5,10 +5,9 @@
 #include "bst.h"
 
 #define MAX(a,b)(a > b ? a : b)
-#define GO_TO_CHILD(res) ((res) > 0 ? LEFT_CHILD : RIGHT_CHILD)
-#define LEFT_CHILD (&(*iter)->children[0])
-#define RIGHT_CHILD (&(*iter)->children[1])
-
+#define GO_TO_CHILD(res) ((res) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]))
+ 
+ 
 
 struct bst
 {
@@ -30,16 +29,16 @@ struct node
  * Return : 
  */
 
-static void PostTraverse(node_t node, action_t ActionFunc, void *param)
+ static void PostTraverse(node_t node, action_t ActionFunc, void *param)
 {
     if (NULL != node)
     {
         PostTraverse(node->children[0], ActionFunc, param);
         PostTraverse(node->children[1], ActionFunc, param);
         ActionFunc(node, param);
-    }
+    }    
 }
-
+ 
 bst_t *BSTCreate(compfunc_t compfunc)
 {
     bst_t *new_bst = (bst_t *)malloc(sizeof(bst_t));
@@ -69,8 +68,10 @@ int FreeFunc(void *node_p, void *param)
     (node) = NULL;
     return 0;
  }
-
-void BSTDestroy(bst_t *bst)
+ 
+/*  Approved by Ran
+ */
+void BSTDestroy(bst_t *bst) 
 {
     node_t root_node = NULL;
     if(NULL == bst)
@@ -78,7 +79,8 @@ void BSTDestroy(bst_t *bst)
         return;
     }
     root_node = bst->root;
-    PostTraverse(root_node, &FreeFunc, root_node);
+ 
+    PostTraverse(bst->root, &FreeFunc, root_node);
     free(bst);
     bst = NULL;
 
@@ -119,11 +121,11 @@ static int CountFunc(void *nada, void *x)
  */
 size_t BSTSize(const bst_t *bst)
 {
-    int i = 0;
+       int i = 0;
     node_t node =  bst->root;
-
     PostTraverse(node, &CountFunc, &i);
-    return i;
+ 
+     return i;
 }
   
 
@@ -143,7 +145,7 @@ node_t CreateNewNode(const void *data)
 /*******************************************************************************************************************/
  void *Insert(node_t *iter, const void *data , compfunc_t cmp, node_t node_to_insert)
 {
-    int cmp_result = 0 ;
+     node_t *node_p_p;
  
     /*
      data is the integer that user wanted to insert
@@ -154,11 +156,17 @@ node_t CreateNewNode(const void *data)
     {
         (*iter) = node_to_insert;
         return (*iter);
-    }
-    cmp_result = cmp((*iter)->data, data);
-    Insert(GO_TO_CHILD(cmp_result) , data ,cmp ,node_to_insert);
+    }cmp((*iter)->data, data);
+    node_p_p = ((cmp((*iter)->data, data)) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]);
+
+     
+    Insert(node_p_p ,data ,cmp ,node_to_insert);
 }
  
+#define GO_TO_CHILD(res) ((res) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]))
+
+
+
 void *BSTInsert(bst_t *bst, const void *data)
 {
     node_t node_to_insert = CreateNewNode(data);     
@@ -245,92 +253,172 @@ size_t BSTHeight(const bst_t *bst)
     return h_arr[1];
 }
  
-void *Finder(node_t node,  compfunc_t cmp, const void *data )
+
+
+static void *DataFinder(node_t node, compfunc_t cmp, const void *data)
 {
-    int cmp_result;
- 
-    if(NULL == node)
+    node_t iter_node = node;
+    if(node == NULL)
     {
         return NULL;
     }
-    cmp_result = cmp(node->data, data);
-
-    if(0 == cmp_result)
+    if ( cmp( iter_node->data , data ) == 0 )
     {
-        return (void *)node->data;
+        return (void *)(node->data);
     }
-    else if(0 < cmp_result)
+
+    else if ( cmp( iter_node->data , data ) > 0 )
     {
-        Finder(node->children[0], cmp, data);
+        DataFinder(iter_node->children[0], cmp, data);
     }
-
-    else if(0 > cmp_result)
-    {   
-        Finder(node->children[1], cmp, data);
+    else if ( cmp(node->data, data ) < 0 )
+    {
+        DataFinder(iter_node->children[1], cmp, data);
     }
-
 }
-   
+
+
 void *BSTFind(bst_t *bst, const void *data)
 {
     node_t iter;
-    int cmp_result;
-    compfunc_t cmp_func;
-    if(NULL == bst || NULL == bst->root)
+    /*  if(NULL == bst || NULL == bst->root)
     {
         printf("BST is empty or doesn't exist.");
         return NULL;
-    }
-    iter = bst->root;
-    cmp_func = bst->cmp;
-     /*
-     data is the integer that user wanted to insert
-     if compare is negative go right(1)
-     if positive go left (0)
-     */
-
-    return Finder(iter, cmp_func, data);
+    } */
+   
+    return (void *)DataFinder(bst->root, bst->cmp, data);
 }
- 
-  
+
 /* 
 bst for each will traverse the tree and will perform certain action on the tree, including but
 not limited to: remove, find, inert, and print.
 
-
+  
 
 */
-
-InOrder(node_t node, action_t ActionFunc, void *param)
+static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
 {
-    
-}
-PreOrder()
-{
-    
-}
-PostOrder()
-{
-
+    /* maybe I should check the node children. also should i change from void to int????  */
+    if (NULL != node)
+    {
+        InOrderTraverse(node->children[0], ActionFunc, param);
+        return ActionFunc(node->data, param);
+        InOrderTraverse(node->children[1], ActionFunc, param);
+    }
 }
 
- /* 
+ static int PreOrderTraverse(node_t node, action_t ActionFunc, void *param)
+{
+      /* maybe I should check the node children. also should i change from void to int????  */
+    if (NULL != node)
+    {
+        return ActionFunc(node->data, param);
+        InOrderTraverse(node->children[0], ActionFunc, param);
+        InOrderTraverse(node->children[1], ActionFunc, param);
+    }
+}
+
+ static int PostOrderTraverse(node_t node, action_t ActionFunc, void *param)
+{
+    if (NULL != node)
+    {
+        InOrderTraverse(node->children[0], ActionFunc, param);
+        InOrderTraverse(node->children[1], ActionFunc, param);
+        return ActionFunc(node->data, param);
+    }
+}
+
+
  
+
 int BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
 {
-    switch(order_type)
+    int return_val = 0;
+  
+    switch (order_type)
     {
-        case: 0;
-
-        break;
-        case: 1;
-
+    case PRE_ORDER:
+        return PreOrderTraverse(bst->root, ActionFunc, param);
         break;
 
-        case: 2;
+    case IN_ORDER:
+        return InOrderTraverse(bst->root, ActionFunc, param);
         break;
 
+    case POST_ORDER:
+        return PostOrderTraverse(bst->root, ActionFunc, param);
+        break;
+
+    default:
+        return PreOrderTraverse(bst->root, ActionFunc, param);
+        break;
     }
-    if()
 
-} */
+	return -1;
+}  
+
+
+node_t GoLeft(node_t current_node)
+{
+    node_t temp = NULL;
+    if (NULL == current_node->children[0])  /*if no more left left...*/
+    {
+        return current_node; 
+    }
+    temp = GoLeft(current_node->children[0]);  /*else go left until no left left*/
+    return temp;
+}
+
+
+node_t Remove(node_t iter_node, compfunc_t compfunc, const void *user_data)
+{
+	int comp_result = compfunc(iter_node->data, user_data); 
+	node_t temp = NULL; 
+	
+	if (0 < comp_result)    /* if node data bigger than user data, go left */
+	{
+		iter_node->children[0] = Remove(iter_node->children[0], compfunc, user_data);
+	}
+	
+	else if (0 > comp_result)  /* if node data smaller than user data, go right */
+	{
+		iter_node->children[1] = Remove(iter_node->children[1], compfunc, user_data);
+	}
+	
+	else if (0 == comp_result)   /* if node data equals user data: */
+	{
+		if (NULL == iter_node->children[0])   /* if left empty, return pointer to right and free current node.   */
+		{
+			temp = iter_node->children[1];
+			free(iter_node);
+			return temp;
+		}
+		else if (NULL == iter_node->children[1])
+		{
+			temp = iter_node->children[0];
+			free(iter_node);
+			return temp;
+		}
+		else
+		{
+			temp = GoLeft(iter_node->children[1]); 
+			iter_node->data = temp->data; 
+			iter_node->children[1] = Remove(iter_node->children[1], compfunc, temp->data);
+		}
+	}
+	return iter_node;
+}
+
+
+void BSTRemove(bst_t *bst, void *data)
+{
+	node_t ptr_root = bst->root;
+	
+	if (1 == BSTIsEmpty(bst))  /*if tree is empty*/
+	{
+		return;
+	}
+	
+	Remove(ptr_root, bst->cmp, data);
+}
