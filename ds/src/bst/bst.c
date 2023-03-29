@@ -297,7 +297,7 @@ not limited to: remove, find, inert, and print.
   
 
 */
-static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
+static int InOrderTraverse(node_t node, action_t ActionFunc, void *param, action_t cmp)
 {
     /* maybe I should check the node children. also should i change from void to int????  */
     if (NULL != node)
@@ -308,7 +308,7 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
     }
 }
 
- static int PreOrderTraverse(node_t node, action_t ActionFunc, void *param)
+ static int PreOrderTraverse(node_t node, action_t ActionFunc, void *param, action_t cmp)
 {
       /* maybe I should check the node children. also should i change from void to int????  */
     if (NULL != node)
@@ -319,7 +319,7 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
     }
 }
 
- static int PostOrderTraverse(node_t node, action_t ActionFunc, void *param)
+ static int PostOrderTraverse(node_t node, action_t ActionFunc, void *param, action_t cmp)
 {
     if (NULL != node)
     {
@@ -330,7 +330,6 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
 }
 
 
- 
 
 int BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
 {
@@ -339,19 +338,19 @@ int BSTForEach(bst_t *bst, traverse order_type, action_t ActionFunc, void *param
     switch (order_type)
     {
     case PRE_ORDER:
-        return PreOrderTraverse(bst->root, ActionFunc, param);
+        return PreOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
         break;
 
     case IN_ORDER:
-        return InOrderTraverse(bst->root, ActionFunc, param);
+        return InOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
         break;
 
     case POST_ORDER:
-        return PostOrderTraverse(bst->root, ActionFunc, param);
+        return PostOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
         break;
 
     default:
-        return PreOrderTraverse(bst->root, ActionFunc, param);
+        return PreOrderTraverse(bst->root, ActionFunc, param, bst->cmp);
         break;
     }
 
@@ -373,9 +372,16 @@ node_t GoLeft(node_t current_node)
 
 node_t Remove(node_t iter_node, compfunc_t compfunc, const void *user_data)
 {
-	int comp_result = compfunc(iter_node->data, user_data); 
+	int comp_result;  
 	node_t temp = NULL; 
-	
+
+   if(NULL == iter_node || NULL == user_data)
+    {
+        printf("data is missing.");
+        return NULL;
+    }  
+    comp_result = compfunc(iter_node->data, user_data); 
+
 	if (0 < comp_result)    /* if node data bigger than user data, go left */
 	{
 		iter_node->children[0] = Remove(iter_node->children[0], compfunc, user_data);
@@ -420,5 +426,9 @@ void BSTRemove(bst_t *bst, void *data)
 		return;
 	}
 	
-	Remove(ptr_root, bst->cmp, data);
+	if(NULL == Remove(ptr_root, bst->cmp, data))
+    {
+        printf("data doesn't exist");
+    }
 }
+
