@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bst.h"
+
+
 #define UNUSED(x) (void)(x)
 #define SIZEARR(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -112,8 +114,9 @@ void TestHeight()
     /* test for linear tree */
     for (i = 1; i < SIZEARR(to_insert); ++i)
     {
-        BSTInsert(bst, &to_insert[i]);NULL
+        BSTInsert(bst, &to_insert[i]); 
     }
+
     printf("When BST is Linear, highet is %lu and should be %lu\n", BSTHeight(bst), (SIZEARR(to_insert) - 1));
     BSTPrint(bst, SIZEARR(to_insert), 8);
     printf("\n******************************************\n\n");
