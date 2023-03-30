@@ -5,8 +5,7 @@
 #include "bst.h"
 
 #define MAX(a,b)(a > b ? a : b)
-#define GO_TO_CHILD(res) ((res) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]))
- 
+  
  
  int FreeFunc(void *node_p, void* unused);
 
@@ -96,8 +95,8 @@ void BSTDestroy(bst_t *bst)
 
  
 /* 
- * Status : 
- * Reviewer :
+ * Status : APPROVED
+ * Reviewer : Hen
  * Description : this function will count the size of the BST.
  * Arguments : bst - pointer to BST.
  * Return : the size of the BST.
@@ -117,9 +116,10 @@ void BSTDestroy(bst_t *bst)
 node_t CreateNewNode(const void *data)
 {
     node_t new_node = (node_t)malloc(sizeof(struct node));
- 
-    assert(NULL != new_node);
-
+   if (NULL == new_node)
+   {
+        return NULL;
+   }
  
     new_node->children[0] = NULL;
     new_node->children[1] = NULL;
@@ -141,7 +141,8 @@ node_t CreateNewNode(const void *data)
     {
         (*iter) = node_to_insert;
         return (*iter);
-    }cmp((*iter)->data, data);
+    }
+    cmp((*iter)->data, data);
     node_p_p = ((cmp((*iter)->data, data)) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]);
 
      
@@ -151,7 +152,10 @@ node_t CreateNewNode(const void *data)
 #define GO_TO_CHILD(res) ((res) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]))
 
 
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 void *BSTInsert(bst_t *bst, const void *data)
 {
     node_t node_to_insert = CreateNewNode(data);     
@@ -163,7 +167,7 @@ void *BSTInsert(bst_t *bst, const void *data)
     if(NULL == bst->root)
     {  
         bst->root = node_to_insert;
-        return ;
+        return;
     }
 
     Insert(&bst->root, data ,bst->cmp, node_to_insert);
@@ -191,7 +195,10 @@ static void Print(node_t node, int space, int count)
  
     Print(node->children[0], space, count);
 }
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 void BSTPrint(bst_t *bst, int space, int count)
 {
     if (bst->root == NULL)
@@ -222,7 +229,10 @@ static void HTraverser(node_t node, size_t *h_arr)
 }
 
  
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 size_t BSTHeight(const bst_t *bst)
 {
     size_t h_arr[2] = {0};
@@ -261,15 +271,13 @@ static void *DataFinder(node_t node, compfunc_t cmp, const void *data)
     }
 }
 
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 void *BSTFind(bst_t *bst, const void *data)
 {
     node_t iter;
-    /*  if(NULL == bst || NULL == bst->root)
-    {
-        printf("BST is empty or doesn't exist.");
-        return NULL;
-    } */
    
     return (void *)DataFinder(bst->root, bst->cmp, data);
 }
@@ -296,9 +304,9 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
       /* maybe I should check the node children. also should i change from void to int????  */
     if (NULL != node)
     {
-        return ActionFunc(node->data, param);
-        InOrderTraverse(node->children[0], ActionFunc, param);
-        InOrderTraverse(node->children[1], ActionFunc, param);
+        return ActionFunc(node, param);
+        PreOrderTraverse(node->children[0], ActionFunc, param);
+        PreOrderTraverse(node->children[1], ActionFunc, param);
     }
 }
 
@@ -306,12 +314,15 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
 {
     if (NULL != node)
     {
-        InOrderTraverse(node->children[0], ActionFunc, param);
-        InOrderTraverse(node->children[1], ActionFunc, param);
+        PostOrderTraverse(node->children[0], ActionFunc, param);
+        PostOrderTraverse(node->children[1], ActionFunc, param);
         return ActionFunc(node, param);
     }
 }
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 int BSTForEach( bst_t *bst, traverse order_type, action_t ActionFunc, void *param)
 {
     switch (order_type)
@@ -393,8 +404,10 @@ node_t Remove(node_t iter_node, compfunc_t compfunc, const void *user_data)
 	}
 	return iter_node;
 }
-
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 void BSTRemove(bst_t *bst, void *data)
 {
 	node_t ptr_root = bst->root;
@@ -403,8 +416,7 @@ void BSTRemove(bst_t *bst, void *data)
 	{
 		return;
 	}
-	
-	 
+	Remove(ptr_root, bst->cmp, data);
 }
 
 
@@ -415,8 +427,10 @@ static int CountFunc(void *nada, void *x)
      return 0;
 }
 
-
-
+/* 
+ * Status : APPROVED
+ * Reviewer : Hen
+*/
 size_t BSTSize(const bst_t *bst)
 {
     int i = 0;

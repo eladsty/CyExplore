@@ -20,8 +20,9 @@ int ActionData(void *data, void *param)
     return 0;
 }
 
-void TestUnit(bst_t *bst)
+void TestUnit()
 {
+    bst_t *bst = BSTCreate(cmpint);
     int to_insert[] = {7,5,6,3,12,0,4,2,8,13,22,9,1};
     int to_remove[] = {7,5,6,3,12,0,4,2,8,13,22,9,1};
     int to_find[] = {5,6,3,12};
@@ -91,7 +92,7 @@ void TestUnit(bst_t *bst)
         BSTRemove(bst, &to_remove[i]);
         printf("Size Of list %ld\n", BSTSize(bst));
     }*/
-  /*   BSTDestroy(bst); */
+    BSTDestroy(bst); 
     return;
 }
 
@@ -123,9 +124,8 @@ void TestHeight()
     
     /* new tree */
     BSTDestroy(bst);
-    bst = BSTCreate(cmpint);
+    /*bst = BSTCreate(cmpint);
 
-    /* Balanced tree */
     for (i = 0; i < SIZEARR(to_insert2); ++i)
     {
         BSTInsert(bst, &to_insert2[i]);
@@ -133,22 +133,17 @@ void TestHeight()
     printf("When BST is Balanced, highet is %lu and should be 3\n", BSTHeight(bst));
     BSTPrint(bst, SIZEARR(to_insert2), 8);
     printf("\n******************************************\n\n");
+    BSTDestroy(bst);*/
 
 }
 
 
 int main()
 {
-    bst_t *bst;
     
-    bst = BSTCreate(cmpint);
-    if (NULL == bst)
-    {
-        printf("Create Failed failed\n");
-    }
-    TestUnit(bst);
+    TestUnit();
     printf("**** TestHeight *****\n\n\n");
-    TestHeight(bst);
+    TestHeight();
 
     return 0;
 }
