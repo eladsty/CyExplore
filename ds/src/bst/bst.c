@@ -8,6 +8,8 @@
 #define GO_TO_CHILD(res) ((res) > 0 ? (&(*iter)->children[0]): &(*iter)->children[1]))
  
  
+ int FreeFunc(void *node_p, void* unused);
+
 
 struct bst
 {
@@ -59,17 +61,16 @@ int BSTIsEmpty(const bst_t *bst)
 }
 
  
- 
 
-int FreeFunc(void *node_p, void *param)
+int FreeFunc(void *node_p, void* unused)
  {
-    node_t node = (node_t)node_p;
-    if(NULL == node_p)
+     if(NULL == (node_t)node_p)
     {
-        return;
+        return -1;
     }
-    free(node);
-    node = NULL;
+    
+    free(node_p);
+    node_p = NULL;
     return 0;
  }
  
@@ -91,23 +92,7 @@ void BSTDestroy(bst_t *bst)
     bst = NULL;
 
 }
-
  
-static size_t Traverse(node_t node)
-{
-    size_t cnt = 1;
-     if(NULL != node->children[0])
-    {
-        cnt += Traverse(node->children[0]);
-    }
-
-    if(NULL != node->children[1])
-    {
-        cnt += Traverse(node->children[1]);
-    }
-    
-    return cnt;
-}
 
  
 /* 
@@ -211,8 +196,7 @@ void BSTPrint(bst_t *bst, int space, int count)
 {
     if (bst->root == NULL)
     {   
-        printf("Tree is empty\n");
-        return;
+         return;
     } 
     Print((node_t)bst->root, 11, 3);
 }
@@ -302,7 +286,7 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
     if (NULL != node)
     {
         InOrderTraverse(node->children[0], ActionFunc, param);
-        return ActionFunc(node->data, param);
+        return ActionFunc(node, param);
         InOrderTraverse(node->children[1], ActionFunc, param);
     }
 }
@@ -324,7 +308,7 @@ static int InOrderTraverse(node_t node, action_t ActionFunc, void *param)
     {
         InOrderTraverse(node->children[0], ActionFunc, param);
         InOrderTraverse(node->children[1], ActionFunc, param);
-        return ActionFunc(node->data, param);
+        return ActionFunc(node, param);
     }
 }
 
@@ -372,8 +356,7 @@ node_t Remove(node_t iter_node, compfunc_t compfunc, const void *user_data)
 
    if(NULL == iter_node || NULL == user_data)
     {
-        printf("data is missing.");
-        return NULL;
+         return NULL;
     }  
     comp_result = compfunc(iter_node->data, user_data); 
 
@@ -421,10 +404,7 @@ void BSTRemove(bst_t *bst, void *data)
 		return;
 	}
 	
-	if(NULL == Remove(ptr_root, bst->cmp, data))
-    {
-        printf("data doesn't exist");
-    }
+	 
 }
 
 

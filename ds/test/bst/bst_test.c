@@ -72,6 +72,7 @@ void TestUnit(bst_t *bst)
     {
         printf("%d ", to_remove[i]);
     }
+    
     printf("\n\n!!!Make sure you can find:  ");
     to_test = i;
     for (; i < size; ++i)
@@ -88,7 +89,7 @@ void TestUnit(bst_t *bst)
         BSTRemove(bst, &to_remove[i]);
         printf("Size Of list %ld\n", BSTSize(bst));
     }*/
-    BSTDestroy(bst);
+  /*   BSTDestroy(bst); */
     return;
 }
 
@@ -144,7 +145,7 @@ int main()
     }
     TestUnit(bst);
     printf("**** TestHeight *****\n\n\n");
-    TestHeight();
+    TestHeight(bst);
 
     return 0;
 }
