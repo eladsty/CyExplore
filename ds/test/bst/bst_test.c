@@ -112,7 +112,7 @@ void TestHeight()
     /* test for linear tree */
     for (i = 1; i < SIZEARR(to_insert); ++i)
     {
-        BSTInsert(bst, &to_insert[i]);
+        BSTInsert(bst, &to_insert[i]);NULL
     }
     printf("When BST is Linear, highet is %lu and should be %lu\n", BSTHeight(bst), (SIZEARR(to_insert) - 1));
     BSTPrint(bst, SIZEARR(to_insert), 8);
