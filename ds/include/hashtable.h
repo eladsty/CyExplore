@@ -99,4 +99,29 @@ void *HashFind(const hash_table_t *table, const void *data);
 int HashForEach(hash_table_t *table, int (void *data, void *param), void *param);
 
 
+
+
+
+/*
+ * Description -loads a table with a dictionary found in linux words file.
+ * Arguments - table          
+ * Return - void
+ * Note: get's the data from the terminal.
+ * Time Complexity - O(n)
+ * Space Complexity - O(1)
+ */
+void HashLoader(hash_table_t *table);
+
+
+/*
+ * Description - received a string from terminal and checks if a string is in the dictionary.
+ * Arguments - table          
+ * Return - void
+ * Note: get's the data from the terminal.
+ * Time Complexity - O(n)
+ * Space Complexity - O(1)
+ */
+void SpellCheck(hash_table_t *table);
+
+
 #endif /* __HASHTABLE_H_CR4__ */

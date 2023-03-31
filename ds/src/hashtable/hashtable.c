@@ -4,6 +4,7 @@
 
 #include "hashtable.h"
 #include "slist.h"
+#define LONGESTWORDSIZE 30
 
 struct hash_table
 {
@@ -71,8 +72,8 @@ slist_iter_t SListFind(slist_const_iter_t from, slist_const_iter_t to, is_match_
 		}
 		iter = SListNext(iter);
 	}
-	
-	return iter;
+	/* return type was  "iter" before spelling exercize */
+	return NULL;
 }
 
 slist_iter_t SListDelete(slist_iter_t to_remove)
@@ -183,7 +184,6 @@ slist_t *SListCreate(void)
 
  
 
-  
 
 hash_table_t *HashCreate(const size_t index_amount, const hash_func_t HashFunc, const cmp_func_t hashcmp)
 {
@@ -249,10 +249,14 @@ void HashDestroy(hash_table_t *table)
 void *HashFind(const hash_table_t *table, const void *data)
 {
     size_t hash = table->hash_func(data);
-    slist_t *curr_list = table->bucket_list[hash % table->index_capacity]; 
+    size_t i = hash % table->index_capacity;
+    slist_t *curr_list = table->bucket_list[i]; 
     
     slist_iter_t node_p = SListFind( SListStart(curr_list), SListEnd(curr_list), table->hashcmp, (void *)data);
-    
+    if(NULL == node_p)
+    {
+        return NULL;
+    }
     return node_p->data;
 }
 
@@ -261,7 +265,10 @@ int HashInsert(hash_table_t *table, const void *data)
     size_t hash = table->hash_func(data);
     size_t i = hash % table->index_capacity;
     slist_t *curr_list = table->bucket_list[i];
-    SListInsertBefore(curr_list->head ,data);
+    if(NULL != SListInsertBefore(curr_list->head ,data))
+    {
+        return 1;
+    }
 
      return 0;
 }
@@ -291,8 +298,6 @@ size_t HashSize(const hash_table_t *table)
     {
         count += SListSize( table->bucket_list[i] );
     }
-
-
     return count;
 }
 
@@ -308,3 +313,50 @@ int HashIsEmpty(const hash_table_t *table)
         return 1;
     }
 }
+ 
+void HashLoader(hash_table_t *table)
+{
+    FILE *dict = fopen("/usr/share/dict/words", "r");
+    int j = 0;
+    int num_of_inserts = 0;
+    char word_in_dic[30];
+     if (NULL == dict)
+    {
+        printf("dict is null ");
+        return;
+    }
+
+    /* NULL != fgets(word_in_dic, 30, dict)  insert it inside the while */
+    while (j < 4)
+    {
+        ++j;
+        fgets(word_in_dic, 30, dict);
+        num_of_inserts += HashInsert(table, word_in_dic);
+        printf("%s\n", word_in_dic);
+        printf("insert: %d\n", num_of_inserts);
+    }
+    fclose(dict);
+
+}
+ void SpellCheck(hash_table_t *table)
+ {
+    char word[30] = {0};
+
+
+    while (27 != getc(stdin)) 
+    {
+        printf("type word to look for in dictionary or press Esc to exit.\n"  );  
+        
+        fgets(word, LONGESTWORDSIZE, stdin);
+        printf("%s\n", word);
+        if(NULL != HashFind(table, word))
+        {
+            printf("Found the word!");
+            return;
+        }
+
+        printf("Word is missing or misspelled.\n");
+ 
+    }
+
+ }
