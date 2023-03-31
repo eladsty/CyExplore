@@ -1,6 +1,6 @@
 #include <stdio.h>/* for printf*/
 
-#define TOLERANCE 0.000000001
+ 
 /*
 double Sqrt(double number)
 {
@@ -22,41 +22,54 @@ double Sqrt(double number)
 }
 */
 
-/*
+
 double Sqrt(double number)
 {
  
- 	double int_part = TOLERANCE;
-	double dec_part = 1;
-	
-	 
-	while((int_part+1) * (int_part+1) <= number)
+ 	int start = 0, end = number, i = 0 ;
+ 	double mid, answer = 0, dec_part = 0.1;
+   
+	while(start <= end)
 	{
-		int_part += 1;
-	}
-	
-	number -= (int_part * int_part);
-	
-	while(number > TOLERANCE)
-	{
-		if((dec_part) * (dec_part) > number)
+		mid = (start + end) / 2;
+		if(mid * mid == number)
 		{
-			dec_part /= 10;
-		} 
+			answer = mid;
+			break;
+		}
+		if(mid * mid < number)
+		{
+			answer = start;
+			start = mid + 1;
+		}
 		else
 		{
-			number -= dec_part;
+			end = mid - 1;
 		}
-		
 	}
-	return (int_part + dec_part);
+	
+	for( i = 0; i < 10; ++i)
+	{
+		while(answer * answer <= number)
+		{
+			answer += dec_part;
+		}
+		answer -= dec_part;
+		dec_part /= 10;
+	}
+	return answer;
 }
-*/
+
+ 
 int main()
 {
-	double d_num = 144.64;
-	
-	printf("Sqrt of %f is %f",d_num, Sqrt(d_num));
-	
+	int i = 0;
+	double arr[] = {0, 0.8,10,5,4.5,24};
+	for(i=0; i < 6 ; ++i)
+	{
+		printf("Sqrt of %f is %f\n",arr[i], Sqrt(arr[i]));
+	}
+ 
+	 
 	return 0;
 }

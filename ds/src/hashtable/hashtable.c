@@ -1,6 +1,7 @@
 #include <stdlib.h>/* malloc */
 #include <assert.h>/* assert */
 #include <stdio.h>/* printf */
+#include <string.h>/* strcmp */
 
 #include "hashtable.h"
 #include "slist.h"
@@ -14,7 +15,22 @@ struct hash_table
     slist_t **bucket_list;
 };
 
-
+size_t HashFunc(char *str)
+{
+    size_t i = 0;
+    size_t size = 0;
+    const int p = 53;                  /* closest prime to */
+    const size_t m = (pow(10, 9) + 9); /* very big prime */
+    long hash_value = 0;
+    long power = 1;
+    size = strlen(str);
+    for (i = 0; i < (size); ++i)
+    {
+        hash_value = (hash_value + (str[i] - 'a' + 1) * power) % m;
+        power = (power * p) % m;
+    }
+    return hash_value;
+}
 /* ******************LISTLISTLIST**************************LISTLISTLIST***************LISTLISTLIST******************************** */
 
 
@@ -60,21 +76,18 @@ size_t SListSize(const slist_t *list)
 	}
 	return cnt;
 }
+ 
+
 slist_iter_t SListFind(slist_const_iter_t from, slist_const_iter_t to, is_match_t CompareFunc, void *param)
 {
- 
-	slist_iter_t iter = SListNext(from);
-	while (iter != to)
-	{
-		if ( 0 == CompareFunc(SListGetData(iter), param))
-		{
-			return iter;
-		}
-		iter = SListNext(iter);
-	}
-	/* return type was  "iter" before spelling exercize */
-	return NULL;
+  while(NULL != from->next && (size_t)from != (size_t)to && CompareFunc(from->data ,param))
+  {
+    from = SListNext(from);
+  }
+  return CompareFunc(from->data ,param) ? NULL : (slist_iter_t)from;
 }
+
+
 
 slist_iter_t SListDelete(slist_iter_t to_remove)
 {
@@ -341,15 +354,14 @@ void HashLoader(hash_table_t *table)
  void SpellCheck(hash_table_t *table)
  {
     char word[30] = {0};
-
-
+    slist_t *curr_list = NULL;
     while (27 != getc(stdin)) 
     {
         printf("type word to look for in dictionary or press Esc to exit.\n"  );  
-        
         fgets(word, LONGESTWORDSIZE, stdin);
-        printf("%s\n", word);
-        if(NULL != HashFind(table, word))
+        curr_list = table->bucket_list[ (HashFunc(word) % table->index_capacity) ];
+ 
+        if(NULL != SListFind(SListStart(curr_list), SListEnd(curr_list),(is_match_t)strcmp, word))
         {
             printf("Found the word!");
             return;

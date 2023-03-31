@@ -2,7 +2,7 @@
 #define __HASHTABLE_H_CR4__ 
 
 #include <stddef.h> /* Used for size_t type */
- 
+ #include <math.h>   /* pow */
  
 
 typedef int (*cmp_func_t)(const void *data, void *param);
@@ -123,5 +123,8 @@ void HashLoader(hash_table_t *table);
  */
 void SpellCheck(hash_table_t *table);
 
+
+
+size_t HashFunc(char *str);
 
 #endif /* __HASHTABLE_H_CR4__ */

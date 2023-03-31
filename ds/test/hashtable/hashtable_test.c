@@ -2,7 +2,7 @@
 #include <string.h> /* strcmp */
 #include <stdio.h>  /* printf */
 #include <stddef.h> /* size_t */
-#include <math.h>   /* pow */
+ 
 #include <stdlib.h> /* free and malloc*/
 
 #define HASHSIZE 3
@@ -17,22 +17,7 @@
     then updating the power factor by the prime closest mod big prime.
 */
 
-size_t HashFunc(char *str)
-{
-    size_t i = 0;
-    size_t size = 0;
-    const int p = 53;                  /* closest prime to */
-    const size_t m = (pow(10, 9) + 9); /* very big prime */
-    long hash_value = 0;
-    long power = 1;
-    size = strlen(str);
-    for (i = 0; i < (size); ++i)
-    {
-        hash_value = (hash_value + (str[i] - 'a' + 1) * power) % m;
-        power = (power * p) % m;
-    }
-    return hash_value;
-}
+
 
 int PrintData(void *data, void *param)
 {
@@ -76,13 +61,15 @@ int main(void)
 
    
 
-    table_dictionary = HashCreate(25000, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
+/*     table_dictionary = HashCreate(25000, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
+ */
+    table_dictionary = HashCreate(10, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
 
     HashLoader(table_dictionary);
     printf("Size Of Hash %ld \n", HashSize(table_dictionary));
  
-/*     SpellCheck( table_dictionary );
- */    if(NULL != HashFind(table_dictionary, "AA"))
+    SpellCheck( table_dictionary );
+    if(NULL != HashFind(table_dictionary, "AA"))
         {
             printf("Found the word!");
         } 
