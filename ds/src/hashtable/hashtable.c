@@ -280,7 +280,10 @@ int HashRemove(hash_table_t *table, const void *data)
     size_t i = hash % table->index_capacity;
     slist_t *curr_list = table->bucket_list[i];
     slist_iter_t iter_to_remove = SListFind(curr_list->head, curr_list->tail, table->hashcmp, (void *)data);
-
+    if(NULL == iter_to_remove)
+    {
+        return 1;
+    }
     /*deletes the node pointed by next in the give iterator*/
     SListDelete(iter_to_remove);
     return 0;
@@ -323,7 +326,7 @@ void HashLoader(hash_table_t *table)
     }
 
     /* NULL != fgets(word_in_dic, 30, dict)  insert it inside the while */
-    while (j < 20)
+    while ( NULL != fgets(word_in_dic, 30, dict))
     {
         ++j;
         fgets(word_in_dic, 30, dict);
@@ -333,6 +336,7 @@ void HashLoader(hash_table_t *table)
     }
     fclose(dict);
 }
+
 /* void SpellCheck(hash_table_t *table)
 {
    char word[30] = {0};

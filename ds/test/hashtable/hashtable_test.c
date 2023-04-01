@@ -19,12 +19,77 @@
 
 
 
+
+
+
 int PrintData(void *data, void *param)
 {
     UNUSED(param);
     printf(" %s  \n", (char *)data);
     return 0;
 }
+
+
+
+
+
+
+/*
+Start of Shani's test ----------------------
+*/
+
+
+void IsInDict(hash_table_t *table)
+{
+	char input[64] = {"good luck"};
+	while('0' != *input)
+	{
+		fscanf(stdin, "%s", input);
+		if (!HashFind(table, input))
+		{
+			printf("word is missing\n");
+		}
+	}
+}
+/* Status : 
+ * Reviewer : 
+ * Description : recieve string of a word from stdin, checks if word is in dictionary,
+ * 					if encounters an unknown word, prints notification, continues 
+ * 					until '0' is pressed by user.	
+ * Arguments : void	
+ * Return : void
+ */
+void Spellcheck()
+{
+	char *buffer = (char *)malloc(1000000);
+	char *keep = buffer;
+	FILE *dict = fopen("/usr/share/dict/words", "r");
+	int indicator = 0;
+	hash_table_t *table = HashCreate(10000, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
+	while (EOF != fscanf(dict, "%s", buffer))
+	{
+		indicator += HashInsert(table, buffer);
+		buffer += (strlen(buffer) + 1);
+	}
+	if (!indicator)
+	{
+		printf("Insert Failed\n");
+	}
+	IsInDict(table);
+    HashForEach(table, PrintData, 0);
+	HashDestroy(table);
+	fclose(dict);
+	free(keep);
+	keep = NULL;
+	return;
+}
+
+/*
+ End of Shani's test ----------------------
+*/
+
+
+
 
 int main(void)
 {
@@ -67,7 +132,9 @@ int main(void)
  
     table_dictionary = HashCreate(10, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
 
-    HashLoader(table_dictionary);
+/*     HashLoader(table_dictionary);
+ */     HashForEach(table_dictionary, PrintData, 0);
+
     printf("Size Of Hash %ld \n", HashSize(table_dictionary));
  
 /*     SpellCheck( table_dictionary );
@@ -80,6 +147,8 @@ int main(void)
     HashDestroy(table_dictionary);
 
     /* ***************************end of spell checker********************************** */
+	Spellcheck();
+
 
     return (0);
 }
