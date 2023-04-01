@@ -46,6 +46,11 @@ int main(void)
         HashInsert(table, (void *)str[i]);
         printf("Size Of Hash %ld \n", HashSize(table));
     }
+    printf("before removing: %ld \n",HashSize(table) ) ;
+    HashRemove(table, &str[2]);
+    printf("after removing: %ld \n", HashSize(table)) ; 
+
+
     printf("\n\n\n");
 
     printf("%s\n", (char *)HashFind(table, (void *)str[6]));
@@ -59,20 +64,18 @@ int main(void)
 
     /* ***************************spell checker********************************** */
 
-   
-
-/*     table_dictionary = HashCreate(25000, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
- */
+ 
     table_dictionary = HashCreate(10, (hash_func_t)HashFunc, (cmp_func_t)strcmp);
 
     HashLoader(table_dictionary);
     printf("Size Of Hash %ld \n", HashSize(table_dictionary));
  
-    SpellCheck( table_dictionary );
-    if(NULL != HashFind(table_dictionary, "AA"))
-        {
-            printf("Found the word!");
-        } 
+/*     SpellCheck( table_dictionary );
+ */  if(NULL == HashFind(table_dictionary, "AF") )
+    {
+        printf("Didn't find the requested string.\n");
+    }
+ 
 
     HashDestroy(table_dictionary);
 

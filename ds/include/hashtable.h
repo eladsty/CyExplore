@@ -79,7 +79,7 @@ int HashIsEmpty(const hash_table_t *table);
  * Description - HashFind find the element correlated with the given data.
  * Arguments - table - pointer to hash table
  *             data - key value to find.
- * Return - void pointer to the value correlated with the given key.
+ * Return - void pointer to the value correlated with the given key, if didn't find, returns null.
  * Time Complexity - O(n)
  * Space Complexity - O(1)
  */
