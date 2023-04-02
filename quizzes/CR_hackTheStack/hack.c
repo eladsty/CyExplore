@@ -4,9 +4,9 @@ void func2(void *arg)
     long f2;
     printf("Enter func2\n");
     /* area 2 */
-        
-
-    printf("Exit func2\n");
+        /*  goto to the following printf and jump to last printf */
+     
+     printf("Exit func2\n");
 }
 
 void func1()
@@ -23,9 +23,11 @@ int main()
 
     const long x = 1;
     long y = 5;
+   
+
 /* area 1 */
 /* 
-1. x = 1337;
+1.  *(long *)&x = 1337;
 2. *(&y + 1) = 1337;
 
  */ 
