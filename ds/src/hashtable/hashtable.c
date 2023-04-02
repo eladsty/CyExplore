@@ -7,6 +7,8 @@
 #include "slist.h"
 #define LONGESTWORDSIZE 30
 
+
+/* Approve: Shlomi */ */
 struct hash_table
 {
     size_t index_capacity;
@@ -14,6 +16,7 @@ struct hash_table
     cmp_func_t hashcmp;
     slist_t **bucket_list;
 };
+/* Approve: Shlomi */ */
 
 size_t HashFunc(char *str)
 {
@@ -224,14 +227,17 @@ hash_table_t *HashCreate(const size_t index_amount, const hash_func_t HashFunc, 
 
 int HashForEach(hash_table_t *table, int (*ActionFunc)(void *list, void *param2), void *param)
 {
-    size_t i = 0;
-
-    for (i = 0; i < (table->index_capacity); ++i)
-    {
-        SListForEach(SListStart(table->bucket_list[i]), SListEnd(table->bucket_list[i]), ActionFunc, param);
-    }
-
-    return 0;
+  	size_t i = 0, result = 0;
+	
+	for (i = 0; i < table->index_capacity; ++i)
+	{
+		result = SListForEach(SListStart(table->bucket_list[i]), SListEnd(table->bucket_list[i]), ActionFunc, param);
+		if (0 != result)
+		{
+			return result;     /* terminate foreach and return 1 upon failure */
+		}
+	}
+	return result;
 }
 
 void HashDestroy(hash_table_t *table)
