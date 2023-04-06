@@ -1,30 +1,31 @@
- #	gd / gc infinity flags
+ 
+#	gd / gc infinity flags
 DEBUG = -ansi -pedantic-errors -Wall -Wextra -g
 RELEASE = -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -O3
 
 CFLAGS = $(DEBUG) -I$(INCDIR)
 CPPFLAGS = 
 
-OBJS = authentication.o  authentication_test.o
+OBJS = authentication.o authentication_test.o
 
 
 TARGET = authentication.out
+ 
 
-
-OBJDIR := /home/el/elad.shem-tov/cyber
-SRCDIR := $(OBJDIR)/src
+OBJDIR := /home/elad/elad.shem-tov/cyber
+SRCDIR := $(OBJDIR)/src/authentication
 INCDIR := $(OBJDIR)/include
-TESDIR := $(OBJDIR)/test
+TESDIR := $(OBJDIR)/test/authentication
 
 .PHONY: clean all
 
 $(TARGET): $(OBJS) 
-	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/authentication.h -L$(INCDIR)/authentication.h
+	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/authentication.h -lcrypt
  
-authentication_test.o: $(TESDIR)/authentication_test.c $(INCDIR)/authentication.h $(INCDIR)/authentication.h 
+authentication_test.o: $(TESDIR)/authentication_test.c $(INCDIR)/authentication.h
 	cc $(CFLAGS) -c $< -o $@ 
 
-authentication.o: $(SRCDIR)/authentication.c $(INCDIR)/authentication.h  $(INCDIR)/authentication.h 
+authentication.o: $(SRCDIR)/authentication.c $(INCDIR)/authentication.h
 	cc $(CFLAGS) -c $< -o $@ 
 
 

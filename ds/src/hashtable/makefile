@@ -11,7 +11,7 @@ OBJS = hashtable.o  hashtable_test.o
 TARGET = hashtable.out
 
 
-OBJDIR := /home/el/elad.shem-tov/ds
+OBJDIR := /home/elad/elad.shem-tov/ds
 SRCDIR := $(OBJDIR)/src/hashtable
 INCDIR := $(OBJDIR)/include
 TESDIR := $(OBJDIR)/test/hashtable

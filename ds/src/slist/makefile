@@ -12,7 +12,7 @@ OBJS = slist.o slist_test.o
 TARGET = slist.out
 
 
-OBJDIR := /home/el/elad.shem-tov/ds
+OBJDIR := /home/elad/elad.shem-tov/ds
 SRCDIR := $(OBJDIR)/src/slist
 INCDIR := $(OBJDIR)/include
 TESDIR := $(OBJDIR)/test/slist

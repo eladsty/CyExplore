@@ -28,7 +28,7 @@ status AuthAddUser(char *user, char *password);
 
 /* 
  * Description : AuthDeleteUser deletes data about a user from the user's data base.
- * Arguments : 'user' ia a user name, 'password' is a user's password,
+ * Arguments : 'user' is a user name, 'password' is a user's password,
 				'data_base' is the pointer to the data structure.
  * Return : return value 0 indicating successful deletion and 2 indicating 
  			failure due to system failure. 
@@ -36,14 +36,15 @@ status AuthAddUser(char *user, char *password);
 int AuthDeleteUser(char *user);
 
 /* 
- * Description : Authenticate looks for the data given about a user, 
- 					in the existing data from the user's data base.
-					if a user data exists, the user is authenticated.
- * Arguments : 'user' ia a user name, 'password' is a user's password,
-				'data_base' is the pointer to the data structure.
+ * Description : Authenticate looks for the data given about a user, in the existing data from the user's data base.
+if a user data exists, the user is authenticated.
+
+ * Arguments : 'user' is a user name, 'password' is a user's password .
+
  * Return : return value 0 indicating successful authentication, 1 indicating
- 			failed authentication and 2 indicating failure due to system failure.
+failed authentication and 2 indicating failure due to system failure.
  */
-status AuthAuthenticate(char *user, char *password, void *data_base);
+
+status AuthAuthenticate(char *user, char *password);
 
 #endif /* __AUTHENTICATION_H_CR4__ */
