@@ -145,11 +145,7 @@ int AuthDeleteUser(char *user)
 }
  
 
- /* 
- get user, add to buffer 100, add:, compare with each line, if strcmp is equal, take the salt, add to string, than add the result from crypt and strcmp the whole line.
- if equal return Authenticated, otherwise return not authenticated
- 
-  */
+
 status AuthAuthenticate(char *user, char *password)
 {
     FILE *src_fp;
