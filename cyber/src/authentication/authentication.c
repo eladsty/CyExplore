@@ -1,4 +1,3 @@
-#define  _POSIX_C_SOURCE 200809L
 
 
 #include <stdlib.h>/* free */
@@ -152,6 +151,7 @@ status AuthAuthenticate(char *user, char *password)
     size_t user_len = 0;
      char user_name[LINE_LENGTH] = {0}; 
     size_t line_len = LINE_LENGTH;
+    size_t hash_len = 0;
     char *line = NULL;
     char salt_cpy[PASS_LENGTH] = {0};
     char *hash = NULL;
@@ -176,9 +176,11 @@ status AuthAuthenticate(char *user, char *password)
     {
     	if( strncmp(user_name, line , user_len) == 0)
         {
-            strncpy(salt_cpy, (line + user_len), 29);
+
+            strncpy(salt_cpy, (line + user_len), PASS_LENGTH-1);
             hash = line + user_len;
-            if(0 == strncmp( hash, crypt(password, salt_cpy), 73) )
+            hash_len = strlen(hash);
+            if(0 == strncmp( hash, crypt(password, salt_cpy), hash_len - 1) )
             {
                 return AUTHENTICATED;
             }
@@ -186,6 +188,14 @@ status AuthAuthenticate(char *user, char *password)
         }
       }
 
-
     return AUTHFAILED;
 }   
+
+void Authenticator( char *user, char *password)
+{
+    if(AUTHENTICATED == AuthAuthenticate(user, password))
+    {
+        printf("Restricted message, how awsome.\n");
+    }
+
+}

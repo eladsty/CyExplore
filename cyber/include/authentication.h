@@ -47,4 +47,20 @@ failed authentication and 2 indicating failure due to system failure.
 
 status AuthAuthenticate(char *user, char *password);
 
+
+
+/* 
+ * Description : print a message for authenticated users only.
+
+ * Arguments : 'user' is a user name, 'password' is a user's password .
+
+ * Return : void
+ */
+void Authenticator( char *user, char *password);
+
+
+
+
+
+
 #endif /* __AUTHENTICATION_H_CR4__ */

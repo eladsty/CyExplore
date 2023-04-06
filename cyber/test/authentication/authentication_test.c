@@ -1,27 +1,32 @@
+#include <stdio.h>/* printf */
+
 #include "authentication.h"
+#define LEN 11
 
-
+int Test_AuthAddUser(char *username[LEN], char *password[LEN])
+{
+    unsigned i = 0;
+    for(i = 0; i < LEN; ++i)
+    {
+       AuthAddUser(username[i], password[i]);
+    }
+}
+ 
 
 int main()
 {
-       AuthAddUser("elad", "123");
-        AuthAddUser("eladad", "123");
-        AuthAddUser("shlomi", "123");
-       AuthAddUser("elad", "123");
-        AuthAddUser("eelad", "123");
-        AuthAddUser("", "123");        
-        AuthAddUser(":", "123");
-        AuthAddUser(" ", "123");
-         AuthDeleteUser("eelad");
-        AuthDeleteUser("eelad");
-        AuthDeleteUser("not_a_user");
+    char *user_arr[] = {"$asd","$asd","eelad","elad", "shlomi","ran", "shani",":", " " ,"oneofthelongestusernamesever", ""};
+    char *pass_arr[] = {"","123","1:23","123","=-907897","12oUJ(&3","Ll#^e23","123","123","123thisisthelongestpassword","9"};
+    
+    Test_AuthAddUser(user_arr, pass_arr);
 
-    printf(" real user real password %d\n", AuthAuthenticate("elad", "123"));
-    printf(" real user wrong password %d\n", AuthAuthenticate("eladad", "1234"));
-    printf(" real password wrong user %d\n", AuthAuthenticate("eladude", "123"));
-    printf("wrong password and username%d\n", AuthAuthenticate("e43lad", "12e2e23"));
-    printf("real user%d\n", AuthAuthenticate("shlomi", "123"));
+    Authenticator("oneofthelongestusernamesever", "123thisisthelongestpassword"); 
 
+    AuthDeleteUser("oneofthelongestusernamesever");
+    
+    Authenticator("oneofthelongestusernamesever", "123thisisthelongestpassword"); 
+
+   
 
     return 0;
 }
