@@ -158,7 +158,7 @@ status AuthAuthenticate(char *user, char *password)
     size_t line_len = LINE_LENGTH;
     size_t hash_len = 0;
     char *line = NULL;
-    char hash_cpy[100] = {0};
+    char *hash_cpy = NULL;
     char *hash = NULL;
     if(AuthInput(user) || AuthInput(password)|| NULL == user || NULL == password)
     {
@@ -181,6 +181,7 @@ status AuthAuthenticate(char *user, char *password)
     {
     	if( strncmp(user_name, line , user_len) == 0)
         {
+            hash_cpy = line + user_len ;
             strcpy(hash_cpy, crypt(password, line + user_len)) ;
             
             if( strcmp(hash_cpy, line + user_len) )
