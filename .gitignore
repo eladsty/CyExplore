@@ -1,14 +1,20 @@
-#ignore all files
+#ignore all
 *
 
-#except these:
+#don't ignore any files that end with .md
+!*.md
 
-#files
-!.gitignore
-!dummy.md
-!*.h
-!*.c
-!.myfuncs
-!makefile
-
+#don't igtnore subdirectories - recurssively
 !*/
+
+#note empty durectories are invisible any way
+
+
+#all required files
+!.myfuncs
+!.gitignore
+!*.c
+!*.h
+!*".cr4"$
+!makefile
+!Makefile
