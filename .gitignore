@@ -15,6 +15,6 @@
 !.gitignore
 !*.c
 !*.h
-!*.cr4$
+!cr4$
 !makefile
 !Makefile
