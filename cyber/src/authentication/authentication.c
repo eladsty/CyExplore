@@ -81,7 +81,12 @@ status AuthAddUser(char *user, char *password)
     return AUTHENTICATED;
 }
 
+/* 
 
+
+
+
+ */
 int AuthDeleteUser(char *user)
 {
     FILE *src_fp;
@@ -104,7 +109,7 @@ int AuthDeleteUser(char *user)
     {
         return SYSERR;
     }
-     strcat(user_name, user);
+    strcat(user_name, user);
     strcat(user_name, ":");
 
     user_len = strlen(user_name);
@@ -153,7 +158,7 @@ status AuthAuthenticate(char *user, char *password)
     size_t line_len = LINE_LENGTH;
     size_t hash_len = 0;
     char *line = NULL;
-    char salt_cpy[PASS_LENGTH] = {0};
+    char hash_cpy[100] = {0};
     char *hash = NULL;
     if(AuthInput(user) || AuthInput(password)|| NULL == user || NULL == password)
     {
@@ -176,11 +181,9 @@ status AuthAuthenticate(char *user, char *password)
     {
     	if( strncmp(user_name, line , user_len) == 0)
         {
-
-            strncpy(salt_cpy, (line + user_len), PASS_LENGTH-1);
-            hash = line + user_len;
-            hash_len = strlen(hash);
-            if(0 == strncmp( hash, crypt(password, salt_cpy), hash_len - 1) )
+            strcpy(hash_cpy, crypt(password, line + user_len)) ;
+            
+            if( strcmp(hash_cpy, line + user_len) )
             {
                 return AUTHENTICATED;
             }
