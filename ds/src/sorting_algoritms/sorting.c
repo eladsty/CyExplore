@@ -5,6 +5,7 @@
 #include "sorting.h"
 
 
+
 /* Status : Approved
  * Reviewer : Shlomi
  * Description : conducts binary search of a sorted array recursivly.
@@ -198,3 +199,43 @@ int MergeSort(int *arr_to_sort, size_t num_elements)
 	return 0;
 }
 
+
+/* static void QuickSortHelper(int *arr, size_t n )
+{
+	size_t pivot = n-1, i=0, j = 0;
+	
+	 while(j < n-1)
+	 {
+		 
+		if(arr[j] < arr[pivot])
+		{
+			++i;
+			arr[i] ^= arr[j];
+			arr[j] ^= arr[i];
+			arr[i] ^= arr[j];
+		}
+
+		++j
+	 }
+	 
+}
+ */
+ 
+int QuickSort(int *arr, size_t n)
+{
+	size_t pivot = n-1, i=0, j = 0;
+	
+	 while(j < n-1)
+	 {
+		 
+		if(arr[j] < arr[pivot])
+		{
+			++i;
+			arr[i] ^= arr[j];
+			arr[j] ^= arr[i];
+			arr[i] ^= arr[j];
+		}
+
+		++j
+	 }
+}
