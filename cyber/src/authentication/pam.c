@@ -1,7 +1,10 @@
-#include <security/pam_appl.h>
-#include <security/pam_misc.h>
-#include <stdio.h>
+#include <security/pam_appl.h>/* for pam */
+#include <security/pam_misc.h>/* for pam */
+#include <stdio.h> /* printf */
+
 #define MAX_USERNAME 32
+
+
 static struct pam_conv conv = 
 {
     misc_conv,
