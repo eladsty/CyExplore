@@ -156,10 +156,8 @@ status AuthAuthenticate(char *user, char *password)
     size_t user_len = 0;
      char user_name[LINE_LENGTH] = {0}; 
     size_t line_len = LINE_LENGTH;
-    size_t hash_len = 0;
     char *line = NULL;
     char *hash_cpy = NULL;
-    char *hash = NULL;
     if(AuthInput(user) || AuthInput(password)|| NULL == user || NULL == password)
     {
         return AUTHFAILED;
