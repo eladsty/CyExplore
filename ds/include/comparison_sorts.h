@@ -21,11 +21,23 @@ int RecursiveSearch(int n ,int arr[], int len);
 
 
 /* -------------------------------------------------------------------------- *
- * Description - search for the given number.
+ * Description - sorting the array.
  * Arguments - int to be found, int array to search in.
- * Return - returns 1 if found,0 otherwise.
- * Time Complexity - O(log(n)).
+ * Return - void 
+ * Time Complexity - O(nlog(n)).
  * Space Complexity - O(1).
  * -------------------------------------------------------------------------- */
-int MergeSort(int *arr_to_sort, size_t num_elements);
+void MergeSort(int *arr_to_sort, size_t num_elements);
 
+
+/* -------------------------------------------------------------------------- *
+ * Description - sorting the array.
+ * Arguments - int to be found, int array to search in.
+ * Return - void 
+ * Time Complexity - O(nlog(n)).
+ * Space Complexity - O(1).
+ * -------------------------------------------------------------------------- 
+ *
+ */
+
+void QuickSort(int arr[], size_t length);

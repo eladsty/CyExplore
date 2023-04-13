@@ -12,7 +12,7 @@ OBJS = comparison_sorts.o comparison_sorts_test.o
 TARGET = comparison_sorts.out
 
 
-OBJDIR := /home/el/elad.shem-tov/ds
+OBJDIR := /home/elad/elad.shem-tov/ds
 SRCDIR := $(OBJDIR)/src/comparison_sorts
 INCDIR := $(OBJDIR)/include
 TESDIR := $(OBJDIR)/test/comparison_sorts

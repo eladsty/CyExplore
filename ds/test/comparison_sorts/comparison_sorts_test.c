@@ -50,7 +50,8 @@ int main()
   	clock_t toc_ins = 0;
   	clock_t tic_qs = 0;
   	clock_t toc_qs = 0; 
-  	
+  	int i = 0;
+	int arr[] = {13,-1,4,5,0,2,2,9,12,3};
   	int int_arr_copy1[5000] = {0};
   	int int_arr_copy2[5000] = {0};
   	int int_arr_copy3[5000] = {0};
@@ -103,7 +104,14 @@ printf("Time elapsed for BubbleSort: %f seconds\n",(double)(toc_bub - tic_bub) /
 printf("Time elapsed for SelectionSort: %f seconds\n", (double)(toc_sel - tic_sel) / CLOCKS_PER_SEC);
 printf("Time elapsed for InsertionSort: %f seconds\n", (double)(toc_ins - tic_ins) / CLOCKS_PER_SEC);
 printf("Time elapsed for qsort: %f seconds\n", (double)(toc_qs - tic_qs) / CLOCKS_PER_SEC);
-	return 0;
+
+QuickSort(arr,10);
+for(i = 0; i < 10; ++i)
+{
+	printf("%d \n", arr[i]);
+}
+
+ 	return 0;
 }
 
 
