@@ -1,6 +1,9 @@
 
+#include <stdio.h>/* printf */
+#include <stdlib.h>/* malloc */
+#include "/home/elad/elad.shem-tov/ds/include/slist.h"
 
-int FindIntersections(list_t *list1, list_t *list2)
+int FindIntersections(slist_t *list1, slist_t *list2)
 {
    node_t *node1 = list1->head;
    node_t *node2 = list2->head;

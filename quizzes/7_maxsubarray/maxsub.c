@@ -1,44 +1,46 @@
- #include <stdio.h>
- 
- 
- 
-int MaxSubArray(int arr[], unsigned len)
+
+#include <stdio.h>
+
+void MaxSubArray(int *arr, size_t size, int ans[2])
 {
-  int max_sum = 0;
-  int current_sum = 0;
-  unsigned i = 0;
-	
-  for(i=0; i < len; ++i) 
+  size_t start = 0, end = 0;
+  size_t i = 0;
+  int max_so_far = arr[0], max_ending_here = arr[0];
+
+  for(i = 1; i < size; ++i)
   {
-    current_sum = current_sum + arr[i];
-    
-    if (current_sum < 0)
+    if(arr[i] > max_ending_here + arr[i])
     {
-          current_sum = 0; 
+      start = i;
+      max_ending_here = arr[i];
     }
- 
-    if(max_sum < current_sum)
-    {	
-      max_sum = current_sum;
-	}
+    else
+    {
+      max_ending_here += arr[i];
+    }
+
+    if(max_so_far < max_ending_here)
+    {
+      max_so_far = max_ending_here;
+      end = i;
+    }
+  }
+
+  ans[0] = start;
+  ans[1] = end;
 }
 
-return max_sum;
-}
-
-
-
-int main()
-{ 
-		/*"should be 3,6 and 8 "*/
-	int array[] = {-2,1,-3,4,-1,2,3,-5,4};
-
+int main(void)
+{
+	int nums[] = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
+	int msa[2] = { 0, 0 };
 	
-	printf(" sum is %d",MaxSubArray(array,9));
+	MaxSubArray(nums, sizeof(nums)/sizeof(nums[0]), msa);
+	
+	printf("Max Sub Array starts at %d and ends in %d\n", msa[0], msa[1]);
 	
 	return 0;
 }
-
 
 
 

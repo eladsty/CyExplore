@@ -2,11 +2,11 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "slist.h"
+#include "/home/elad/elad.shem-tov/ds/include/slist.h"
 
 /*
 
-approved by
+approved by 
 
 */
 
@@ -106,7 +106,7 @@ slist_iter_t SListDelete(slist_iter_t to_remove)
 	free(temp);
 	temp = NULL;
 	
-	printf("node removed \n");
+ 
 	return to_remove;
 }
 
@@ -136,10 +136,7 @@ void SListSetData(slist_iter_t elem, const void *data)
 
 slist_iter_t SListNext(slist_const_iter_t element)
 {
-	if (NULL == element->next)
-	{
-		return ((slist_t *)(element->data))->tail;
-	}
+	 
 	return (slist_iter_t)element->next;
 }
 
