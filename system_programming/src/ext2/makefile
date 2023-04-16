@@ -6,28 +6,28 @@ RELEASE = -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -O3
 CFLAGS =  -I$(INCDIR)
 CPPFLAGS = 
 
-OBJS = vsa.o vsa_test.o
+OBJS = ext2.o ext2_test.o
 
-TARGET = vsa.out
+TARGET = ext2.out
 
-OBJDIR := /home/el/elad.shem-tov/system_programming
-SRCDIR := $(OBJDIR)/src/vsa
+OBJDIR := /home/elad/elad.shem-tov/system_programming
+SRCDIR := $(OBJDIR)/src/ext2
 INCDIR := $(OBJDIR)/include
-TESDIR := $(OBJDIR)/test/vsa
+TESDIR := $(OBJDIR)/test/ext2
 
 .PHONY: clean all
 
 $(TARGET): $(OBJS) 
-	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/vsa.h
+	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/ext2.h -L$(INCDIR)/ext2_linux.h
 	
-vsa_test.o: $(TESDIR)/vsa_test.c $(INCDIR)/vsa.h
+ext2_test.o: $(TESDIR)/ext2_test.c $(INCDIR)/ext2.h
 	cc  -c $< -o $@ 
 
-vsa.o: $(SRCDIR)/vsa.c $(INCDIR)/vsa.h
+ext2.o: $(SRCDIR)/ext2.c $(INCDIR)/ext2.h
 	cc  -c $< -o $@ 
 
 
-libvsa.a: vsa.o $(INCDIR)/vsa.h
+libext2.a: ext2.o $(INCDIR)/ext2.h
 	ar rcs $@ $^
 	rm -f $(OBJS)
 	
@@ -37,7 +37,7 @@ clean:
 	rm -f $(OBJS)
 .PHONY : cleanll
 cleanll:
-	rm -f $(OBJS) $(TARGET) libvsa.a
+	rm -f $(OBJS) $(TARGET) libext2.a
 
 debug: $(OBJS)
 	gcc $(DEBUG) $(OBJS) -o $(TARGET)
@@ -50,13 +50,13 @@ vlg:
 
 .PHONY : open
 open: 
-	gedit $(SRCDIR)/vsa.c &
-	gedit $(INCDIR)/vsa.h &
-	gedit $(TESDIR)/vsa_test.c & 
+	gedit $(SRCDIR)/ext2.c &
+	gedit $(INCDIR)/ext2.h &
+	gedit $(TESDIR)/ext2_test.c & 
 
 .PHONY : touch
 touch: 
-	touch vsa.o 
+	touch ext2.o 
 	touch main.o 
 	echo "touch to renew"
 

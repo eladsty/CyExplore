@@ -1,5 +1,5 @@
-#ifndef __EXT2_H_CR4__ 
-#define __EXT2_H_CR4__ 
+#ifndef __PARSING_H_CR4__ 
+#define __PARSING_H_CR4__ 
 
 #include <stddef.h> /* size_t */
 
@@ -75,4 +75,4 @@ void EXT2PrintSuperblock(handle_t *process);
 void EXT2PrintGroupDescriptor(handle_t *process, inode_t file_descriptor);
 
 
-#endif /* __EXT2_H_CR4__ */
+#endif /* __PARSING_H_CR4__ */
