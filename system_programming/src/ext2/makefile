@@ -14,6 +14,7 @@ OBJDIR := /home/elad/elad.shem-tov/system_programming
 SRCDIR := $(OBJDIR)/src/ext2
 INCDIR := $(OBJDIR)/include
 TESDIR := $(OBJDIR)/test/ext2
+BINDIR := $(OBJDIR)/bin/ext2
 
 .PHONY: clean all
 
