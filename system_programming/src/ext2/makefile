@@ -8,7 +8,7 @@ CPPFLAGS =
 
 OBJS = ext2.o ext2_test.o
 
-TARGET = ext2.out
+TARGET = ./ext2.out
 
 OBJDIR := /home/elad/elad.shem-tov/system_programming
 SRCDIR := $(OBJDIR)/src/ext2
@@ -18,14 +18,15 @@ BINDIR := $(OBJDIR)/bin/ext2
 
 .PHONY: clean all
 
+
 $(TARGET): $(OBJS) 
-	cc $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/ext2.h -L$(INCDIR)/ext2_linux.h
+	cc -g $(CFLAGS) $(OBJS) -o $(TARGET) -L$(INCDIR)/ext2.h -L$(INCDIR)/ext2_linux.h
 	
 ext2_test.o: $(TESDIR)/ext2_test.c $(INCDIR)/ext2.h
-	cc  -c $< -o $@ 
+	cc  -g -c $< -o $@ 
 
 ext2.o: $(SRCDIR)/ext2.c $(INCDIR)/ext2.h
-	cc  -c $< -o $@ 
+	cc -g  -c $< -o $@ 
 
 
 libext2.a: ext2.o $(INCDIR)/ext2.h
@@ -39,6 +40,10 @@ clean:
 .PHONY : cleanll
 cleanll:
 	rm -f $(OBJS) $(TARGET) libext2.a
+gdb : 
+	sudo cgdb $(OBJDIR)/src/ext2/$(TARGET)
+vlg :
+	sudo valgrind  $(OBJDIR)/src/ext2/$(TARGET)
 
 debug: $(OBJS)
 	gcc $(DEBUG) $(OBJS) -o $(TARGET)
@@ -46,8 +51,7 @@ debug: $(OBJS)
 release: $(OBJS)
 	gcc $(RELEASE) $(OBJS) -o $(TARGET)	
 	
-vlg:
-	valgrind --leak-check=yes --track-origins=yes ./$(TARGET)
+ 
 
 .PHONY : open
 open: 
