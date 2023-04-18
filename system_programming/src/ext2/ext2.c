@@ -155,14 +155,11 @@ inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path)
     {
         memcpy(file_name, entry->name, entry->name_len);
         
-        file_name[entry->name_len] = 0;
-        path_name =  strrchr(file_path, '/');
-           
-
+        file_name[entry->name_len] = '\0';
+        path_name =  strrchr(file_path+1, '/');
 
         if(0 == strcmp(file_name, file_path) )
         {
-
             free(group_desc);
             group_desc = NULL;
             free(inode_struct);
