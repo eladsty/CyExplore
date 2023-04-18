@@ -7,6 +7,9 @@
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2.h"
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2_linux.h"
  
+ 
+ static char *CurrentFileName(const char *path, char *to_copy);
+
 
 
 struct process 
@@ -102,10 +105,12 @@ inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path)
 {
   	struct ext2_inode *inode_struct = NULL; 
     char *str = NULL;
-    char *path_name;
+    size_t sum_rec_len = 0;
+    char path_name[40];
     size_t block_size = EXT2_BLOCK_SIZE(process->sb);
     char file_name[EXT2_NAME_LEN+1];
-	struct ext2_dir_entry_2 *entry = NULL;
+    char buffer[4096];
+	struct ext2_dir_entry_2 entry;
     ssize_t read_status = 0;
 	struct ext2_group_desc *group_desc = NULL;
     size_t root_offset = 0;
@@ -149,27 +154,24 @@ inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path)
 		return -1; 
     }
     /* Go to the first entry */
-    read_status = pread(process->fd, entry, sizeof(struct ext2_dir_entry_2), (inode_struct->i_block[0] * block_size));
+    read_status = pread(process->fd, &buffer, sizeof(buffer), (inode_struct->i_block[0] * block_size));
 
-    while(size < inode_struct->i_size) 
+    CurrentFileName(file_path, path_name);
+    while(size <= inode_struct->i_size) 
     {
-        memcpy(file_name, entry->name, entry->name_len);
+         memcpy(&entry, buffer + size, sizeof(struct ext2_dir_entry_2));
         
-        file_name[entry->name_len] = '\0';
-        path_name =  strrchr(file_path+1, '/');
-
-        if(0 == strcmp(file_name, file_path) )
+        if(0 == strcmp(entry.name, file_path + 1) )
         {
             free(group_desc);
             group_desc = NULL;
             free(inode_struct);
             inode_struct = NULL;
-            return entry->inode;
+            return entry.inode;
         }
  
-        size += entry->rec_len;
-        entry = (struct ext2_dir_entry_2 *)((char *)entry + entry->rec_len);      /* move to the next entry */
-        printf("%d\n", size);
+        size += entry.rec_len;
+         printf("%d\n", size);
     }    
   
     free(group_desc);
@@ -179,6 +181,26 @@ inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path)
 	return -1; 
 }
 
+
+static char *CurrentFileName(const char *path, char *to_copy)
+{
+    char *tmp = (char *)path;
+    size_t offset = 0;
+    tmp = index(tmp + 1, '/');
+    if (NULL != tmp)
+    {
+        offset = tmp - (path + 1);
+    }
+    else
+    {
+        offset = strlen(path + 1);
+    }
+    strncpy(to_copy, path + 1, offset);
+    *(to_copy + offset) = '\0';
+    return to_copy;
+}
+
+
 /* 
  * Description : EXT2ReadBytes reads n bytes from a file into a user buffer. 
  * Arguments : process - pointer to handler returned by EXT2Open, s
@@ -186,7 +208,6 @@ inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path)
  * destination buffer, nbytes - number of bytes to read from file.
  * Return : pointer to buffer, NULL if an error occured.
  * Time Complexity
-
 }
 
  
