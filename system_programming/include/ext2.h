@@ -42,8 +42,7 @@ inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path);
  * Time Complexity : O(n)
  * Space Complexity : O(1)
  */
-void *EXT2ReadBytes(handle_t *process, inode_t file_descriptor, void *buffer, 
-					size_t nbytes);
+void *EXT2ReadBytes(handle_t *process, inode_t inode_num, void *buffer, size_t nbytes);
 /* 
  * Description : EXT2GetFileSize returns a given file size.
  * Arguments : process - pointer to handler returned by EXT2Open, 

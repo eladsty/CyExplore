@@ -1,217 +1,299 @@
+#define _XOPEN_SOURCE 500
 #include <string.h> /* memcpy */
- #include <unistd.h>/*  seek read */
+#include <unistd.h> /*  seek read */
 #include <assert.h>
 #include <stdlib.h>
 #include <fcntl.h>/*open  */
 #include <stdio.h>
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2.h"
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2_linux.h"
- 
- 
- static char *CurrentFileName(const char *path, char *to_copy);
 
+#define BLOCK_SIZE 4096
+static char *CurrentFileName(const char *path, char *to_copy);
 
-
-struct process 
+struct process
 {
     int fd;
     struct ext2_super_block *sb;
+    struct ext2_group_desc *group_desc_table;
 };
 
-handle_t *EXT2Open(char *device)
+struct process *EXT2Open(char *device)
 {
-   ssize_t a = 0;
-   inode_t fd = open(device, O_RDWR);
-   handle_t *handle = (handle_t *)malloc( sizeof(handle_t) );
-   if(NULL == handle)
-   {
-        return NULL;
-   }
-
-    handle->fd = fd;
-    lseek(fd, EXT2_MIN_BLOCK_SIZE, SEEK_SET);
-    handle->sb = (struct ext2_super_block *)malloc( sizeof(struct ext2_super_block) );
-
-    if(NULL == handle->sb)
+    ssize_t a = 0;
+    inode_t fd = open(device, O_RDWR);
+     struct process *process = (struct process *)malloc(sizeof(struct process));
+    unsigned group_desc_amount = 0;
+    int read_status = 0;
+    if (NULL == process)
     {
-        printf("NULLLL35");
-        free(handle);
-        handle = NULL;
         return NULL;
     }
 
-    a = read(fd, handle->sb, sizeof(struct ext2_super_block));
-    if(-1 == a )
+    process->fd = fd;
+    process->sb = (struct ext2_super_block *)malloc(sizeof(struct ext2_super_block));
+
+    if (NULL == process->sb)
     {
+        free(process);
+        process = NULL;
         return NULL;
-    }  
-    return handle;
+    }
+     read_status = pread(process->fd, process->sb, sizeof(struct ext2_super_block), 1024);
+    group_desc_amount = process->sb->s_blocks_count / process->sb->s_blocks_per_group + 1;
+    process->group_desc_table = (struct ext2_group_desc *)malloc(sizeof(struct ext2_group_desc) * group_desc_amount);
+    read_status = pread(process->fd, process->group_desc_table, sizeof(struct ext2_group_desc) * group_desc_amount, BLOCK_SIZE);
+
+    return process;
 }
 
-int EXT2Close(handle_t *process)
+int EXT2Close(struct process *process)
 {
     if (NULL == process)
-	{
-		return -1;
-	}
-    
+    {
+        return -1;
+    }
+
     close(process->fd);
 
     free(process->sb);
     process->sb = NULL;
 
+    free(process->group_desc_table);
+    process->group_desc_table = NULL;
+
     free(process);
     process = NULL;
- 
+
     return 0;
 }
-
-/* static size_t Get_inode_offset(handle_t *process, int inode_num)
+ 
+int GetInodeStruct(struct process *process, struct ext2_inode *inode, inode_t inode_no)
 {
-    size_t offset = 0;
-    ssize_t fd;
     struct ext2_group_desc *group_desc = NULL;
-    unsigned block_size = BASE_OFFSET << (process->sb->s_log_block_size);
-    size_t blockgroup_number = (inode_num-1) / process->sb->s_inodes_per_group;
-
-    /* maybe it will be quicker to deduct inode no. with (inode_size * inode_per_group) *
-    size_t inode_index =  (inode_num-1) % process->sb->s_inodes_per_group;
-    size_t group_desc_offset = sizeof(struct ext2_group_desc) * inode_blockgroup ;
-
-    lseek(process->fd, block_size + group_desc_offset, SEEK_SET);
+    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
+    size_t inode_offset = 0;
+    ssize_t read_status = 0;
 
     group_desc = (struct ext2_group_desc *)malloc(sizeof(struct ext2_group_desc));
-    if(NULL == group_desc)
-    {
-        return -1;
-    }
-    fd = read(process->fd, group_desc, sizeof(struct ext2_group_desc));
-    if(-1 == fd)
-    {
-        free(group_desc);
-        group_desc = NULL;
-        return -1;
-    }
-    offset = (group_desc->bg_inode_table) * block_size + inode_index*(process->sb->s_inode_size);
-    free(group_desc);
-    group_desc = NULL;
 
-    return offset;
-}
-
-*/
-
-inode_t EXT2GetFileDescriptor(handle_t *process, char *file_path)
-{
-  	struct ext2_inode *inode_struct = NULL; 
-    char *str = NULL;
-    size_t sum_rec_len = 0;
-    char path_name[40];
-    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
-    char file_name[EXT2_NAME_LEN+1];
-    char buffer[4096];
-	struct ext2_dir_entry_2 entry;
-    ssize_t read_status = 0;
-	struct ext2_group_desc *group_desc = NULL;
-    size_t root_offset = 0;
-    unsigned size = 0;
-   
-	group_desc = (struct ext2_group_desc *)malloc(sizeof(struct ext2_group_desc ));
-     
-    if(NULL == group_desc)  
+    if (NULL == group_desc)
     {
         return -1;
     }
 
     read_status = pread(process->fd, group_desc, sizeof(struct ext2_group_desc), block_size);
 
-    if(-1 == read_status)
+    if (-1 == read_status)
     {
         free(group_desc);
         group_desc = NULL;
         return -1;
-    }  
-     /* jump to inode table, by multiplying, might need to change 2 to 1 to reach root */
-    root_offset = group_desc->bg_inode_table * block_size + (process->sb->s_inode_size);
-    
-    inode_struct = (struct ext2_inode *)malloc((process->sb->s_inode_size)); 
+    }
 
-	if (NULL == inode_struct)
-	{
-		free(group_desc);
-		group_desc = NULL;
-		return -1; 
-	}
-        /* look for root inode */
-    read_status = pread(process->fd, inode_struct, process->sb->s_inode_size, root_offset);
+    inode_offset = group_desc->bg_inode_table * block_size + (inode_no - 1) * (process->sb->s_inode_size);
+    read_status = pread(process->fd, inode, sizeof(struct ext2_inode), inode_offset);
 
     if (-1 == read_status)
-	{
-        free(inode_struct);
-        inode_struct = NULL;
-        free(group_desc);
-		group_desc = NULL;
-		return -1; 
-    }
-    /* Go to the first entry */
-    read_status = pread(process->fd, &buffer, sizeof(buffer), (inode_struct->i_block[0] * block_size));
-
-    CurrentFileName(file_path, path_name);
-    while(size <= inode_struct->i_size) 
     {
-         memcpy(&entry, buffer + size, sizeof(struct ext2_dir_entry_2));
-        
-        if(0 == strcmp(entry.name, file_path + 1) )
-        {
-            free(group_desc);
-            group_desc = NULL;
-            free(inode_struct);
-            inode_struct = NULL;
-            return entry.inode;
-        }
- 
-        size += entry.rec_len;
-         printf("%d\n", size);
-    }    
-  
+        return -1;
+    }
+
     free(group_desc);
     group_desc = NULL;
-    free(inode_struct);
-    inode_struct = NULL;
-	return -1; 
 }
 
-
-static char *CurrentFileName(const char *path, char *to_copy)
+static inode_t SearchInDirectory(char *name_to_find, struct ext2_dir_entry_2 *dir, size_t dir_size)
 {
-    char *tmp = (char *)path;
-    size_t offset = 0;
-    tmp = index(tmp + 1, '/');
-    if (NULL != tmp)
+    size_t searched_bytes = 0;
+    while (searched_bytes < dir_size)
     {
-        offset = tmp - (path + 1);
+        if (0 == strcmp(name_to_find, dir->name))
+        {
+            return dir->inode;
+        }
+        dir = (struct ext2_dir_entry_2 *)((char *)dir + dir->rec_len);
+        searched_bytes += dir->rec_len;
     }
-    else
-    {
-        offset = strlen(path + 1);
-    }
-    strncpy(to_copy, path + 1, offset);
-    *(to_copy + offset) = '\0';
-    return to_copy;
+    return -1;
 }
 
+inode_t EXT2GetFileDescriptor(struct process *process, char *file_path)
+{
+    
+    struct ext2_inode *inode_struct = NULL;
+    char *str = NULL;
+    size_t sum_rec_len = 0;
+    char path_name[100] = {0};
+    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
+    char file_name[EXT2_NAME_LEN + 1];
+    struct ext2_dir_entry_2 entry;
+    ssize_t read_status = 0;
+    struct ext2_group_desc *group_desc = NULL;
+    size_t root_offset = 0;
+    unsigned size = 0;
+    struct ext2_inode inode;
+    unsigned curr_inode = 2;
+    char *curr_partial_path = NULL;
+    size_t inode_block_offset = 0;
+    size_t group_desc_index = 0;
+    size_t curr_inode_offset = 0;
+    struct ext2_inode found_inode;
+    struct ext2_dir_entry_2 *dir = (struct ext2_dir_entry_2 *)malloc(block_size);
 
-/* 
- * Description : EXT2ReadBytes reads n bytes from a file into a user buffer. 
+    if (-1 == read_status)
+    {
+        free(group_desc);
+        group_desc = NULL;
+        return -1;
+    }
+
+    strcpy(path_name, file_path);
+    curr_partial_path = strtok(path_name, "/");
+
+    /* block_size indicates 1 block, but it's possible to have more than one block of data */
+
+    while (NULL != curr_partial_path)
+    {
+        group_desc_index = curr_inode / process->sb->s_inodes_per_group;
+        curr_inode_offset = ((process->group_desc_table)[group_desc_index].bg_inode_table * block_size)
+                 + ((curr_inode - 1) * process->sb->s_inode_size);
+        pread(process->fd, &found_inode, sizeof(struct ext2_inode), curr_inode_offset);
+
+        pread(process->fd, dir, block_size, found_inode.i_block[0] * block_size);
+
+        curr_inode = SearchInDirectory(curr_partial_path, dir, block_size);
+        if (curr_inode < 0)
+        {
+            break;
+        }
+        curr_partial_path = strtok(NULL, "/");
+    }
+
+    free(dir);
+    dir = NULL;
+    return curr_inode;
+}
+ 
+
+/*
+ * Description : EXT2ReadBytes reads n bytes from a file into a user buffer.
  * Arguments : process - pointer to handler returned by EXT2Open, s
- * file_descriptor - returned by EXT2GetFileDescriptor, buffer - user 
+ * file_descriptor - returned by EXT2GetFileDescriptor, buffer - user
  * destination buffer, nbytes - number of bytes to read from file.
  * Return : pointer to buffer, NULL if an error occured.
  * Time Complexity
+*/
+void *EXT2ReadBytes(handle_t *process, inode_t inode_num, void *buffer, size_t nbytes)
+{
+    /*
+    * finds the data block of inode_num
+        - find ext2_inode struct
+    * pread from data block to buffer
+        - read block at a time
+    */
+    unsigned i = 0;
+    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
+    size_t group_desc_index = inode_num / process->sb->s_inodes_per_group;
+    size_t curr_inode_offset = ((process->group_desc_table)[group_desc_index].bg_inode_table * block_size) + ((inode_num - 1) * 256);
+    struct ext2_inode inode_struct = {0};
+
+    pread(process->fd, &inode_struct, sizeof(struct ext2_inode), curr_inode_offset);
+    
+    while(inode_struct.i_block[i] != 0 && nbytes > 0 && i < 12)
+    {
+        pread(process->fd, buffer , (nbytes < block_size? nbytes: block_size) , inode_struct.i_block[i] * block_size);
+        nbytes -= (nbytes < block_size? nbytes: block_size);
+        ++i;
+    }
+
+    return buffer;
+    
+   /* finds the data block of inpode_num */
+
+}
+ 
+
+
+long EXT2GetFileSize(handle_t *process, inode_t inode_no)
+{
+    struct ext2_inode inode;
+    int status = 0;
+    status = GetInodeStruct(process, &inode, inode_no);
+
+    if(status < 0)
+    {
+        return -1;
+    }
+ 
+	return inode.i_size;
 }
 
- 
-#define BLOCK_OFFSET(block) (BASE_OFFSET+(block-1)*block_size)
-#define EXT2_BLOCK_SIZE(s)	(EXT2_MIN_BLOCK_SIZE << (s)->s_log_block_size)
 
-*/
+void EXT2PrintSuperblock(handle_t *process)
+{
+    printf("\n\n******** Print Super Block ********\n\n");
+    printf("s_inodes_count:\t\t\t%u\n", process->sb->s_inodes_count);
+    printf("s_blocks_count:\t\t\t%u\n", process->sb->s_blocks_count);
+    printf("s_r_blocks_count:\t\t%u\n", process->sb->s_r_blocks_count);
+    printf("s_free_blocks_count:\t\t%u\n", process->sb->s_free_blocks_count);
+    printf("s_free_inodes_count:\t\t%u\n", process->sb->s_free_inodes_count);
+    printf("s_first_data_block:\t\t%u\n", process->sb->s_first_data_block);
+    printf("s_log_block_size:\t\t%u\n", process->sb->s_log_block_size);
+    printf("s_log_frag_size:\t\t%d\n", process->sb->s_log_frag_size);
+    printf("s_blocks_per_group:\t\t%u\n", process->sb->s_blocks_per_group);
+    printf("s_frags_per_group:\t\t%u\n", process->sb->s_frags_per_group);
+    printf("s_inodes_per_group:\t\t%u\n", process->sb->s_inodes_per_group);
+    printf("s_mtime:\t\t\t%u\n", process->sb->s_mtime);
+    printf("s_wtime:\t\t\t%u\n", process->sb->s_wtime);
+    printf("s_mnt_count:\t\t\t%u\n", process->sb->s_mnt_count);
+
+    printf("s_max_mnt_count:\t\t%d\n", process->sb->s_max_mnt_count);
+    printf("s_magic:\t\t\t%u\n", process->sb->s_magic);
+    printf("s_state:\t\t\t%u\n", process->sb->s_state);
+    printf("s_errors:\t\\tt%u\n", process->sb->s_errors);
+    printf("s_minor_rev_level:\t\t%u\n", process->sb->s_minor_rev_level);
+    printf("s_lastcheck:\t\t\t%u\n", process->sb->s_lastcheck);
+    printf("s_checkinterval:\t\t%u\n", process->sb->s_checkinterval);
+    printf("s_creator_os:\t\t\t%u\n", process->sb->s_creator_os);
+    printf("s_rev_level:\t\t\t%u\n", process->sb->s_rev_level);
+    printf("s_def_resuid:\t\t\t%u\n", process->sb->s_def_resuid);
+    printf("s_def_resgid:\t\t\t%u\n", process->sb->s_def_resgid);
+    printf("s_first_ino:\t\t\t%u\n", process->sb->s_first_ino);
+    printf("s_inode_size:\t\t\t%u\n", process->sb->s_inode_size);
+    printf("s_block_group_nr:\t\t%u\n", process->sb->s_block_group_nr);
+    printf("s_feature_compat:\t\t%u\n", process->sb->s_feature_compat);
+    printf("s_feature_incompat:\t\t%u\n", process->sb->s_feature_incompat);
+    printf("s_feature_ro_compat:\t\t%u\n", process->sb->s_feature_ro_compat);
+
+
+}
+static int read_group_descriptor(handle_t *process, inode_t inode_no, struct ext2_group_desc *group_desc)
+{
+	int read_gd;
+	read_gd = pread(process->fd, group_desc, sizeof(struct ext2_group_desc), 
+				4096 + (4096 * ((inode_no - 1) / 
+				process->sb->s_inodes_per_group)));
+	if (0 > read_gd)
+	{
+		return -1;
+	}
+	return 0;
+}
+
+void EXT2PrintGroupDescriptor(handle_t *process, inode_t inode_no)
+{
+	struct ext2_group_desc group;
+	int read_val = read_group_descriptor(process, inode_no, &group);
+	if (0 > read_val)
+	{
+		return;
+	}
+	printf("group #: %ld \n", ((inode_no - 1) / process->sb->s_inodes_per_group));
+	printf("%s%u \n", "blocks bitmap at: ", group.bg_block_bitmap);
+	printf("%s%u \n", "inodes bitmap at: ", group.bg_inode_bitmap);
+	printf("%s%u \n", "inode table at: ", group.bg_inode_table);
+	printf("%s%u \n", "free blocks: ", group.bg_free_blocks_count);
+	printf("%s%u \n", "free inodes: ", group.bg_free_inodes_count);
+	printf("%s%u \n", "used directories: ", group.bg_used_dirs_count);
+}
