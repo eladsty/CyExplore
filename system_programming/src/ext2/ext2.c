@@ -7,8 +7,9 @@
 #include <stdio.h>
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2.h"
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2_linux.h"
-
+#define BASE_OFFSET 1024
 #define BLOCK_SIZE 4096
+
 static char *CurrentFileName(const char *path, char *to_copy);
 
 struct process
@@ -25,6 +26,8 @@ struct process *EXT2Open(char *device)
      struct process *process = (struct process *)malloc(sizeof(struct process));
     unsigned group_desc_amount = 0;
     int read_status = 0;
+    size_t block_size = 0; 
+
     if (NULL == process)
     {
         return NULL;
@@ -39,7 +42,12 @@ struct process *EXT2Open(char *device)
         process = NULL;
         return NULL;
     }
-     read_status = pread(process->fd, process->sb, sizeof(struct ext2_super_block), 1024);
+    read_status = pread(process->fd, process->sb, sizeof(struct ext2_super_block), BASE_OFFSET);
+    if(-1 == read_status)
+    {
+        return NULL;
+    }
+    block_size = BASE_OFFSET << (process->sb->s_log_block_size);
     group_desc_amount = process->sb->s_blocks_count / process->sb->s_blocks_per_group + 1;
     process->group_desc_table = (struct ext2_group_desc *)malloc(sizeof(struct ext2_group_desc) * group_desc_amount);
     read_status = pread(process->fd, process->group_desc_table, sizeof(struct ext2_group_desc) * group_desc_amount, BLOCK_SIZE);
@@ -271,8 +279,10 @@ void EXT2PrintSuperblock(handle_t *process)
 static int read_group_descriptor(handle_t *process, inode_t inode_no, struct ext2_group_desc *group_desc)
 {
 	int read_gd;
+    size_t block_size = 0; 
+    block_size = BASE_OFFSET << (process->sb->s_log_block_size);
 	read_gd = pread(process->fd, group_desc, sizeof(struct ext2_group_desc), 
-				4096 + (4096 * ((inode_no - 1) / 
+				block_size + (block_size * ((inode_no - 1) / 
 				process->sb->s_inodes_per_group)));
 	if (0 > read_gd)
 	{
