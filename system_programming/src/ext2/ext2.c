@@ -9,6 +9,7 @@
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2_linux.h"
 #define BASE_OFFSET 1024
 #define BLOCK_SIZE 4096
+#define ROOT_INODE 2
 
 static char *CurrentFileName(const char *path, char *to_copy);
 
@@ -129,30 +130,19 @@ static inode_t SearchInDirectory(char *name_to_find, struct ext2_dir_entry_2 *di
 inode_t EXT2GetFileDescriptor(struct process *process, char *file_path)
 {
     
-    struct ext2_inode *inode_struct = NULL;
-    char *str = NULL;
-    size_t sum_rec_len = 0;
-    char path_name[100] = {0};
+     char path_name[100] = {0};
     size_t block_size = EXT2_BLOCK_SIZE(process->sb);
-    char file_name[EXT2_NAME_LEN + 1];
-    struct ext2_dir_entry_2 entry;
     ssize_t read_status = 0;
     struct ext2_group_desc *group_desc = NULL;
-    size_t root_offset = 0;
-    unsigned size = 0;
-    struct ext2_inode inode;
-    unsigned curr_inode = 2;
+     unsigned curr_inode = ROOT_INODE;
     char *curr_partial_path = NULL;
-    size_t inode_block_offset = 0;
-    size_t group_desc_index = 0;
+     size_t group_desc_index = 0;
     size_t curr_inode_offset = 0;
     struct ext2_inode found_inode;
     struct ext2_dir_entry_2 *dir = (struct ext2_dir_entry_2 *)malloc(block_size);
 
-    if (-1 == read_status)
+    if (NULL == dir)
     {
-        free(group_desc);
-        group_desc = NULL;
         return -1;
     }
 
