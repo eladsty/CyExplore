@@ -2,16 +2,28 @@
 #include <string.h> /* memcpy */
 #include <unistd.h> /*  seek read */
 #include <assert.h>
-#include <stdlib.h>
+#include <stdlib.h>/* malloc */
 #include <fcntl.h>/*open  */
-#include <stdio.h>
+#include <stdio.h>/*  */
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2.h"
 #include "/home/elad/elad.shem-tov/system_programming/include/ext2_linux.h"
 #define BASE_OFFSET 1024
 #define BLOCK_SIZE 4096
 #define ROOT_INODE 2
-
+#define MAX_PATH_SIZE 4096
 static char *CurrentFileName(const char *path, char *to_copy);
+
+
+
+/* 
+
+APPROVED BY RAN KLEIN
+
+ */
+
+
+
+
 
 struct process
 {
@@ -130,7 +142,7 @@ static inode_t SearchInDirectory(char *name_to_find, struct ext2_dir_entry_2 *di
 inode_t EXT2GetFileDescriptor(struct process *process, char *file_path)
 {
     
-     char path_name[100] = {0};
+     char path_name[MAX_PATH_SIZE] = {0};
     size_t block_size = EXT2_BLOCK_SIZE(process->sb);
     ssize_t read_status = 0;
     struct ext2_group_desc *group_desc = NULL;
