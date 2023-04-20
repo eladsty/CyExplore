@@ -35,11 +35,11 @@ struct process
 struct process *EXT2Open(char *device)
 {
     ssize_t a = 0;
-    inode_t fd = open(device, O_RDWR);
-     struct process *process = (struct process *)malloc(sizeof(struct process));
+    int fd = open(device, O_RDWR);
+    struct process *process = (struct process *)malloc(sizeof(struct process));
     unsigned group_desc_amount = 0;
     int read_status = 0;
-    size_t block_size = 0; 
+    size_t block_size = 0;
 
     if (NULL == process)
     {
@@ -309,3 +309,21 @@ void EXT2PrintGroupDescriptor(handle_t *process, inode_t inode_no)
 	printf("%s%u \n", "free inodes: ", group.bg_free_inodes_count);
 	printf("%s%u \n", "used directories: ", group.bg_used_dirs_count);
 }
+
+
+ 
+/* 
+int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
+{
+    struct ext2_inode *inode = {0};
+    size_t status = 0;
+    status =  GetInodeStruct(process, inode, file_inode);
+
+    if(-1 == status)
+    {
+        return -1;
+    }
+
+    printf("%d", inode->i_mode);  
+ 
+} */
