@@ -127,7 +127,7 @@ int GetInodeStruct(struct process *process, struct ext2_inode *inode, inode_t in
 static inode_t SearchInDirectory(char *name_to_find, struct ext2_dir_entry_2 *dir, size_t dir_size)
 {
     size_t searched_bytes = 0;
-    while (searched_bytes < dir_size)
+    while (0 != dir->rec_len)
     {
         if (0 == strcmp(name_to_find, dir->name))
         {
@@ -146,7 +146,7 @@ inode_t EXT2GetFileDescriptor(struct process *process, char *file_path)
     size_t block_size = EXT2_BLOCK_SIZE(process->sb);
     ssize_t read_status = 0;
     struct ext2_group_desc *group_desc = NULL;
-     unsigned curr_inode = ROOT_INODE;
+    inode_t curr_inode = ROOT_INODE;
     char *curr_partial_path = NULL;
      size_t group_desc_index = 0;
     size_t curr_inode_offset = 0;
