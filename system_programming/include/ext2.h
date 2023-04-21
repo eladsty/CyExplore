@@ -74,4 +74,16 @@ void EXT2PrintSuperblock(handle_t *process);
 void EXT2PrintGroupDescriptor(handle_t *process, inode_t file_descriptor);
 
 
+/*
+ * Description : EXT2Chmod changes the permission of a file.
+ * Arguments : fs - pointer to handler returned by EXT2Open, 
+ *                 file_inode - returned by EXT2GetFileDescriptor.
+ *                 new_mod - mode number is 4 digits, each one is 0-7.
+ * Return : 0 on success, non-zero upon failure.
+ * Time Complexity : O(1)
+ * Space Complexity : O(1)
+ */
+
+int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod);
+
 #endif /* __PARSING_H_CR4__ */

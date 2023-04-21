@@ -91,28 +91,15 @@ int EXT2Close(struct process *process)
  
 int GetInodeStruct(struct process *process, struct ext2_inode *inode, inode_t inode_no)
 {
-    struct ext2_group_desc *group_desc = NULL;
+    struct ext2_group_desc group_desc = { 0 };
     size_t block_size = EXT2_BLOCK_SIZE(process->sb);
     size_t inode_offset = 0;
     ssize_t read_status = 0;
-
-    group_desc = (struct ext2_group_desc *)malloc(sizeof(struct ext2_group_desc));
-
-    if (NULL == group_desc)
-    {
-        return -1;
-    }
-
-    read_status = pread(process->fd, group_desc, sizeof(struct ext2_group_desc), block_size);
-
-    if (-1 == read_status)
-    {
-        free(group_desc);
-        group_desc = NULL;
-        return -1;
-    }
-
-    inode_offset = group_desc->bg_inode_table * block_size + (inode_no - 1) * (process->sb->s_inode_size);
+    size_t group_num = 0;
+ 
+    group_num = (inode_no - 1) / process->sb->s_inodes_per_group ;
+    group_desc = process->group_desc_table[group_num];
+    inode_offset = group_desc.bg_inode_table * block_size + ((inode_no - 1) % process->sb->s_inodes_per_group ) * (process->sb->s_inode_size);
     read_status = pread(process->fd, inode, sizeof(struct ext2_inode), inode_offset);
 
     if (-1 == read_status)
@@ -120,9 +107,30 @@ int GetInodeStruct(struct process *process, struct ext2_inode *inode, inode_t in
         return -1;
     }
 
-    free(group_desc);
-    group_desc = NULL;
 }
+
+
+int SetInodeStruct(struct process *process, struct ext2_inode *inode, inode_t inode_no)
+{
+    struct ext2_group_desc group_desc = { 0 };
+    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
+    size_t inode_offset = 0;
+    ssize_t read_status = 0;
+    size_t group_num = 0;
+ 
+    group_num = (inode_no - 1) / process->sb->s_inodes_per_group ;
+    group_desc = process->group_desc_table[group_num];
+    inode_offset = group_desc.bg_inode_table * block_size + ((inode_no - 1) % process->sb->s_inodes_per_group ) * (process->sb->s_inode_size);
+    read_status = pwrite(process->fd, inode, sizeof(struct ext2_inode), inode_offset);
+
+    if (-1 == read_status)
+    {
+        return -1;
+    }
+ 
+}
+
+
 
 static inode_t SearchInDirectory(char *name_to_find, struct ext2_dir_entry_2 *dir, size_t dir_size)
 {
@@ -309,21 +317,43 @@ void EXT2PrintGroupDescriptor(handle_t *process, inode_t inode_no)
 	printf("%s%u \n", "free inodes: ", group.bg_free_inodes_count);
 	printf("%s%u \n", "used directories: ", group.bg_used_dirs_count);
 }
+ 
 
 
  
-/* 
 int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
 {
-    struct ext2_inode *inode = {0};
-    size_t status = 0;
-    status =  GetInodeStruct(process, inode, file_inode);
+    int i = 0;
+    struct ext2_inode inode = {0};
+    size_t temp_new_mod = 0;
 
-    if(-1 == status)
+    unsigned short s_bits = 0 , u_bits = 0, g_bits = 0, o_bits = 0;
+
+    o_bits |= (new_mod % 8);    
+    new_mod /= 10;
+    g_bits |= (new_mod % 8);
+    new_mod /= 10;
+    u_bits |= (new_mod % 8);
+    new_mod /= 10;
+    s_bits |= (new_mod % 8);
+
+    if(-1 == GetInodeStruct(process, &inode, file_inode))
     {
         return -1;
     }
+    
+    /* zero all 12 leftmost bits */
+    inode.i_mode >> 9;
 
-    printf("%d", inode->i_mode);  
- 
-} */
+    inode.i_mode |= s_bits;
+    inode.i_mode <<= 3;
+    inode.i_mode |= u_bits;
+    inode.i_mode <<= 3;
+    inode.i_mode |= g_bits;
+    inode.i_mode <<= 3;
+    inode.i_mode |= o_bits;
+
+    SetInodeStruct(process, &inode, file_inode);
+
+  
+} 
