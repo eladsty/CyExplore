@@ -27,7 +27,7 @@ int Partition(int arr[], int low, int high, unsigned k)
 void QuickSortK_recursion(int *arr, unsigned low, unsigned high, unsigned k)
 {
     int pivot_i;
-    if(low < high)
+    if(low < high && (high - low) > k)
     {
         pivot_i = Partition(arr, low, high, k);
 		QuickSortK_recursion(arr, low, pivot_i - 1, k);
@@ -44,6 +44,7 @@ void QuickSortK_recursion(int *arr, unsigned low, unsigned high, unsigned k)
 
 int MinimumKValue(int *arr, unsigned len, unsigned k)
 {
+	k -= 1;
     QuickSortK(arr, len, k);
     
 
