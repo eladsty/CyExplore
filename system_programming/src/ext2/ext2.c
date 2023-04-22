@@ -224,7 +224,7 @@ void *EXT2ReadBytes(handle_t *process, inode_t inode_num, void *buffer, size_t n
     struct ext2_inode inode_struct = {0};
 
     pread(process->fd, &inode_struct, sizeof(struct ext2_inode), curr_inode_offset);
-    
+    printf("this is the current i_mode %b", inode_struct.i_mode);    
     while(inode_struct.i_block[i] != 0 && nbytes > 0 && i < 12)
     {
         pread(process->fd, buffer , (nbytes < block_size? nbytes: block_size) , inode_struct.i_block[i] * block_size);
@@ -343,8 +343,12 @@ int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
     new_mod /= 10;
     u_bits |= (new_mod % 10);
     new_mod /= 10;
-    s_bits |= (new_mod % 10);
-
+    
+    if(new_mod != 0)
+    {
+      s_bits |= (new_mod % 10);
+    }
+ 
     if(-1 == GetInodeStruct(process, &inode, file_inode))
     {
         return -1;

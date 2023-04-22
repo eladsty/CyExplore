@@ -200,55 +200,15 @@ int MergeSort(int *arr_to_sort, size_t num_elements)
 }
 
 
-/*  static void QuickSortHelper(int *arr, size_t n )
-{
-	size_t pivot = n-1, i=0, j = 0;
-	
-	 while(j < n-1)
-	 {
-		 
-		if(arr[j] < arr[pivot])
-		{
-			++i;
-			arr[i] ^= arr[j];
-			arr[j] ^= arr[i];
-			arr[i] ^= arr[j];
-		}
-
-		++j;
-	 }
-	 
-}
- 
- 
-int QuickSort(int *arr, size_t n)
-{
-	size_t pivot = n-1, i=0, j = 0;
-	
-	 while(j < n-1)
-	 {
-		 
-		if(arr[j] < arr[pivot])
-		{
-			++i;
-			arr[i] ^= arr[j];
-			arr[j] ^= arr[i];
-			arr[i] ^= arr[j];
-		}
-
-		++j
-	 }
-	 QuickSort();
-} */
-
-
- int partition(int array[], int low, int high) {
+ int partition(int array[], int low, int high) 
+ {
   
    int pivot = array[high];
   
    int i = (low - 1);
  
-  for (int j = low; j < high; j++) {
+  for (int j = low; j < high; j++) 
+  {
     if (array[j] <= pivot) {
      
       i++;
@@ -262,7 +222,8 @@ int QuickSort(int *arr, size_t n)
    return (i + 1);
 }
 
-void quickSort(int array[], int low, int high) {
+void quickSort(int array[], int low, int high) 
+{
   if (low < high) {
     
     int pi = partition(array, low, high);
