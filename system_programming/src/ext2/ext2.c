@@ -157,14 +157,14 @@ static inode_t SearchInDirectory(char *name_to_find, struct ext2_dir_entry_2 *di
 inode_t EXT2GetFileDescriptor(struct process *process, char *file_path)
 {
     
-     char path_name[MAX_PATH_SIZE] = {0};
-    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
-    ssize_t read_status = 0;
-    struct ext2_group_desc *group_desc = NULL;
     inode_t curr_inode = ROOT_INODE;
+    char path_name[MAX_PATH_SIZE] = {0};
     char *curr_partial_path = NULL;
-     size_t group_desc_index = 0;
+    ssize_t read_status = 0;
+    size_t block_size = EXT2_BLOCK_SIZE(process->sb);
+    size_t group_desc_index = 0;
     size_t curr_inode_offset = 0;
+    struct ext2_group_desc *group_desc = NULL;
     struct ext2_inode found_inode;
     struct ext2_dir_entry_2 *dir = (struct ext2_dir_entry_2 *)malloc(block_size);
 
@@ -297,10 +297,10 @@ static int read_group_descriptor(handle_t *process, inode_t inode_no, struct ext
 {
 	int read_gd;
     size_t block_size = 0; 
+    size_t g_desc_offset = block_size + (block_size * ((inode_no - 1) / process->sb->s_inodes_per_group));
     block_size = BASE_OFFSET << (process->sb->s_log_block_size);
-	read_gd = pread(process->fd, group_desc, sizeof(struct ext2_group_desc), 
-				block_size + (block_size * ((inode_no - 1) / 
-				process->sb->s_inodes_per_group)));
+
+	read_gd = pread(process->fd, group_desc, sizeof(struct ext2_group_desc), g_desc_offset);
 	if (0 > read_gd)
 	{
 		return -1;
@@ -362,6 +362,10 @@ int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
     inode.i_mode <<= 3;
     inode.i_mode |= o_bits;
 
-    SetInodeStruct(process, &inode, file_inode);
-  
+    if( -1 == SetInodeStruct(process, &inode, file_inode) )
+    {
+        return -1;
+    }
+    
+    return 0;
 } 
