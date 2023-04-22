@@ -23,7 +23,7 @@ int main()
     printf("%s", buffer);
     EXT2PrintGroupDescriptor(process, fd);
  
-    EXT2Chmod(process, fd, 3666);
+    EXT2Chmod(process, fd, 777);
      
     EXT2Close(process);
     return 0;

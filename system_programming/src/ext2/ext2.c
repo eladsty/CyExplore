@@ -356,8 +356,8 @@ int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
     
     /* zero all 12 leftmost bits */
     inode.i_mode >>= 12;
+    
     inode.i_mode <<= 3;
-
     inode.i_mode |= s_bits;
     inode.i_mode <<= 3;
     inode.i_mode |= u_bits;
