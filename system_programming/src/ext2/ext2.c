@@ -35,12 +35,19 @@ struct process
 struct process *EXT2Open(char *device)
 {
     ssize_t a = 0;
-    int fd = open(device, O_RDWR);
-    struct process *process = (struct process *)malloc(sizeof(struct process));
+    int fd = 0;
+    struct process *process = NULL;  
     unsigned group_desc_amount = 0;
     int read_status = 0;
     size_t block_size = 0;
+    fd = open(device, O_RDWR);
 
+    if(0 > fd)
+    {
+        return NULL;
+    }
+    
+    process = (struct process *)malloc(sizeof(struct process));
     if (NULL == process)
     {
         return NULL;
@@ -329,13 +336,14 @@ int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
 
     unsigned short s_bits = 0 , u_bits = 0, g_bits = 0, o_bits = 0;
 
-    o_bits |= (new_mod % 8);    
+/* if octal value verification is required it's possible to check each value before deviding */
+    o_bits |= (new_mod % 10);    
     new_mod /= 10;
-    g_bits |= (new_mod % 8);
+    g_bits |= (new_mod % 10);
     new_mod /= 10;
-    u_bits |= (new_mod % 8);
+    u_bits |= (new_mod % 10);
     new_mod /= 10;
-    s_bits |= (new_mod % 8);
+    s_bits |= (new_mod % 10);
 
     if(-1 == GetInodeStruct(process, &inode, file_inode))
     {
@@ -343,7 +351,8 @@ int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
     }
     
     /* zero all 12 leftmost bits */
-    inode.i_mode >> 9;
+    inode.i_mode >>= 12;
+    inode.i_mode <<= 3;
 
     inode.i_mode |= s_bits;
     inode.i_mode <<= 3;
@@ -354,6 +363,5 @@ int EXT2Chmod(handle_t *process, inode_t file_inode, size_t new_mod)
     inode.i_mode |= o_bits;
 
     SetInodeStruct(process, &inode, file_inode);
-
   
 } 
