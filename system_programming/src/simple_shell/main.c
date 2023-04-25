@@ -11,6 +11,7 @@ int Fork_Way(char *input)
 {
     char *command_args[CMD_BUFF_SIZE] = {0};
     int i = 0; 
+    int pid = 0;
     char *new_line = NULL;
     new_line = strchr(input, '\n');
      if(NULL != new_line)
@@ -24,19 +25,22 @@ int Fork_Way(char *input)
         ++i;
         command_args[i] = strtok(NULL, " ");
      }
-
- 	if(fork() == 0)
-	{
-  		if(-1 == execvp(command_args[0],  command_args))
-        {
-            printf("command not found. \n");
-        }		
+    pid = fork();
+    switch (pid) {
+ 		case -1:			/* fork failed */
+ 			perror ("fork");
+ 			exit (1);
+ 		case 0:			/* in new child process */
+            if(-1 == execvp(command_args[0],  command_args))
+            {
+                printf("command not found. \n");
+            }		
+ 		    exit (0);
+ 		default:	 /* in parent  */
+            wait(0);
+  			break;
  	}
-	/*this is the parent process*/
-	else
-	{
-		wait(0);
-	}
+ 
 	return 0;	
 }
 
