@@ -28,8 +28,7 @@ int Fork_Way(char *input)
  	if(fork() == 0)
 	{
   		execvp(command_args[0],  command_args);		
-        printf("forked\n");
-	}
+ 	}
 	/*this is the parent process*/
 	else
 	{
@@ -41,7 +40,7 @@ int Fork_Way(char *input)
 void SimpleShell()
 {
     char *p_input = NULL;
-     char cmd_buffer[CMD_BUFF_SIZE] = {0};   
+    char cmd_buffer[CMD_BUFF_SIZE] = {0}; 
     
     while(1) 
     {
@@ -55,7 +54,10 @@ void SimpleShell()
             {
                 *p_input = '\0';
             }
-
+            if(0 == strcmp(cmd_buffer, "exit\n"))
+            {
+                exit(0);
+            }
             if(0 == strcmp(cmd_buffer, "system"))
             {
                 printf ("Thank for choosing system! \n\n");
