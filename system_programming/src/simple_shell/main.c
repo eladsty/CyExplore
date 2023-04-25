@@ -27,7 +27,10 @@ int Fork_Way(char *input)
 
  	if(fork() == 0)
 	{
-  		execvp(command_args[0],  command_args);		
+  		if(-1 == execvp(command_args[0],  command_args))
+        {
+            printf("command not found. \n");
+        }		
  	}
 	/*this is the parent process*/
 	else
@@ -41,7 +44,7 @@ void SimpleShell()
 {
     char *p_input = NULL;
     char cmd_buffer[CMD_BUFF_SIZE] = {0}; 
-    
+    int status = 0;
     while(1) 
     {
         printf("Type a command using system or fork: \n");
@@ -56,18 +59,22 @@ void SimpleShell()
             }
             if(0 == strcmp(cmd_buffer, "exit\n"))
             {
+                printf("exit.\n");
                 exit(0);
             }
             if(0 == strcmp(cmd_buffer, "system"))
             {
-                printf ("Thank for choosing system! \n\n");
-                system((p_input+1));
+                status = system((p_input+1));
+                if(0 != status)
+                {
+                    printf("command not found. \n");
+
+                }
             }
 
             if(0 == strcmp(cmd_buffer, "fork"))
             {
-                printf ("Thank for choosing fork! \n\n");
-                Fork_Way( (p_input+1) );
+                 Fork_Way( (p_input+1) );
             }
         }
     }
