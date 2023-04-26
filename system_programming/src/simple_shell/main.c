@@ -11,7 +11,7 @@ int Fork_Way(char *input)
 {
     char *command_args[CMD_BUFF_SIZE] = {0};
     int i = 0; 
-    int pid = 0;
+    pid_t pid = 0;
     char *new_line = NULL;
     new_line = strchr(input, '\n');
      if(NULL != new_line)
