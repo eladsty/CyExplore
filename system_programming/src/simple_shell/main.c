@@ -7,6 +7,15 @@
 
  #define CMD_BUFF_SIZE 255
  
+
+
+/* Status : Approved
+ * Reviewer : Hen
+ * arguments: pointer to string.
+ * Description : fork and execv the command in the string it receives as an argument
+ * return: 0
+*/
+
 int Fork_Way(char *input)
 {
     char *command_args[CMD_BUFF_SIZE] = {0};
@@ -44,6 +53,14 @@ int Fork_Way(char *input)
 	return 0;	
 }
 
+
+
+/* Status : Approved
+ * Reviewer : Hen
+ * arguments: none.
+ * Description : creates a simple shell and let the user run commands through system and fork + exec.
+ * return: void
+*/
 void SimpleShell()
 {
     char *p_input = NULL;
@@ -53,7 +70,7 @@ void SimpleShell()
     {
         printf("Type a command using system or fork: \n");
           
-        if (fgets(cmd_buffer, CMD_BUFF_SIZE, stdin) != NULL)
+        if (NULL != fgets(cmd_buffer, CMD_BUFF_SIZE, stdin))
         {            
             p_input = strchr(cmd_buffer, ' ');
 
