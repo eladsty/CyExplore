@@ -1,34 +1,45 @@
+
+
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
  
-#define _POSIX_SOURCE 500
-#define _XOPEN_SOURCE_EXTENDED 1
 
-#include <signal.h> /* signal handling */
-#include <sys/types.h> /* fork */
-#include <unistd.h> /* getppid */
-#include <sys/wait.h>/* wait */
-#include <stdio.h> /* printf */
-
-
-
-static void shandlerPing()
+static void SIGHandlerPing(int signum, siginfo_t *info, void *ucontext)
 {
-    write(STDOUT_FILENO, "ping\n", 6);
+    if (signum == SIGUSR1)
+    {
+        write(STDOUT_FILENO, "ping\n", 6);
+        
+        kill(info->si_pid, SIGUSR2);      /*siginfo_t *info is a pointer to struct that holds, among others, si_pid = Sending process ID . */
+    }
 }
+
+/* Status :   
+ * Reviewer :  
+ */
 
 int main()
 {
-    struct sigaction sa;
-    pid_t id = 0;
-    sa.sa_handler = &shandlerPing;
+	struct sigaction pongaction;
+	pongaction.sa_sigaction = &SIGHandlerPing;  
+	pongaction.sa_flags = SA_SIGINFO;     
+       										  
+	printf("ping's pid is %d \n" , getpid());
+	
+	sigaction(SIGUSR1, &pongaction ,NULL); 	
+	
+	while(1)
+	{
+		pause();
+		
+		sleep(1); 
+		
+	}
 
-    printf("ping pid: %d\n", getpid());
-    printf("Enter a process id: "); 
-    scanf("%d", &id);
-    kill(id, SIGUSR1);
-    
-    sigaction(SIGUSR2, &sa, NULL);
-    pause();
-
-    return 0;
 }
-

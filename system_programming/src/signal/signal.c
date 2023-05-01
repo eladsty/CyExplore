@@ -71,6 +71,9 @@ int PingPong()
 
 
 
+/* Status :  APPROVED
+ * Reviewer : Michael
+ */
 void ForkExec(int max_signals)
 {
 	struct sigaction sa;
@@ -109,6 +112,9 @@ void ForkExec(int max_signals)
 
 
 
+/* Status :  APPROVED
+ * Reviewer : Michael
+ */
 
 void NoFork(int max_signals)
 {
@@ -136,6 +142,9 @@ void NoFork(int max_signals)
  
 }
 
+/* Status :  APPROVED
+ * Reviewer : Michael
+ */
 int main()
 {
     ForkExec(20);
