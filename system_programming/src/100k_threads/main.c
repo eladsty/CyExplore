@@ -1,49 +1,80 @@
 
 #include <pthread.h>/* threads */
-#include <stdio.h>/* printf */
-#include <time.h>/* time */
+#include <stdio.h>  /* printf */
+#include <time.h>   /* time */
 #include <stdlib.h>
+#include <omp.h>
 
-int arr[100000] = {0};
+#define MAX_THREADS2 32000 /* actual: 32752, ulimit -u : 62398 */
+#define MAX_THREADS 10 /* actual: 32752, ulimit -u : 62398 */
 
-void handler(void *i)
+#define NUMBER 1232000000
+#define RANGE (NUMBER / MAX_THREADS) /*  + (NUMBER % MAX_THREADS)) */
+
+size_t arr[MAX_THREADS] = {0};
+void *handler(void *i)
 {
-    arr[(int)i] = (int)i;
+    size_t shared_sum = 0;
+    size_t j = 0;
+    arr[(size_t)i] = (size_t)i;
+    for (j = 1; j <= RANGE; ++j)
+    {
+        if (0 == ((size_t)NUMBER % (j + (RANGE * (size_t)i))))
+        {
+            shared_sum += (j + (RANGE * (size_t)i));
+        }
+    }
+    return (void *)shared_sum;
 }
 
 void Create100K()
 {
     unsigned i = 0;
+    long sum = 0;
     int pthread_status = 0;
-    pthread_t thr;
- 
-    for(i = 0; i < 100000; ++i)
+    pthread_t thread_arr[MAX_THREADS] = {0};
+    long temp = 0;
+
+    for (i = 0; i <= MAX_THREADS; ++i)
     {
-        
-        pthread_status = pthread_create(&thr, NULL, &handler, (void *)i );
-        pthread_detach(thr);
-    
+        pthread_status = pthread_create(&thread_arr[i], NULL, handler, (void *)i);
+        if (0 != pthread_status)
+        {
+            printf("error creating threads");
+        }
     }
+
+    for (i = 0; i <= MAX_THREADS; ++i)
+    {
+        pthread_join(thread_arr[i], (void **)&temp);
+        sum += temp;
+    }
+    printf("our %ld\n",sum);
+}
+
+void simple_loop()
+{
+    int i = 0;
+    size_t shared_sum2 = 0;
+
+    for (i = 1; i <= NUMBER; ++i)
+    {
+        if (0 == ((size_t)NUMBER % i))
+        {
+            shared_sum2 += i;
+        }
+    }
+    printf("using a simple loop, result i %ld", shared_sum2);
 }
 
 int main()
 {
+    sleep(3);
     unsigned i = 0;
-    time_t time1;
-    time_t time2;
+     
+     Create100K(arr); 
+/*     simple_loop();  
+ */    
     
-    time1 = clock();
-    Create100K(arr); 
-    time2 = clock();
-    
- 
-    printf("threads were created in:%f\n",(double)(time2 - time1)/CLOCKS_PER_SEC);
-    
-    for(i = 0; i < 100000; ++i)
-    {
-        printf("%d ", arr[i]);
-    } 
- 
-        
     return 0;
 }
