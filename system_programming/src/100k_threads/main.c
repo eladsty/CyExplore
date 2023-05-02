@@ -26,7 +26,8 @@ void *handler(void *i)
             shared_sum += (j + (RANGE * (size_t)i));
         }
     }
-    return (void *)shared_sum;
+    
+     return (void *)shared_sum;
 }
 
 void Create100K()
@@ -39,6 +40,7 @@ void Create100K()
 
     for (i = 0; i <= MAX_THREADS; ++i)
     {
+        sleep(1);
         pthread_status = pthread_create(&thread_arr[i], NULL, handler, (void *)i);
         if (0 != pthread_status)
         {
@@ -48,9 +50,9 @@ void Create100K()
 
     for (i = 0; i <= MAX_THREADS; ++i)
     {
-        pthread_join(thread_arr[i], (void **)&temp);
+        pthread_join(thread_arr[i], (void *)&temp);
         sum += temp;
-    }
+    }  
     printf("our %ld\n",sum);
 }
 
@@ -74,8 +76,8 @@ int main()
 {
      unsigned i = 0;
      
-/*      Create100K(arr); 
- */      simple_loop();  
+     Create100K(arr); 
+      simple_loop();  
   
     
     return 0;
