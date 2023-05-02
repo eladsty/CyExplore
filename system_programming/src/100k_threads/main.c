@@ -3,7 +3,9 @@
 #include <stdio.h>  /* printf */
 #include <time.h>   /* time */
 #include <stdlib.h>
-#include <omp.h>
+#include <omp.h>  /* OpenMP */
+
+
 
 #define MAX_THREADS2 32000 /* actual: 32752, ulimit -u : 62398 */
 #define MAX_THREADS 10 /* actual: 32752, ulimit -u : 62398 */
@@ -56,7 +58,8 @@ void simple_loop()
 {
     int i = 0;
     size_t shared_sum2 = 0;
-
+ 
+    #pragma omp parallel for
     for (i = 1; i <= NUMBER; ++i)
     {
         if (0 == ((size_t)NUMBER % i))
@@ -69,12 +72,11 @@ void simple_loop()
 
 int main()
 {
-    sleep(3);
-    unsigned i = 0;
+     unsigned i = 0;
      
-     Create100K(arr); 
-/*     simple_loop();  
- */    
+/*      Create100K(arr); 
+ */      simple_loop();  
+  
     
     return 0;
 }

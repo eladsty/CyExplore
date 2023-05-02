@@ -1,4 +1,3 @@
-
 #include <stdio.h>/* printf */
 typedef struct node node_t;
 
@@ -13,7 +12,6 @@ node_t *Find(node_t *node, int *n);
 
 node_t *Find(node_t *node, int *n)
 {
-    
     if(0 == *n)
     {
         return node;
@@ -32,7 +30,7 @@ node_t *FindNthElem(node_t *node, int *n)
 int main()
 { 
     node_t node1, node2, node3, node4, node5, node6, tail;
-     int nth_elem = 2;
+    int nth_elem = 2;
     node_t *res = NULL;
  
     node1.next = &node2;
