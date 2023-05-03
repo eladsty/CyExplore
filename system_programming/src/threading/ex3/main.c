@@ -1,7 +1,8 @@
 
 #include <pthread.h>/* threads */
 #include <threads.h>/* threads */
- #include <stdio.h>  /* printf */
+#include <semaphore.h> /* semaphroes */
+#include <stdio.h>  /* printf */
 #include <stdlib.h>
 #include <omp.h>  /* OpenMP */
 #include <assert.h> /* assert */
@@ -13,8 +14,7 @@
 
 slist_t *new_list = NULL;
 pthread_mutex_t mutex_lock;
-
-
+sem_t sema;
 
 
 void *Consumer()
