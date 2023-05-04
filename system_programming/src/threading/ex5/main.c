@@ -1,7 +1,6 @@
 
 
 #include <pthread.h>/* threads */
-#include <threads.h>/* threads */
 #include <semaphore.h> /* semaphroes */
 #include <stdio.h>  /* printf */
 #include <assert.h> /* assert */
@@ -21,7 +20,8 @@ void *ProduceData(void *data);
 
 struct thread_struct
 {
-    pthread_mutex_t *mutex_lock;
+    pthread_mutex_t *mutex_lock_prod;
+    pthread_mutex_t *mutex_lock_cons;
     sem_t *sem_cons;
     sem_t *sem_prod;
     c_buff_t *thr_buffer;
@@ -55,12 +55,12 @@ void *Consumer(void *data)
     while (i < MAX_ROUNDS)
     {
         sem_wait( ((thr_struct_t *)data)->sem_cons );
-        pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock);
+        pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock_cons);
        
         CBuffRead(((thr_struct_t *)data)->thr_buffer, &answer, ((thr_struct_t *)data)->data_read_size );
 
         sem_post( ((thr_struct_t *)data)->sem_prod );
-        pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock);
+        pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock_cons);
       
         ++i;
         ++num_of_reads;
@@ -79,7 +79,7 @@ void *Producer(void *data)
     while (i < MAX_ROUNDS)
     {
         sem_wait(((thr_struct_t *)data)->sem_prod);
-        pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock);
+        pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock_prod);
        
        /* create and insert the data into the buffer by passing a thr struct pointer*/
         ((thr_struct_t *)data)->prod_action_func(data);
@@ -87,7 +87,7 @@ void *Producer(void *data)
         /* printf("thread id = %ld", pthread_self()); */
         
         sem_post(((thr_struct_t *)data)->sem_cons);
-        pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock);
+        pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock_prod);
         ++i;
         ++num_of_reads;
     }
@@ -103,7 +103,9 @@ void ProdConsMain()
     size_t tot_cons = 0;
     pthread_t cons_thr[3] = {0};
     pthread_t prod_thr[3] = {0};
-    pthread_mutex_t mutex_lock;
+    pthread_mutex_t mutex_lock_prod;
+    pthread_mutex_t mutex_lock_cons;
+
     sem_t sem_cons;
     sem_t sem_prod;
     c_buff_t *thr_buffer = NULL;
@@ -112,9 +114,12 @@ void ProdConsMain()
     
     thr_buffer = CBuffCreate(BUFFER_SIZE);
 
-    pthread_mutex_init(&mutex_lock, 0);
+    pthread_mutex_init(&mutex_lock_prod, 0);
+    pthread_mutex_init(&mutex_lock_cons, 0);
+   
 
-    thr_struct.mutex_lock = &mutex_lock;
+    thr_struct.mutex_lock_prod = &mutex_lock_prod;
+    thr_struct.mutex_lock_cons = &mutex_lock_cons;
     thr_struct.sem_cons = &sem_cons;
     thr_struct.sem_prod = &sem_prod;
     thr_struct.thr_buffer = thr_buffer;
@@ -142,7 +147,9 @@ void ProdConsMain()
         tot_prod += prod_ret;
     }
     assert(tot_cons == tot_prod);
- 
+
+    pthread_mutex_destroy(&mutex_lock_prod);
+    pthread_mutex_destroy(&mutex_lock_cons);
     sem_destroy(&sem_cons);
     sem_destroy(&sem_prod);
     CBuffDestroy(thr_buffer);
