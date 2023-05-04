@@ -143,11 +143,9 @@ void ProdConsMain()
     }
     assert(tot_cons == tot_prod);
  
- 
     sem_destroy(&sem_cons);
     sem_destroy(&sem_prod);
     CBuffDestroy(thr_buffer);
-
 }
 
 
