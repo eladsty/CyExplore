@@ -116,7 +116,10 @@ void simple_loop()
     printf("using a simple loop, result i %ld", shared_sum2);
 }
 
-/* ------------------------------------------------------------------------- */
+/* -------------------------------
+Approved by: Mr Evanov.M
+
+------------------------------------------ */
 int info_array[1] = {0};
 int lock = 0;
 

@@ -10,7 +10,11 @@
 #define N_THREADS 16
 
 /* 
+  -------------------------------
+Approved by: Mr Evanov.M
+
 description: function pointer to: function that returns void pointer (data to insert)
+------------------------------------------ 
  */
 typedef void *(*producer_action_t)(void* data);
 typedef void *(*consumer_action_t)(void* data);
@@ -38,17 +42,20 @@ void *Consumer(void *data)
     {
         pthread_mutex_lock(&((struct thread_struct*)data)->mutex_lock);
         /* printf("thread id = %ld", pthread_self()); */
-
+        answer = 0; 
         if (SListSize(((struct thread_struct*)data)->new_list) > 0)
         {
             head_node = SListStart(((struct thread_struct*)data)->new_list);
             answer = (size_t)SListGetData(head_node);
             /* printf(" %ld \n", answer); */
             SListDelete(head_node);
-            ++i;
-            sum += answer;
         }
         pthread_mutex_unlock(&((struct thread_struct*)data)->mutex_lock);
+        if(answer)
+        {
+            ++i;
+            sum += answer; 
+        }          
     }
 
     return (void*)sum;
@@ -57,7 +64,7 @@ void *Consumer(void *data)
  void *ProduceData(void *data)
 {        
     (void)data;
-    return (void *)(size_t)(rand() % 10);   
+    return (void *)(size_t)(rand() % 10 + 1);   
 }
 
 void *ConsumeData(void *data)
@@ -80,11 +87,10 @@ void *Producer(void *data)
 
         head_node = SListStart(((struct thread_struct*)data)->new_list);
         SListInsertBefore(head_node, data_to_send);
-        ++i;
-        sum += (size_t)data_to_send;
-
         pthread_mutex_unlock(&((struct thread_struct*)data)->mutex_lock);
         
+        ++i;
+        sum += (size_t)data_to_send;
     }
 
     return (void*)sum;
@@ -102,7 +108,7 @@ void ProdConsMain()
     struct thread_struct thr_struct;
     thr_slist = SListCreate();
 
-    pthread_mutex_init(&mutex_lock, 0);
+    pthread_mutex_init(&mutex_lock, NULL);
 
     thr_struct.mutex_lock = mutex_lock;
     thr_struct.new_list = thr_slist;
@@ -126,7 +132,10 @@ void ProdConsMain()
         tot_cons += cons_ret;
         tot_prod += prod_ret;
     }
+
     assert(tot_cons == tot_prod);
+    pthread_mutex_destroy(&mutex_lock);
+
 }
 
 int main()
