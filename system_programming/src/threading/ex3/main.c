@@ -50,17 +50,17 @@ void *Consumer(void *data)
         sem_wait( &((struct thread_struct*)data)->sema );
         pthread_mutex_lock(&((struct thread_struct*)data)->mutex_lock);
         /* printf("thread id = %ld", pthread_self()); */
-
+        answer = 0;
         if (SListSize(((struct thread_struct*)data)->new_list) > 0)
         {
             head_node = SListStart(((struct thread_struct*)data)->new_list);
             answer = (size_t)SListGetData(head_node);
             /* printf(" %ld \n", answer); */
             SListDelete(head_node);
-            ++i;
-            sum += answer;
         }
         pthread_mutex_unlock(&((struct thread_struct*)data)->mutex_lock);
+            ++i;
+            sum += answer;
     }
 
     return (void*)sum;
@@ -81,12 +81,12 @@ void *Producer(void *data)
 
         head_node = SListStart(((struct thread_struct*)data)->new_list);
         SListInsertBefore(head_node, data_to_send);
-        ++i;
-        sum += (size_t)data_to_send;
 
         sem_post( &((struct thread_struct*)data)->sema );
         pthread_mutex_unlock(&((struct thread_struct*)data)->mutex_lock);
         
+        ++i;
+        sum += (size_t)data_to_send;
     }
 
     return (void*)sum;

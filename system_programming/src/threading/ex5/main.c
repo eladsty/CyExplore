@@ -84,8 +84,7 @@ void *Producer(void *data)
        /* create and insert the data into the buffer by passing a thr struct pointer*/
         ((thr_struct_t *)data)->prod_action_func(data);
         CBuffRead(((thr_struct_t *)data)->thr_buffer,&test_data, ((thr_struct_t *)data)->data_read_size);
-        /* printf("thread id = %ld", pthread_self()); */
-        
+        /* printf("thread id = %ld", pthread_self()); */ 
         sem_post(((thr_struct_t *)data)->sem_cons);
         pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock_prod);
         ++i;
