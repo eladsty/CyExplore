@@ -1,8 +1,8 @@
-
 #include <pthread.h>/* threads */
-#include <threads.h>/* threads */
+#include <semaphore.h> /* semaphroes */
 #include <stdio.h>  /* printf */
 #include <assert.h> /* assert */
+
 #include "slist.h"
 #include "slist.c" /* if time permits, I should create a shared library */
 
