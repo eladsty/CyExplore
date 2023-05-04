@@ -100,7 +100,6 @@ slist_iter_t SListDelete(slist_iter_t to_remove)
 	free(temp);
 	temp = NULL;
 	
-	printf("node removed \n");
 	return to_remove;
 }
 

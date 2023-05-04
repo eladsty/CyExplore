@@ -141,11 +141,13 @@ void ProdConsMain()
         tot_cons += cons_ret;
         tot_prod += prod_ret;
     }
-      assert(tot_cons == tot_prod);
-     pthread_mutex_destroy(&mutex_lock);
+    assert(tot_cons == tot_prod);
+ 
+ 
     sem_destroy(&sem_cons);
     sem_destroy(&sem_prod);
     CBuffDestroy(thr_buffer);
+
 }
 
 
