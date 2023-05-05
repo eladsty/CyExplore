@@ -1,5 +1,7 @@
 
-
+/* 
+APPROVED: MICHAEL EVANOV
+ */
 #include <pthread.h>/* threads */
 #include <semaphore.h> /* semaphroes */
 #include <stdio.h>  /* printf */

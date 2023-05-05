@@ -6,7 +6,9 @@
 #include "slist.h"
  
 #define MAX_ROUNDS 1000000
-
+/* 
+APPROVED: MICHAEL EVANOV
+ */
  
 typedef void *(*producer_action_t)(void* data);
 typedef void *(*consumer_action_t)(void* data);

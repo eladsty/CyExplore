@@ -9,7 +9,9 @@
   
  #define MAX_ROUNDS 120000
 #define BUFFER_SIZE 80
-
+/* 
+APPROVED: MICHAEL EVANOV
+ */
 
 typedef struct thread_struct thr_struct_t;
 typedef void *(*producer_action_t)(void* data);
