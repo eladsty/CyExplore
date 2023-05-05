@@ -2,12 +2,10 @@
 #include <semaphore.h> /* semaphroes */
 #include <stdio.h>  /* printf */
 #include <assert.h> /* assert */
-
+#include <stdlib.h> /* rand */
 #include "slist.h"
-#include "slist.c" /* if time permits, I should create a shared library */
-
-#define MAX_ROUNDS 100
-
+ 
+#define MAX_ROUNDS 1000000
 
  
 typedef void *(*producer_action_t)(void* data);
@@ -82,9 +80,9 @@ void *Producer(void *data)
         head_node = SListStart(((struct thread_struct*)data)->new_list);
         SListInsertBefore(head_node, data_to_send);
 
-        sem_post( &((struct thread_struct*)data)->sema );
         pthread_mutex_unlock(&((struct thread_struct*)data)->mutex_lock);
         
+        sem_post( &((struct thread_struct*)data)->sema );
         ++i;
         sum += (size_t)data_to_send;
     }

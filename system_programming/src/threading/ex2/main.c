@@ -1,10 +1,11 @@
 #include <pthread.h>/* threads */
 #include <semaphore.h> /* semaphroes */
 #include <stdio.h>  /* printf */
+#include <stdlib.h>/* rand */
 #include <assert.h> /* assert */
 
 #include "slist.h"
-#include "slist.c" /* if time permits, I should create a shared library */
+ 
 
 #define MAX_ROUNDS 1000
 #define N_THREADS 16
@@ -40,9 +41,9 @@ void *Consumer(void *data)
     
     while (i < MAX_ROUNDS)
     {
-        pthread_mutex_lock(&((struct thread_struct*)data)->mutex_lock);
         /* printf("thread id = %ld", pthread_self()); */
         answer = 0; 
+        pthread_mutex_lock(&((struct thread_struct*)data)->mutex_lock);
         if (SListSize(((struct thread_struct*)data)->new_list) > 0)
         {
             head_node = SListStart(((struct thread_struct*)data)->new_list);

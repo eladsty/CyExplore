@@ -1,4 +1,3 @@
-
 #include <pthread.h>/* threads */
 #include <threads.h>/* threads */
 
@@ -14,9 +13,11 @@
 
 #define NUMBER 1232000000
 #define RANGE (NUMBER / MAX_THREADS) /*  + (NUMBER % MAX_THREADS)) */
-#define FREE 0
+#define UNLOCK 0
 #define LOCKED 1
-
+#define INFO_ARR_SIZE 5
+#define EMPTY 0
+#define MAX_ROUNDS 100000
 
 size_t arr[MAX_THREADS] = {0};
 
@@ -26,7 +27,7 @@ void *Mem_Map_thread(void *i)
 {
     size_t shared_sum = 0;
     size_t j = 0;
-    size_t thread_stack = 20+i;
+    size_t thread_stack = 20 + (size_t)i;
     int *heap_var = malloc(4);
     static thread_local int thr_local = 88;
  
@@ -84,7 +85,6 @@ void Create100K()
 
     for (i = 0; i <= MAX_THREADS; ++i)
     {
-        sleep(1);
         pthread_status = pthread_create(&thread_arr[i], NULL, handler, (void *)i);
         if (0 != pthread_status)
         {
@@ -117,75 +117,93 @@ void simple_loop()
 }
 
 /* -------------------------------
-Approved by: Mr Evanov.M
+Approved by: Evanov.M EX1
 
 ------------------------------------------ */
-int info_array[1] = {0};
-int lock = 0;
-
-void *Consumer()
+  void *Consumer(void *info_array)
 {
-    int i = 0;
-
-    while (1) 
+    int i = 1;
+    unsigned consumer_rounds = 0;
+    unsigned j = 0;
+     while (j < MAX_ROUNDS) 
     {
-         if(1 == lock)
+        if(UNLOCK == *(int *)info_array)
         {
-            printf("%d \n",info_array[0]);
-            --lock;
-        }
-        printf("lock is %d\n",lock);
+            *(int *)info_array = LOCKED;
+            ++consumer_rounds;
+            if(EMPTY != *( ((int *)(info_array) + 2)) ) 
+            {
+                while(i <=  INFO_ARR_SIZE)
+                {
 
+                     printf("%d \n", *( ((int *)(info_array) + i)) );
+                   *( ((int *)(info_array) + i)) = EMPTY;
+                    ++i;
+                }
+            }
+            *(int *)info_array = UNLOCK;
+             i = 1;
+        }
+
+        ++j;
     }    
+    printf("total cons rounds: %d \n ", consumer_rounds);
     return NULL;
  }
 
-void *Producer()
+void *Producer(void *info_array)
 {
-    int i = 0;
-    int rand_n = 0;
- 
-     while (1) 
+    int i = 1;
+    int new_info = 0;  
+    unsigned producer_rounds = 0;
+    unsigned j = 0;
+    while (j < MAX_ROUNDS) 
     {
-        if(0 == lock)
+        if(UNLOCK == *(int *)info_array)
         {
-            rand_n = (rand() % 10) + 1;
-            info_array[0] = rand_n;
+            *(int *)info_array = LOCKED;
+            ++producer_rounds;
+            if(EMPTY == *((int *)(info_array) + 2))
+            {
+                while(i <= INFO_ARR_SIZE)
+                {
+                    new_info = (int)(rand() % 10);
+                    *((int *)(info_array) + i) = (new_info + 1);
+                    ++i;
+                }
+            }
 
-            ++lock;
+            *(int *)info_array = UNLOCK;
+            i = 1;
         }
-        printf("lock is %d\n",lock);
-    }    
-
+        ++j;
+    }  
+    printf("total rounds: %d \n ", producer_rounds);
     return NULL;
 }
 
 
 void ProdConsMain()
 {
-    pthread_t cons_thr[3] = {0};
-    pthread_t prod_thr[3] = {0};
-    int i = 0;
-    
-    for(i = 0; i < 3; ++i)
-    {
-        pthread_create(&prod_thr[i], NULL, Producer, NULL );
-        pthread_create(&cons_thr[i], NULL, Consumer, NULL );
-    }
-    
-    for(i = 0; i < 3; ++i)
-    {
-        pthread_join(cons_thr[i], NULL);
-        pthread_join(prod_thr[i], NULL);
-    }
-    
- }
+    pthread_t cons_thr ;
+    pthread_t prod_thr;
+    int arr[1] = {0};
+    int pshared = 0;
+    int info_array[INFO_ARR_SIZE + 1] = {0};
+
+    pthread_create(&prod_thr, NULL, Producer, &info_array );
+    pthread_create(&cons_thr, NULL, Consumer, &info_array );
+
+
+    pthread_join(prod_thr, NULL);
+    pthread_join(cons_thr, NULL);
+ 
+
+  }
 
 
 int main()
-{
-     unsigned i = 0;
-     
+{     
     /*
       Create100K(arr); 
       simple_loop();   
@@ -197,3 +215,4 @@ int main()
 
     return 0;
 }
+

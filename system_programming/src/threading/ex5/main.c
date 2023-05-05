@@ -3,10 +3,11 @@
 #include <pthread.h>/* threads */
 #include <semaphore.h> /* semaphroes */
 #include <stdio.h>  /* printf */
+#include <stdlib.h> /* rand */
 #include <assert.h> /* assert */
 
 #include "cbuff_read_write_index.h"/* buffer */
-#include "cbuff_read_write_index.c"/* buffer */
+ 
  
 #define MAX_ROUNDS 12
 #define BUFFER_SIZE 80
@@ -35,11 +36,8 @@ void *ProduceData(void *data)
 {     
     size_t num = (rand() % 10);
     (void)data;
-    
-    CBuffWrite(((thr_struct_t *)data)->thr_buffer, &num, 8);   
-    return NULL;   
+    return (void *)num;   
 }
-
 void *ConsumeData(void *data)
 {        
     printf(" %ld \n", (size_t)data); 
@@ -49,49 +47,46 @@ void *ConsumeData(void *data)
 void *Consumer(void *data)
 {
     size_t i = 0;
-    size_t num_of_reads = 0;
+    size_t sum = 0;
     size_t answer = 0;
 
     while (i < MAX_ROUNDS)
     {
         sem_wait( ((thr_struct_t *)data)->sem_cons );
-        pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock_cons);
-       
+        pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock_cons);   
         CBuffRead(((thr_struct_t *)data)->thr_buffer, &answer, ((thr_struct_t *)data)->data_read_size );
-
-        sem_post( ((thr_struct_t *)data)->sem_prod );
         pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock_cons);
+        sem_post( ((thr_struct_t *)data)->sem_prod );
       
         ++i;
-        ++num_of_reads;
+        sum += answer;   
     }
 
-    return (void*)num_of_reads;
+    return (void*)sum;
 }
  
  
 void *Producer(void *data)
 {
     int i = 0;
-    /* sum is just for testing */
-    size_t num_of_reads = 0;
+    size_t sum = 0;
     size_t test_data = 0;
     while (i < MAX_ROUNDS)
     {
         sem_wait(((thr_struct_t *)data)->sem_prod);
         pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock_prod);
        
-       /* create and insert the data into the buffer by passing a thr struct pointer*/
-        ((thr_struct_t *)data)->prod_action_func(data);
-        CBuffRead(((thr_struct_t *)data)->thr_buffer,&test_data, ((thr_struct_t *)data)->data_read_size);
-        /* printf("thread id = %ld", pthread_self()); */ 
-        sem_post(((thr_struct_t *)data)->sem_cons);
+        test_data = (size_t)((thr_struct_t *)data)->prod_action_func(NULL);
+        CBuffWrite(((thr_struct_t *)data)->thr_buffer, &test_data, 8);   
+
         pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock_prod);
+        sem_post(((thr_struct_t *)data)->sem_cons);
+        
         ++i;
-        ++num_of_reads;
+        sum += test_data;
     }
 
-    return (void*)num_of_reads;
+    return (void*)sum;
 }
  
 
@@ -145,7 +140,7 @@ void ProdConsMain()
         tot_cons += cons_ret;
         tot_prod += prod_ret;
     }
-    assert(tot_cons == tot_prod);
+     assert(tot_cons == tot_prod);
 
     pthread_mutex_destroy(&mutex_lock_prod);
     pthread_mutex_destroy(&mutex_lock_cons);
