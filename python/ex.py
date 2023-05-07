@@ -131,13 +131,13 @@ min_curr(0)
 """ EX8 """
 
 def prime(num):
-    if(1 >= num):
-        return False
-    res = dev_sum(num)
-    if (res == (num + 1)):
+    if 1 == num or 2 == num:
         return True
-    else:
-        return False
+    for i in range(2, num):
+        if 0 == (num % i):
+            return False
+    return True
+
     
 print(prime(2))
 print(prime(3))
