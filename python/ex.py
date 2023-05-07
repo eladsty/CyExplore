@@ -46,37 +46,93 @@ print(fer)
 
 """ EX4 """
 
-def Is_Leap(year):
+def is_leap(year):
     if (year % 400 == 0) or (year % 100 != 0) and (year % 4 == 0):
         return 1
     else:
         return 0
     
-x = Is_Leap(1500)
+x = is_leap(1500)
 print(x)   
-x = Is_Leap(1616)
+x = is_leap(1616)
 print(x)    
-x = Is_Leap(1000)
+x = is_leap(1000)
 print(x)
 
 
 """ EX5 """
 
-def IsComplexed(pwd):
-    nums = set('0123456789$,')
-    spec = set('@#%&$, ')
-    upper = set('ABCDEFGHIJKLMNOPQRSTUVWXYZ$,')
-    lower = set('abcdefghijklmnopqrstuvwxyz$,')
+def check_pwd(password):
+     cond1=0
+     cond2=0
+     cond3=0
+     cond4=0
 
-    if (len(pwd > 7) and (any(c in nums) for c in pwd) and any(c in spec) for c in pwd) and any((c in lower) for c in pwd) and any((c in upper) for c in pwd):
-    print('Found').
+     if len(password) < 8:
+         return False
+
+     for l in password:
+         if l in '[A-Z]':
+             cond1 = 1
+         if l in '[a-z]':
+             cond2 = 1
+         if ( ord(l) in range(ord('0'), ord('9')) ):
+             cond3 = 1
+         if l == '@' or l == '#' or l == '&' or l == '%':
+             cond4 = 1
+
+     if cond1+cond2+cond3+cond4 > 3:
+         return True
+     else:
+         return False
 
 
-else:
-    print('Not Found')
+print(check_pwd("283fF9a8j%"))
+print(check_pwd("dq#Sf"))
+
+""" EX6 """
+
+def dev_sum(num):
+    sum = 0
+    for i in range(2, num - 1):
+        if (0 == (num % i)):
+            sum += i
+    return sum + 1 + num
+
+ 
+print(dev_sum(3))
 
 
-    if(len(pwd) < 8):
-        return 0
-    if ('0') or ('1') or ('2') or ('3') or ('4') or ('5') in pwd:
+""" EX7 """
 
+def min_curr(money):
+    curr_devision = [200, 100, 50, 20, 10, 5, 2, 1]
+    i = 0
+    while (0 != money):
+        res = (money // curr_devision[i])
+        if (0 < res * curr_devision[i]):
+            print(res, " bills of ", curr_devision[i])
+            money -= (res * curr_devision[i])
+            i += 1
+        else:
+            i += 1
+
+min_curr(414)
+min_curr(100)
+min_curr(0)
+
+""" EX8 """
+
+def prime(num):
+    if(1 >= num):
+        return False
+    res = dev_sum(num)
+    if (res == (num + 1)):
+        return True
+    else:
+        return False
+    
+print(prime(2))
+print(prime(3))
+print(prime(22))
+ 
