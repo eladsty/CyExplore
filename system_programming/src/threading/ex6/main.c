@@ -6,7 +6,9 @@
 #include <stdlib.h> /* rand */
 #include <assert.h> /* assert */
 
-  
+  /* 
+APPROVED: MICHAEL EVANOV
+ */
  
 #define CONS_NUM 5
 #define STRING_LEN 12
@@ -50,11 +52,10 @@ void *Consumer(void *data)
     while (i < MAX_ROUNDS)
     {
         pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock);  
+        sem_post(((thr_struct_t *)data)->sem_p);
         pthread_cond_wait(((thr_struct_t *)data)->cond, ((thr_struct_t *)data)->mutex_lock);
         printf("%s\n",((thr_struct_t *)data)->str );
         pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock);
-        sem_post( ((thr_struct_t *)data)->sem_p);
-         
         ++i;
      }
 
@@ -70,23 +71,18 @@ void *Consumer(void *data)
 
 void *Producer(void *data)
 {
-    int i = 0  ;
+    int i = 0, j = 0;
     int curr_sem_val = 0;
     while (i < MAX_ROUNDS)
     {
-        while(1)
+        for(j = 0; j < CONS_NUM; ++j)
         {
-            pthread_mutex_lock(  ((thr_struct_t *)data)->mutex_lock );  
-            Rand_String( ((thr_struct_t *)data)->str );                    
-            pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock);
-            
-            pthread_cond_broadcast(((thr_struct_t *)data)->cond);
-            break;
+            sem_wait(((thr_struct_t *)data)->sem_p );
         }
-        for(i = 0; i < CONS_NUM; ++i)
-        {
-            sem_wait( ((thr_struct_t *)data)->sem_p );
-        }
+        pthread_mutex_lock(  ((thr_struct_t *)data)->mutex_lock );  
+        Rand_String(((thr_struct_t *)data)->str );                    
+        pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock);
+        pthread_cond_broadcast(((thr_struct_t *)data)->cond);
         ++i;
     }
     return (void*)i;
@@ -109,6 +105,7 @@ void ProdConsMain()
     sem_init(&sem, 0, 0);
 
     thr_struct.mutex_lock = &mutex_lock;
+    thr_struct.cond = &cond;
     thr_struct.sem_p = &sem;
     thr_struct.str = string;
     thr_struct.data = NULL;
