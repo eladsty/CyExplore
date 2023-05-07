@@ -76,7 +76,7 @@ void *Producer(void *data)
     {
         while(1)
         {
-             pthread_mutex_lock(  ((thr_struct_t *)data)->mutex_lock );  
+            pthread_mutex_lock(  ((thr_struct_t *)data)->mutex_lock );  
             Rand_String( ((thr_struct_t *)data)->str );                    
             pthread_mutex_unlock(((thr_struct_t *)data)->mutex_lock);
             
