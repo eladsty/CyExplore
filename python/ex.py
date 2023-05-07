@@ -1,4 +1,5 @@
-import sys
+
+# approved by adir
 
 """ EX1 """
 
@@ -13,8 +14,8 @@ ch = "a"
 str = "basasababa"
 k = char_cnt(ch, str)
 print(k)
-""" print(sys.getrefcount(k))
- """
+  
+# approved by adir
 
 
 """ EX2 """
@@ -33,6 +34,7 @@ def flip_num(num):
 flipped = flip_num(-1234)
 print(flipped)
 
+# approved by adir
 
 """ EX3 """
 
@@ -43,6 +45,7 @@ def cel_fer(deg):
 fer = cel_fer(180)
 print(fer)
 
+# approved by adir
 
 """ EX4 """
 
@@ -59,6 +62,7 @@ print(x)
 x = is_leap(1000)
 print(x)
 
+# approved by adir
 
 """ EX5 """
 
@@ -89,6 +93,7 @@ def check_pwd(password):
 
 print(check_pwd("283fF9a8j%"))
 print(check_pwd("dq#Sf"))
+# approved by adir
 
 """ EX6 """
 
@@ -104,22 +109,24 @@ print(dev_sum(3))
 
 
 """ EX7 """
+print("--- ex7 ")
 
 def min_curr(money):
-    curr_devision = [200, 100, 50, 20, 10, 5, 2, 1]
-    i = 0
-    while (0 != money):
-        res = (money // curr_devision[i])
-        if (0 < res * curr_devision[i]):
-            print(res, " bills of ", curr_devision[i])
-            money -= (res * curr_devision[i])
-            i += 1
-        else:
-            i += 1
+    banknotes = [200 ,100 ,50 ,20 ,10 ,5 ,2 ,1]
+    for currency in banknotes:
+        change = money // currency
+        if 0 != change:
+            print("change is", change)
+            money -= change * currency
+            print(change , currency)
+
 
 min_curr(414)
 min_curr(100)
 min_curr(0)
+
+
+# approved by adir
 
 """ EX8 """
 
