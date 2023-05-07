@@ -54,6 +54,15 @@ void *Consumer(void *data)
 
     while (i < MAX_ROUNDS)
     {
+        pthread_mutex_lock(&arg->mutex);
+        sem_wait(&arg->semaphore);
+        pthread_cond_wait(&arg->consumers_can_read, &arg->mutex);
+        pthread_mutex_unlock(&arg->mutex);
+
+        printf("consumer %d: consumed %d\n", i, arg->sum);
+        ++i;
+
+       
         sem_wait( ((thr_struct_t *)data)->sem_cons );
         pthread_mutex_lock(((thr_struct_t *)data)->mutex_lock_cons);   
         CBuffRead(((thr_struct_t *)data)->thr_buffer, &answer, ((thr_struct_t *)data)->data_read_size );

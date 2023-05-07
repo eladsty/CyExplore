@@ -14,6 +14,7 @@
 !.myfuncs
 !.gitignore
 !*.c
+!*.py
 !*.h
 !*.cr4
 !makefile
