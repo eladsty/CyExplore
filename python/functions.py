@@ -1,3 +1,6 @@
+import functools 
+# for reduce
+
 #ex1
 
 def remove_from_list(list_ex1, key):
@@ -18,11 +21,12 @@ sort_str(num_str_li)
 # -------------------------------------------------------------------------------------
 #ex3
 
-def list_sum(ints_li):
-    total_sum = sum(map(lambda x: int(x), ints_li))
-    print(total_sum)
+def list_sum(neg_ints, pos_ints):
+    pos_sum = sum(map(lambda x: int(x), pos_ints))
+    neg_sum = sum(map(lambda x: int(x), neg_ints))
+    print([pos_sum, neg_sum])
 
-list_sum([4,-2,-2,1,2,3])
+print( list_sum([-4,-2,-2,-1,-2,-3], [4,2,2,1,2,3]) )
 
 # -------------------------------------------------------------------------------------
 #ex4
@@ -56,10 +60,14 @@ gematria_cal("אינפיניטי לאבס")
 
 # -------------------------------------------------------------------------------------
 #ex7
-
+card_func = lambda i : i-9 if i > 9 else i
 def is_card_valid(card_num):
-    digits = [int(i) for i in str(card_num)]
-    print(0 == (sum(digits[1::2]) + sum(map(card_num ,digits[-2::-2])) ) % 10 )
+    int_list =  [int(i) for i in card_num]
+    int_list[-2::-2]  = [ int(i) for i in card_num[-2::-2] ]
+    int_list = map(card_func, int_list)
+    sum = functools.reduce(lambda a , b : a + b, int_list)
+    return sum % 10 == 0
+
+    
+print(is_card_valid("4513256858760869") ) 
  
-print(  is_card_valid("1230298592834357")   )
-  
