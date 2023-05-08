@@ -1,3 +1,5 @@
+""" Approved by Amir """
+
 # EX1
 
 def string_extractor(list_ts):
@@ -58,6 +60,7 @@ def print_sec(list5):
         del list5[::2]
 print(print_sec([1,2,3,4,5,6,7,8,9]))
  
+""" Approved by Amir """
 
 #EX7
 
@@ -70,6 +73,7 @@ def dict_to_tup(dict7):
 dict_even =  { 'apples': 10, 'oranges': 12, 'strawberries': 31 }
 print( dict_to_tup(dict_even) )
 
+""" Approved by Amir """
 
 #EX8
 
