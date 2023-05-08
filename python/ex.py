@@ -143,3 +143,46 @@ print(prime(2))
 print(prime(3))
 print(prime(22))
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ # EX4
+def unique_val(dictio):
+    l = []
+    for key in dictionary:
+        l.append(dictionary[key])
+    return sorted(set(l))
+
+# EX5
+
+def Ex5(l ,num_of_ratations):
+    return (l[num_of_ratations:] + l[:num_of_ratations])
+
+# EX6
+
+def Ex6(l):
+    while len(l):
+        for i in l[::2]:
+            print(i)
+        del l[::2]
+
+
+# EX7
+def Ex7(dictionary):
+    return list(dictionary.items())
+
+# EX8
+def Ex8(dictionary):
+    print("MIN " ,min(dictionary.items())[0])
+    print("MAX " ,max(dictionary.items())[0])
+
+
