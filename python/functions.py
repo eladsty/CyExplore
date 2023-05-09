@@ -12,26 +12,28 @@ remove_from_list(ex1_list, "fox")
 # ------------------------------------------------------------------------------------
 #ex2
 def sort_str(num_str_li):
-    num_str_li.sort(key=lambda x:x)
+    num_str_li.sort(key=lambda x:int(x))
     print(num_str_li)
 
-num_str_li = ["6","3","1","7","2","-2",]
+num_str_li = ["46","3","1","7","2","-222",]
 sort_str(num_str_li)
 
 # -------------------------------------------------------------------------------------
 #ex3
 
-def list_sum(neg_ints, pos_ints):
-    pos_sum = sum(map(lambda x: int(x), pos_ints))
-    neg_sum = sum(map(lambda x: int(x), neg_ints))
-    print([pos_sum, neg_sum])
+def list_sum(list_o_ints):
+    pos_li = list(filter(lambda x: x > 0, list_o_ints))
+    neg_li = list(filter(lambda x: x < 0, list_o_ints))
+    pos_sum = sum(pos_li)
+    neg_sum = sum(neg_li)
+    return [pos_sum, neg_sum]     
 
-print( list_sum([-4,-2,-2,-1,-2,-3], [4,2,2,1,2,3]) )
+print( list_sum( [-4,-2,-2,5,2,-1,-2,8,4,-3] ) )
 
 # -------------------------------------------------------------------------------------
 #ex4
 def list_sum(int_li):
-    new_int_list = [x * x for x in int_li if (x % 2 == 0) in int_li]
+    new_int_list = [x * x for x in int_li if (x % 2 == 0) ]
     print(new_int_list)
 
 list_sum([1,2,3,4,5])
@@ -60,14 +62,20 @@ gematria_cal("אינפיניטי לאבס")
 
 # -------------------------------------------------------------------------------------
 #ex7
+print("exercise 7 below")
 card_func = lambda i : i-9 if i > 9 else i
-def is_card_valid(card_num):
-    int_list =  [int(i) for i in card_num]
-    int_list[-2::-2]  = [ int(i) for i in card_num[-2::-2] ]
-    int_list = map(card_func, int_list)
-    sum = functools.reduce(lambda a , b : a + b, int_list)
-    return sum % 10 == 0
 
-    
-print(is_card_valid("4513256858760869") ) 
+def is_card_valid(card_num):
+    int_list = [int(i) for i in card_num]
+    fst_li = [int(x) for x in int_list[-1::-2]]
+    sec_list = [int(x) * int(x) for x in int_list[-2::-2] ]
+    sec_list = map(card_func, sec_list)
+    fst_sum = functools.reduce(lambda a , b : a + b, fst_li)  
+    sec_sum = functools.reduce(lambda a , b : a + b, sec_list)  
+    total_sum = fst_sum  + sec_sum
+    print(total_sum)
+    return total_sum % 10 == 0
+
  
+print(is_card_valid("4513256858760869") ) 
+print(is_card_valid("4513256858760865") ) 
