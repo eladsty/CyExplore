@@ -4,24 +4,27 @@ import platform
 import sys
 import stat
 
-
+# approved by adir
 print(modules.CircleArea(5))
 print(modules.TriangleArea(3,4))
 print(modules.RectangleArea(4,3))
+# approved by adir
 
 # EX3
-print(platform.system())
+print(os.uname()[0])
 print(os.getlogin())
 print(os.getcwd())
 
+# approved by adir
 
 # EX4
 
 def rev_input():
     print("few")
-    print((sys.argv)[-1::-1] )
+    print((sys.argv)[1:0:-1] )
 rev_input()
 
+# approved by adir
 
 # EX5
 
