@@ -1,4 +1,4 @@
- 
+#  approved by Afonin.M
 
 #ex1
 
@@ -9,6 +9,8 @@ def a_to_z():
 
 a_to_z()
 
+#  approved by Afonin.M
+
 #ex2
 
 def read_n_lines(path, n):
@@ -18,13 +20,15 @@ def read_n_lines(path, n):
  
 read_n_lines("/home/elad/elad.shem-tov/python/files/ext2test.txt", 3)
 
+#  approved by Afonin.M
+
 #ex3
 print("below is EX3 ------------")
 
 import csv 
 #  gender agerange and vaccinated
 
-def filter_input(line_val, user_input, path):
+def input_writer(line_val, user_input, path):
     min_age = int(user_input[1].split('-')[0])
     max_age= int(user_input[1].split('-')[1])
     print(user_input[0]  )
@@ -40,7 +44,7 @@ def csv_stat(path):
     with open(path, "r") as csv_file:
         csv_reader = csv.reader(csv_file)
         csv_reader.__next__()
-        Dict_obj = csv.DictReader(csv_file)
+        dict_obj = csv.DictReader(csv_file)
         sum = 0
         n_patient = 0
         vac_min = 150
@@ -60,12 +64,12 @@ def csv_stat(path):
             if(int(line[1]) > int(unvac_max) and line[6] == 'N'):
                 unvac_max = line[1]  
             n_patient += 1
-            sum += int(line[1])
-            filter_input(line, input_list, path)
+            sum += int(line[4])
+            input_writer(line, input_list, path)
 
         print("vaxed min-max: " + str(vac_min) +  " " + str(vac_max))
         print("unvaccinated min-max: " + str(unvac_min)+ " "+ str(unvac_max))
-        print("average age is: " + str(sum / n_patient) )     
+        print("average days of hospitalization is: " + str(sum / n_patient) )     
 
 csv_stat("/home/elad/elad.shem-tov/python/files/corona.csv")
 
