@@ -9,8 +9,7 @@ class Point:
             self.x = x
             self.y = y
     def distance_from_origin(self):
-        return math.sqrt( math.pow(self.x, 2) + math.pow(self.y, 2) )
-    
+        return math.sqrt(self.x**2 + self.y**2) 
     
 
 p = Point(3, 4)
