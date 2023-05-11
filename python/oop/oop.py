@@ -1,5 +1,5 @@
 import math
-
+# approved by Michael
 class Point:
     
     def __init__(self,x = 0.0, y = 0.0):
@@ -14,10 +14,12 @@ class Point:
 def test1():
     p = Point(3, 4)
     print(p.distance_from_origin())
-    
+
 test1()
 
 # ex2 --------------------------------------------------
+# approved by Michael
+
 class Node:
    def __init__(self, data=None):
         self.data = data
@@ -73,6 +75,7 @@ def test2():
 test2()
 
 # ex3 --------------------------------------------------
+# approved by Michael
 
 import datetime
 import time
