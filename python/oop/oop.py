@@ -11,11 +11,11 @@ class Point:
     def distance_from_origin(self):
         return math.sqrt(self.x**2 + self.y**2) 
     
-
-p = Point(3, 4)
- 
-print(p.distance_from_origin())
-
+def test1():
+    p = Point(3, 4)
+    print(p.distance_from_origin())
+    
+test1()
 
 # ex2 --------------------------------------------------
 class Node:
@@ -53,29 +53,29 @@ class SList:
     def Is_Empty(self):
         return self.head_node is None
 
+def test2():
+    new_list = SList()
+    assert(True == new_list.Is_Empty())
+    assert(0 == new_list.len())
 
-new_list = SList()
-assert(True == new_list.Is_Empty())
-assert(0 == new_list.len())
+    for i in range(1,8,2):
+        new_list.push(i)
+    assert(False == new_list.Is_Empty())
+    assert(7 == new_list.head())
+    assert(4 == new_list.len())
 
-for i in range(1,8,2):
-    new_list.push(i)
-assert(False == new_list.Is_Empty())
-assert(7 == new_list.head())
-assert(4 == new_list.len())
+    for i in range(1,5):
+        new_list.pop()
 
-for i in range(1,5):
-    new_list.pop()
+    assert(0 == new_list.len())
+    assert(True == new_list.Is_Empty())
 
-assert(0 == new_list.len())
-assert(True == new_list.Is_Empty())
-
+test2()
 
 # ex3 --------------------------------------------------
 
 import datetime
 import time
-
 
  
 class Machine:
@@ -111,7 +111,6 @@ def test_driver():
     b = Machine()
     c = Machine()
     d = Machine()
-    e = Machine()
 
     a.start_machine(1)
     b.start_machine(1)
@@ -120,6 +119,7 @@ def test_driver():
 
     time.sleep(60)
 
+    e = Machine()
     e.start_machine(2)
 
     time.sleep(60)
