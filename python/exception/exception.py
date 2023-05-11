@@ -1,4 +1,4 @@
-
+APPROVED: MICHAEL AFONIN
 
 def check_pwd(password):
      error = False
