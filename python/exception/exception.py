@@ -5,13 +5,12 @@ def check_pwd(password):
      cond3=0
      cond4=0
      exceptions= ""
-
-     if len(password) < 8:
-        exceptions += "password length should be 8 or longer\n"
-
-     class PassException(Exception):
-         pass
-     if len(password) < 8:
+     
+     try:
+        if len(password) < 8:
+            raise Exception("password length should be 8 or longer") 
+     except Exception as len_err:
+         error = True
          return False
     
      for l in password:
@@ -23,7 +22,7 @@ def check_pwd(password):
              cond3 = 1
          if l == '@' or l == '#' or l == '&' or l == '%':
              cond4 = 1
-        
+    
          if cond1 + cond2 + cond3 + cond4 == 4: 
             return True
      else:
@@ -35,9 +34,8 @@ def check_pwd(password):
              exceptions += "password must contain numbers "
          if cond4 == 0:
              exceptions += "password must contain a least one @ # & or %"
-         raise Exception(exceptions)
-
-
+        
+ 
 
 print(check_pwd("283fF9a8j%"))
 print(check_pwd("dq#Sf"))
