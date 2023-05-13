@@ -1,6 +1,5 @@
 import unittest
 from bank_account import BankAccount
-# approved: Michael afonin
 
 
 class BankAccTest(unittest.TestCase):

@@ -1,3 +1,4 @@
+# approved: Michael afonin
 
 from machine_class import Machine
 from time import sleep

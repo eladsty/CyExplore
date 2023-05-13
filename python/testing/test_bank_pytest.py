@@ -1,3 +1,5 @@
+# approved: Michael afonin
+
 from bank_account import BankAccount
 
 # def test_init():

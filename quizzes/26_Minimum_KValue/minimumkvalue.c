@@ -3,7 +3,7 @@
  
 int partition(int arr[], int l, int r)
 {
-    int pivot = arr[r-1], i = 0, piv_j = l, j = 0;
+    int pivot = arr[r-1], i = l, j = 0;
 
     for (j = l; j < r; ++j) 
     {	
@@ -15,10 +15,10 @@ int partition(int arr[], int l, int r)
 			arr[j] ^= arr[j];
 		}
     }
-    arr[i+1] ^= arr[r];
-    arr[r] ^= arr[i+1];
-    arr[i+1] ^= arr[r];
-    return i+1;
+    arr[i] ^= arr[r-1];
+    arr[r-1] ^= arr[i];
+    arr[i] ^= arr[r-1];
+    return i;
 }
 
 int MinimumKValue(int arr[], int l, int r, int k)
@@ -49,6 +49,6 @@ int main()
 	int arr2[] = {9,8,7,6,5,4,3,2,1,88,77,66,55,44,33,22,11,0};
     unsigned size = sizeof(arr2) / sizeof(int);
     int res = MinimumKValue(arr2, 0, size ,kth);
-	printf("the min value of the give k is: %d\n", res);
+	printf("the %d smallest element is: %d\n", kth, res);
     return 0;
 }

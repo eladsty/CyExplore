@@ -1,9 +1,9 @@
 import unittest
 from bank_account import BankAccount
-# approved: Michael afonin
 
 
 class BankAccTest(unittest.TestCase):
+
     def setUp(self):
         self.person = ["Tom", 1]
         self.str_bank_account = BankAccount(person[0])
@@ -30,6 +30,4 @@ class BankAccTest(unittest.TestCase):
          
 
 if __name__ == '__main__':
-    BankAccTest.test_init()
-    BankAccTest.test_init_valid()
     unittest.main()
