@@ -1,7 +1,6 @@
 import math
 # approved by Michael
 class Point:
-    
     def __init__(self,x = 0.0, y = 0.0):
         if not isinstance(x and y , int or float):
             print("type error")

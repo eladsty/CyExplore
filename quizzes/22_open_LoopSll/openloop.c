@@ -64,7 +64,6 @@ int main()
     node6.data = 600; 
  
     OpenLoopSLL(&node1);
-/*     assert(node6.next != &node3);
- */    return 0;
+     return 0;
 }
  

@@ -24,7 +24,7 @@ def rev_input():
     print((sys.argv)[1:0:-1] )
 rev_input()
 
-# approved by Adir
+# approved by adir
 
 # EX5
 

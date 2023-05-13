@@ -1,50 +1,54 @@
  #include <stdio.h>
-void swap(int *a, int *b);
-
+ 
+ 
 int partition(int arr[], int l, int r)
 {
-	int x = arr[r], i = l, j = 0;
+    int pivot = arr[r-1], i = 0, piv_j = l, j = 0;
 
-	for(j = l; j <= r-1; ++j)
-	{
-		if( arr[j] <= x)
+    for (j = l; j < r; ++j) 
+    {	
+		if (arr[j] <= pivot) 
 		{
-			swap(&arr[i], &arr[j]);
 			++i;
+			arr[i] ^= arr[j];
+			arr[j] ^= arr[j];
+			arr[j] ^= arr[j];
 		}
-	}
-	swap(&arr[i], &arr[r]);
-	return i;
+    }
+    arr[i+1] ^= arr[r];
+    arr[r] ^= arr[i+1];
+    arr[i+1] ^= arr[r];
+    return i+1;
 }
 
 int MinimumKValue(int arr[], int l, int r, int k)
 {
-	int min_val = arr[k];
-	int pos;
-	if(k > 0 && k <= r - l + 1)
+	int piv_i = 0;
+	if (k > 0 && k <= r - l) 
 	{
-		pos = partition(arr, l , r);
-		if(pos - 1 == k - 1)
+		piv_i = partition(arr, l, r);
+		if (piv_i - l == k - 1)
 		{
-			return MinimumKValue(arr, l, pos - 1, k);
+			return arr[piv_i];
 		}
-		return MinimumKValue(arr, pos+1, r, (k - pos + l - 1));
-
+		else if (piv_i - l > k - 1)
+		{
+			return MinimumKValue(arr, l, piv_i - 1, k);
+		}
+		else
+		{
+			return MinimumKValue(arr, piv_i + 1, r, k);
+		}
 	}
-    return min_val;
-}
-void swap(int *a, int *b)
-{
-	int temp = *a;
-	*a  = *b;
-	*b = temp;
 }
 
 int main()
 {
+	int kth = 5;
     int arr[] = {-2,55,4,1,2,-7,9,2,3,7,4,5,7,44,777,8,8,9,99,33 };
-    unsigned size = sizeof(arr) / sizeof(int);
-    int res = MinimumKValue(arr, 0,size - 1 ,3);
+	int arr2[] = {9,8,7,6,5,4,3,2,1,88,77,66,55,44,33,22,11,0};
+    unsigned size = sizeof(arr2) / sizeof(int);
+    int res = MinimumKValue(arr2, 0, size ,kth);
 	printf("the min value of the give k is: %d\n", res);
     return 0;
 }
