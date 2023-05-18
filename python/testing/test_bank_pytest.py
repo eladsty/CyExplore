@@ -27,3 +27,13 @@ def test_withdrawal():
     assert one_bank_acc.balance == 0
     assert str_bank_account.withdraw(100) == False
     assert one_bank_acc.withdraw(100) == False     
+    
+    
+    amir gombo - shlomi  - ran
+    hen - michael afonin
+	Elad Shem tov - Nevo  
+    shani - nave 
+    Nimrod Zelzer - Michael Evanov  
+    Adi Amilany -	Adir Mor	
+     
+     	 	   	 
