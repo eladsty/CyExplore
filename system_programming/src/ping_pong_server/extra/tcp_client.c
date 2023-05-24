@@ -1,16 +1,20 @@
 #include <stdio.h>
+#include <time.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "server.h"
 
+
+ 
 int main(void)
 {
     int socket_desc;
     struct sockaddr_in server_addr;
-    char server_message[10] = {0};
-    char client_message[] = "ping";
-    
+    char server_message[MAX_LINE] = {0};
+    char client_message[] = "ping\n";
+ 
     socket_desc = socket(AF_INET, SOCK_STREAM, 0);
     
     if(socket_desc < 0)
@@ -23,7 +27,7 @@ int main(void)
      
     /*  Set port and IP the same as server-side */
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(43434);
+    server_addr.sin_port = htons(PORT);
     server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     
     /* Send connection request to server: */
@@ -36,24 +40,28 @@ int main(void)
     printf("Connected with server successfully \n");
 
     /*  send message so server */
-    fgets(client_message, sizeof(client_message), stdin);
-  
-    if(send(socket_desc, client_message, strlen(client_message), 0) < 0)
+    while(1)
     {
-        printf("Unable to send message\n");
-        return -1;
-    }
-    
-    /* receive the server response */
+        sleep(1);
+        if(send(socket_desc, client_message, strlen(client_message), 0) < 0)
+        {
+            printf("Unable to send message\n");
+            return -1;
+        }
+        
+        /* receive the server response */
 
-     if(recv(socket_desc, server_message, sizeof(server_message), 0) < 0)
-    {
-        printf("Error while receiving server's msg\n");
-        return -1;
+        if( recv(socket_desc, server_message, sizeof(server_message), 0) < 0 )
+        {
+            printf("Error while receiving server's msg\n");
+            return -1;
+        }
+
     }
+     
     
-    printf("Server's response: %s\n",server_message);
-    
+
+
     close(socket_desc);
 
     return 0;
