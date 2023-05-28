@@ -1,0 +1,22 @@
+#ignore all
+*
+
+#don't ignore any files that end with .md
+!*.md
+
+#don't igtnore subdirectories - recurssively
+!*/
+
+#note empty durectories are invisible any way
+
+
+#all required files
+!.myfuncs
+!.gitignore
+!*.c
+!*.h
+!makefile
+!Makefile
+!shani-auth
+!*.py
+!*.html
