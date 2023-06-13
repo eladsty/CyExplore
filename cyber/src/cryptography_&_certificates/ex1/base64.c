@@ -4,7 +4,6 @@
 
 static char *encoding_table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-
 char *B64Enc(const char *str)
 {
     char *copy_str = (char *)str;
@@ -14,7 +13,8 @@ char *B64Enc(const char *str)
     char *encoded_str;
     char *cpy;
     int temp = 0;
-    encoded_str = malloc(  ( len * 4) / 3 + 3);
+    /* 1 for null terminator,   */
+    encoded_str = (char * )malloc( 4 * (len / 3) + (len % 3) + 3 + 1 );
     cpy = encoded_str;
     if (NULL == encoded_str)
     {
@@ -24,7 +24,8 @@ char *B64Enc(const char *str)
     while(len > 2)
     {
         memcpy(&temp, copy_str, 3);
-        i = 3;
+          
+          i = 3;
         temp &= 16777215;
         while(i >= 0)
         {
@@ -32,32 +33,44 @@ char *B64Enc(const char *str)
             temp >>= 6;
             --i;
         }
-
+        
         copy_str += 3;
         encoded_str += 4;
         temp = 0;
-        len -= 3;
+        len -= 3;  
     }
 
-    memcpy(&temp, copy_str, 3 - padding);
-    i = 3 - padding;
-    while(padding)
+/*     temp = 0;
+
+
+    *(encoded_str + i) =  encoding_table[ temp & 63];
+            temp >>= 6;
+            --i; */
+
+    if(1 == padding) 
     {
-        *(encoded_str + (3 - padding))  = '=';
-        ++encoded_str;
-        --padding;
+        memcpy(&temp, copy_str, 2); 
+        temp &= 2;
+        *copy_str = (char)temp & 3111;
+        encoded_str = NULL;
+
     }
 
-    temp = 0;
-   
-    while (i)
+    if(2 == padding)
     {
-        *(encoded_str + i) = encoding_table[temp & 63]; 
-        temp >>= 6;
-        ++encoded_str;
-        --i;
+        memcpy(&temp, copy_str, 1); 
+        *copy_str = 2;
+
+
     }
-כן
+ 
+    if(2 == padding)
+    {
+        
+    }
+ 
+ ++encoded_str;
+    *encoded_str = '\0';
     return cpy;
 }
 
@@ -79,15 +92,9 @@ int main()
     char *str3 = "abcdefg";
     char *encoded;
 
-    encoded = B64Enc(str);
-    printf("%s \n",encoded);
-
     encoded = B64Enc(str2);
     printf("%s \n",encoded);
-
-    encoded = B64Enc(str3);
-    printf("%s \n", encoded);
-
+ 
 
 
     free(encoded);
