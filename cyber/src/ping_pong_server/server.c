@@ -8,7 +8,7 @@ int ServerConnect()
 	int udp_socket, tcp_socket, val, i;
 	socklen_t len = sizeof(serveraddr);
 	fd_set read;
-	int connections[MAXCONNECTIONS];
+	int connections[3 + MAXCONNECTIONS];
 	struct timeval tv;
 	tv.tv_usec = 0;
 	
