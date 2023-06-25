@@ -37,20 +37,25 @@ static void run(char *cmd)
     exit(1);
   }
 }
- 
+
+void ifconfig() 
+{
+  char cmd[MAX_LINE];
+  /* write to cmd buffer the formatted text */
+  sprintf(cmd, "ifconfig tun0 10.0.0.1/16 mtu %d up", MTU);
+  run(cmd);
+}
 
 void set_route_table() 
 {
     char cmd[MAX_LINE];
-    /* tun alloc first!!!!!!!!!!!! */
     sprintf(cmd, "ifconfig tun0 10.0.0.1/16 mtu %d up", MTU);
     run(cmd);
     run("sysctl -w net.ipv4.ip_forward=1");
-    run("iptables -t nat -A POSTROUTING -s 10.8.")
-
+    run("ifconfig ");
     run("iptables -t nat -A POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad_vpn' -j MASQUERADE");
     run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); 
+    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); */
 }
 
 

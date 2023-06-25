@@ -18,10 +18,11 @@
 #include <signal.h>
 #include <linux/if.h>
  
-#define PORT 5054
+#define PORT 54321
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
-#define MAX_LINE 1024
+#define SERVER_HOST "the public ip of the server"
+
 
 static int max(int a, int b)
 {
@@ -37,21 +38,7 @@ static void run(char *cmd)
     exit(1);
   }
 }
- 
 
-void set_route_table() 
-{
-    char cmd[MAX_LINE];
-    /* tun alloc first!!!!!!!!!!!! */
-    sprintf(cmd, "ifconfig tun0 10.0.0.1/16 mtu %d up", MTU);
-    run(cmd);
-    run("sysctl -w net.ipv4.ip_forward=1");
-    run("iptables -t nat -A POSTROUTING -s 10.8.")
-
-    run("iptables -t nat -A POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad_vpn' -j MASQUERADE");
-    run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); 
-}
 
 
 

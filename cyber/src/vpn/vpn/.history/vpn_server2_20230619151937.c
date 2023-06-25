@@ -37,22 +37,46 @@ static void run(char *cmd)
     exit(1);
   }
 }
- 
 
-void set_route_table() 
+void setup_route_table() 
 {
-    char cmd[MAX_LINE];
-    /* tun alloc first!!!!!!!!!!!! */
-    sprintf(cmd, "ifconfig tun0 10.0.0.1/16 mtu %d up", MTU);
-    run(cmd);
-    run("sysctl -w net.ipv4.ip_forward=1");
-    run("iptables -t nat -A POSTROUTING -s 10.8.")
+    run("iptables ");
+
 
     run("iptables -t nat -A POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad_vpn' -j MASQUERADE");
     run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); 
+    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT");
 }
 
+int tun_alloc() 
+{
+  struct ifreq ifr;
+  int fd, e;
+  fd = open("/dev/net/tun",  O_RDWR);
+  if (fd < 0) 
+  {
+    perror("Cannot open /dev/net/tun");
+    return fd;
+  }
+
+  memset(&ifr, 0, sizeof(ifr));
+
+/* IFF_NO_PI - don't provide packet info */
+
+  ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
+
+  strncpy(ifr.ifr_name, "tun0", IF_NAMESIZE);
+  e = ioctl(fd, TUNSETIFF, (void *) &ifr);
+
+  if (e < 0) 
+  {
+    perror("ioctl[TUNSETIFF]");
+    close(fd);
+    return e;
+  }
+
+  return fd;
+}
 
 
 int main()

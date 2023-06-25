@@ -21,7 +21,7 @@
 #define PORT 54321
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
-#define SERVER_HOST "server's  ip"
+#define SERVER_HOST "server's public ip"
 
 
 static int max(int a, int b)
@@ -31,23 +31,23 @@ static int max(int a, int b)
 
 static void run(char *cmd) 
 {
-    printf("Execute `%s`\n", cmd);
-    if (system(cmd)) 
-    {
-        perror(cmd);
-        exit(1);
-    }
+  printf("Execute `%s`\n", cmd);
+  if (system(cmd)) 
+  {
+    perror(cmd);
+    exit(1);
+  }
 }
 
 int tun_alloc() 
 {
     struct ifreq ifr;
     int fd, e;
-    fd = open("/dev/net/tun", O_RDWR);
+    fd = open("/dev/net/tun", O_RDWR)
     if (fd < 0) 
     {
         perror("Cannot open /dev/net/tun");
-        return -1;
+        return fd;
     }
 
     memset(&ifr, 0, sizeof(ifr));
@@ -57,30 +57,29 @@ int tun_alloc()
     e = ioctl(fd, TUNSETIFF, (void *) &ifr);
     if (e < 0) 
     {
-        perror("ioctl[TUNSETIFF]");
-        close(fd);
-        return -1;
+    perror("ioctl[TUNSETIFF]");
+    close(fd);
+    return e;
     }
 
   return fd;
 }
 
 
+
+
 void set_route_table() 
 {
     run("sysctl -w net.ipv4.ip_forward=1");
-    run("ifconfig tun0 10.0.0.10/24 mtu 1400 up");
-
-   /*
-    run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
-    run("iptables -I FORWARD  -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -I FORWARD  -o tun0 -j ACCEPT"); 
     
-    */
+    run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
+    run("iptables -I FORWARD 1 -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
+    run("iptables -I FORWARD 1 -o tun0 -j ACCEPT");
 
- 
+    char cmd[1024];
+    run(cmd);
+
     /* all address via my tun0 */ 
-
     run("ip route add 0/1 dev tun0");
     run("ip route add 128/1 dev tun0");
 }
@@ -88,8 +87,7 @@ void set_route_table()
 
 int main()
 {
-    tun_alloc();
-    ifconfig();
+
 
     return 0;
 }

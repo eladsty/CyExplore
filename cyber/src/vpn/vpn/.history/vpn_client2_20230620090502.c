@@ -88,8 +88,7 @@ void set_route_table()
 
 int main()
 {
-    tun_alloc();
-    ifconfig();
+
 
     return 0;
 }

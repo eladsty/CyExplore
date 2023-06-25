@@ -48,7 +48,6 @@ void ifconfig()
 */
 void setup_route_table() 
 {
-    run("sysctl -w net.ipv4.ip_forward=1");
     run("iptables -t nat -A POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad_vpn' -j MASQUERADE");
     run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT");

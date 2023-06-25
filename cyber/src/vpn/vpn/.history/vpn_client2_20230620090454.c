@@ -70,8 +70,8 @@ void set_route_table()
 {
     run("sysctl -w net.ipv4.ip_forward=1");
     run("ifconfig tun0 10.0.0.10/24 mtu 1400 up");
-
    /*
+    
     run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
     run("iptables -I FORWARD  -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -I FORWARD  -o tun0 -j ACCEPT"); 
@@ -88,8 +88,7 @@ void set_route_table()
 
 int main()
 {
-    tun_alloc();
-    ifconfig();
+
 
     return 0;
 }

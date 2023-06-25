@@ -42,7 +42,7 @@ static void run(char *cmd)
 void set_route_table() 
 {
     char cmd[MAX_LINE];
-    /* tun alloc first!!!!!!!!!!!! */
+    /* tun alloc first */
     sprintf(cmd, "ifconfig tun0 10.0.0.1/16 mtu %d up", MTU);
     run(cmd);
     run("sysctl -w net.ipv4.ip_forward=1");
