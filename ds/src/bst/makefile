@@ -11,7 +11,7 @@ OBJS = bst.o  bst_test.o
 TARGET = bst.out
 
 
-OBJDIR := /home/el/elad.shem-tov/ds
+OBJDIR := /home/elad/elad.shem-tov/ds
 SRCDIR := $(OBJDIR)/src/bst
 INCDIR := $(OBJDIR)/include
 TESDIR := $(OBJDIR)/test/bst
@@ -31,7 +31,7 @@ bst.o: $(SRCDIR)/bst.c $(INCDIR)/bst.h  $(INCDIR)/stack.h
 libbst.a: bst.o $(INCDIR)/bst.h
 	ar rcs $@ $^
 	rm -f $(OBJS)
-	
+
 
 .PHONY : clean
 clean:

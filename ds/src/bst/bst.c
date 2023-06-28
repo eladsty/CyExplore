@@ -2,7 +2,7 @@
 #include <stdlib.h>/*malloc and free*/
 #include <stdio.h>/*printf*/
 
-#include "bst.h"
+#include "../../include/bst.h"
 
 #define MAX(a,b)(a > b ? a : b)
   

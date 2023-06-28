@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "bst.h"
+#include "../../include/bst.h"
 
 
 #define UNUSED(x) (void)(x)
