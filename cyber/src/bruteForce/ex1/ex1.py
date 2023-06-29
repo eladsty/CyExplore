@@ -58,8 +58,7 @@ if __name__ == "__main__":
     # SHACracker(1, 8, "d", HashFunc("12345678", 1) )
     # SHACracker(2, 8, "d", HashFunc("12345678", 2) )
 
-    # SHACracker(1, 6, "l", HashFunc("aabbcc", 1) )
-    # SHACracker(2, 6, "l", HashFunc("aabbcc", 2) )
-
-    #SHACracker(1, 5, "ld", HashFunc("a3i64", 1) )
-    #SHACracker(2, 5, "ld", HashFunc("a3i64", 2) )
+    # SHACracker(1, 5, "l", HashFunc("aabbcc", 1) )
+    # SHACracker(2, 5, "l", HashFunc("aabbcc", 2) )
+     SHACracker(1, 6, "ld", HashFunc("a3ai64", 1) )
+     SHACracker(2, 6, "ld", HashFunc("a3ai64", 2) )
