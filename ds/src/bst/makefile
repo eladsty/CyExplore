@@ -7,9 +7,7 @@ CPPFLAGS =
 
 OBJS = bst.o  bst_test.o
 
-
 TARGET = bst.out
-
 
 OBJDIR := /home/elad/elad.shem-tov/ds
 SRCDIR := $(OBJDIR)/src/bst
