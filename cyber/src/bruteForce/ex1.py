@@ -28,7 +28,7 @@ def SHACracker(chosen_hash, pass_len, charset, hash_to_crack):
     if chosen_hash != 1 and chosen_hash != 2:
         print("wrong hashing algorithm, choose 1 for sha1 or 2 for sha256")
     
-    pass_set = list(product(final_charset, repeat = pass_len))  
+    pass_set = product(final_charset, repeat = pass_len) 
     time_start = datetime.datetime.now()
 
     for pass_str in pass_set:
@@ -43,11 +43,11 @@ def SHACracker(chosen_hash, pass_len, charset, hash_to_crack):
             print(str_rep)
             
 if __name__ == "__main__":
-    # SHACracker(1, 4, "l", HashFunc("abba", 1) )
-    # SHACracker(2, 4, "l", HashFunc("abba", 2) )
-
-    # SHACracker(1, 5, "l", HashFunc("aabbe", 1) )
-    # SHACracker(2, 5, "l", HashFunc("aabbe", 2) )
+    #SHACracker(1, 4, "l", HashFunc("zulu", 1) )
+    # SHACracker(2, 4, "l", HashFunc("zulu", 2) )
+   
+    # SHACracker(1, 5, "l", HashFunc("great", 1) )
+    # SHACracker(2, 5, "l", HashFunc("great", 2) )
 
     # SHACracker(1, 6, "d", HashFunc("123456", 1) )
     # SHACracker(2, 6, "d", HashFunc("123456", 2) )
@@ -58,8 +58,8 @@ if __name__ == "__main__":
     # SHACracker(1, 8, "d", HashFunc("12345678", 1) )
     # SHACracker(2, 8, "d", HashFunc("12345678", 2) )
 
-    SHACracker(1, 6, "l", HashFunc("aabbcc", 1) )
-    SHACracker(2, 6, "l", HashFunc("aabbcc", 2) )
+    # SHACracker(1, 6, "l", HashFunc("aabbcc", 1) )
+    # SHACracker(2, 6, "l", HashFunc("aabbcc", 2) )
 
-    # SHACracker(1, 5, "ld", HashFunc("a3i64", 1) )
-    # SHACracker(2, 5, "dl", HashFunc("a3i64", 2) )
+    #SHACracker(1, 5, "ld", HashFunc("a3i64", 1) )
+    #SHACracker(2, 5, "ld", HashFunc("a3i64", 2) )
