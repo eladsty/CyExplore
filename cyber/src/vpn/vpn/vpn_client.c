@@ -53,6 +53,13 @@ void decrypt(char *ciphertext, char *plaintext, int len)
 /*
  * Setup route table via `iptables` & `ip route`
 */
+
+/* first allow forwarding, (what will happen if forwarding is disabled?
+
+
+
+) */
+
 void setup_route_table() 
 {
     run("sysctl -w net.ipv4.ip_forward=1");
