@@ -6,11 +6,9 @@ from scapy.layers.inet import UDP, IP, Ether
 from scapy.all import *
 import time
 import subprocess
-from base64 import b64encode
 from enum import IntEnum
 
  
-victim_ip = ""
 active = False
 seqnum = 64
 str_to_print = ""

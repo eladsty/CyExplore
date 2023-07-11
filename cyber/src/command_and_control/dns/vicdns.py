@@ -11,8 +11,6 @@ import time
 
 
 Att_ip="10.0.2.15"
-ICMP_ID_HELO = 23144
-ICMP_ID = 54545
 is_ready = False
 TTL = 64
 mtu = 24
