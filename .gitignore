@@ -15,6 +15,9 @@
 !.gitignore
 !*.c
 !*.py
+!*.php
+!*.html
+!*.css
 !*.h
 !*.cr4
 !makefile

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Country: {{data.sys.country}}</h1>
+    <h1>City: {{data.name}}</h1>
+
+    <div>
+        <h2>Winds:</h2>
+        <pre>
+            Speed: {{data.wind.speed}}
+            Direction(degrees): {{data.wind.deg}}
+        </pre>
+    </div>
+
+    <div>
+        <h2>Stats:</h2>
+        <pre>
+            Temprature(Celzius): {{data.main.temp - 273.15}}
+            Humidity: {{data.main.humidity}}
+        </pre>
+    </div>
+
+    <a href="{{ url_for('index') }}">Go back</a>
+    {% endblock %}

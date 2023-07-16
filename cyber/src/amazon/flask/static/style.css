@@ -1,0 +1,21 @@
+body
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px;
+  padding: 5px;
+  background-color: red;
+}
+
+form
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
