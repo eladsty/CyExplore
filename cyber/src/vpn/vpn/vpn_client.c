@@ -63,17 +63,12 @@ void decrypt(char *ciphertext, char *plaintext, int len)
 
 void setup_route_table() 
 {
-    run("sysctl -w net.ipv4.ip_forward=1");
-    run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
-    run("iptables -I FORWARD 1 -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -I FORWARD 1 -o tun0 -j ACCEPT");
-
     char cmd[1024];
     run(cmd);
 
     /* all address via my tun0 */ 
     run("ip route add 0/1 dev tun0");
-    run("ip route add 128/1 dev tun0");
+    run("ip route add 192.168.56.1 dev enp0s3");
 }
  
   
@@ -118,6 +113,11 @@ int udp_bind(struct sockaddr *addr, socklen_t* addrlen)
     freeaddrinfo(result);
     return -1;
   }
+  if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+    {
+        perror("setsockopt");
+        return -1;
+    }
 
   freeaddrinfo(result);
 
