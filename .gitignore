@@ -15,6 +15,7 @@
 !.gitignore
 !*.c
 !*.py
+!*.sh
 !*.php
 !*.html
 !*.css

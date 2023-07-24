@@ -1,0 +1,7 @@
+#!/bin/sh
+
+clear 
+echo "Running first test."
+XDG_CURRENT_DESKTOP=3333333333333333333333333333333333333333333333333333333333333
+./provided_binary
+exit 0
