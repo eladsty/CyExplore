@@ -19,6 +19,8 @@
 #define PORT 54321
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
+#define SERVER_HOST "192.168.1.30"
+#define CLIENT_IP "192.168.56.102"
 
 static int max(int a, int b)
 {
@@ -153,7 +155,7 @@ void decrypt(char *ciphertext, char *plantext, int len)
 
 void cleanup_route_table() 
 {
-    run("iptables -t nat -D POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'vpndemo' -j MASQUERADE");
+    run("iptables -t nat -D POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad' -j MASQUERADE");
     run("iptables -D FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -D FORWARD -d 10.8.0.0/16 -j ACCEPT");
 }

@@ -17,7 +17,8 @@
 #define PORT 54321
 #define MTU 1400
 #define BIND_HOST  "0.0.0.0"
-#define SERVER_HOST "192.168.57.2"
+#define SERVER_HOST "192.168.1.30"
+#define CLIENT_IP "192.168.56.102"
 
 static int max(int a, int b)
 {
