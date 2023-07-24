@@ -65,9 +65,11 @@ void setup_route_table()
 {
   char cmd[1024];
   run(cmd);
+  /* run("ip route flush table main"); */
   run("sysctl -w net.ipv4.ip_forward=1");
-  /* all address via my tun0 */
-  run("ip route add 0/1 dev tun0");
+  /* all address via tun0 */
+  run("ip route add 0/0 dev tun0");
+  /* except server address */
   run("ip route add 192.168.56.1 dev enp0s3");
 
   run("route -n");
@@ -167,7 +169,7 @@ int tun_alloc()
   return fd;
 }
 
-void cleanup_route_table()
+/* void cleanup_route_table()
 {
   run("iptables -t nat -D POSTROUTING -o tun0 -j MASQUERADE");
   run("iptables -D FORWARD -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
@@ -177,7 +179,7 @@ void cleanup_route_table()
   run(cmd);
   run("ip route del 0/1");
   run("ip route del 128/1");
-}
+} */
 
 int main()
 {
