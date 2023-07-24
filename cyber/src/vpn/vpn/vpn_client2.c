@@ -1,11 +1,8 @@
-
-#define _POSIX_C_SOURCE 200112L
-
-
 #include <linux/if_tun.h> /* tun   */
 #include <sys/ioctl.h> /* for installing vnic interface */
 #include <net/if.h> /* tun  */
 #include <string.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -22,38 +19,7 @@
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
 #define SERVER_HOST "server's  ip"
-#define SA_RESTART 0
 
-
-void cleanup(int sigNum) {
-  printf("Goodbye, cruel world....\n");
-  if (sigNum == SIGHUP || sigNum == SIGINT || sigNum == SIGTERM) {
-    cleanup_route_table();
-    exit(0);
-  }
-}
-
-
-void CleanExit() 
-{
-    struct sigaction sa;
-    sa.sa_handler = &cleanup;
-    sa.sa_flags = SA_RESTART;
-    sigfillset(&sa.sa_mask);
-
-    if (sigaction(SIGHUP, &sa, NULL) < 0) 
-    {
-        perror("Cannot handle SIGHUP");
-    }
-    if (sigaction(SIGINT, &sa, NULL) < 0) 
-    {
-        perror("Cannot handle SIGINT");
-    }
-    if (sigaction(SIGTERM, &sa, NULL) < 0) 
-    {
-        perror("Cannot handle SIGTERM");
-    }
-}
 
 static int max(int a, int b)
 {
@@ -101,28 +67,73 @@ void set_route_table()
 {
     run("sysctl -w net.ipv4.ip_forward=1");
     run("ifconfig tun0 10.0.0.10/24 mtu 1400 up");
-
-   /*
     run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
     run("iptables -I FORWARD  -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -I FORWARD  -o tun0 -j ACCEPT"); 
-    
-    */
-
  
-    /* all address via my tun0 */ 
+    /* all address via tun0 */ 
 
     run("ip route add 0/1 dev tun0");
     run("ip route add 128/1 dev tun0");
 }
 
+int udp_bind(struct sockaddr *addr, socklen_t* addrlen) 
+{
+  struct addrinfo hints;
+  struct addrinfo *result;
+  int sock, flags;
+
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_socktype = SOCK_DGRAM;
+  hints.ai_protocol = IPPROTO_UDP;
+ 
+  const char *host = SERVER_HOST;
+ 
+  if (0 != getaddrinfo(host, NULL, &hints, &result)) 
+  {
+    perror("getaddrinfo error");
+    return -1;
+  }
+
+  if (result->ai_family == AF_INET)
+    ((struct sockaddr_in *)result->ai_addr)->sin_port = htons(PORT);
+  else if (result->ai_family == AF_INET6)
+    ((struct sockaddr_in6 *)result->ai_addr)->sin6_port = htons(PORT);
+  else {
+    fprintf(stderr, "unknown ai_family %d", result->ai_family);
+    freeaddrinfo(result);
+    return -1;
+  }
+  memcpy(addr, result->ai_addr, result->ai_addrlen);
+  *addrlen = result->ai_addrlen;
+
+  if (-1 == (sock = socket(result->ai_family, SOCK_DGRAM, IPPROTO_UDP)))
+  {
+    perror("Cannot create socket");
+    freeaddrinfo(result);
+    return -1;
+  }
+
+  freeaddrinfo(result);
+
+  flags = fcntl(sock, F_GETFL, 0);
+  if (flags != -1) {
+    if (-1 != fcntl(sock, F_SETFL, flags | O_NONBLOCK))
+      return sock;
+  }
+  perror("fcntl error");
+
+  close(sock);
+  return -1;
+}
+
 
 int main()
 {
+    
     tun_alloc();
     ifconfig();
     setup_route_table();
-    cleanup_when_sig_exit();
 
     return 0;
 }

@@ -1,11 +1,11 @@
 
+#define _POSIX_C_SOURCE 200112L
 
 
 #include <linux/if_tun.h> /* tun   */
 #include <sys/ioctl.h> /* for installing vnic interface */
 #include <net/if.h> /* tun  */
 #include <string.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -22,7 +22,38 @@
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
 #define SERVER_HOST "server's  ip"
+#define SA_RESTART 0
 
+
+void cleanup(int sigNum) {
+  printf("Goodbye, cruel world....\n");
+  if (sigNum == SIGHUP || sigNum == SIGINT || sigNum == SIGTERM) {
+    cleanup_route_table();
+    exit(0);
+  }
+}
+
+
+void CleanExit() 
+{
+    struct sigaction sa;
+    sa.sa_handler = &cleanup;
+    sa.sa_flags = SA_RESTART;
+    sigfillset(&sa.sa_mask);
+
+    if (sigaction(SIGHUP, &sa, NULL) < 0) 
+    {
+        perror("Cannot handle SIGHUP");
+    }
+    if (sigaction(SIGINT, &sa, NULL) < 0) 
+    {
+        perror("Cannot handle SIGINT");
+    }
+    if (sigaction(SIGTERM, &sa, NULL) < 0) 
+    {
+        perror("Cannot handle SIGTERM");
+    }
+}
 
 static int max(int a, int b)
 {
@@ -70,8 +101,8 @@ void set_route_table()
 {
     run("sysctl -w net.ipv4.ip_forward=1");
     run("ifconfig tun0 10.0.0.10/24 mtu 1400 up");
+
    /*
-    
     run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
     run("iptables -I FORWARD  -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -I FORWARD  -o tun0 -j ACCEPT"); 
@@ -88,7 +119,10 @@ void set_route_table()
 
 int main()
 {
-
+    tun_alloc();
+    ifconfig();
+    setup_route_table();
+    cleanup_when_sig_exit();
 
     return 0;
 }

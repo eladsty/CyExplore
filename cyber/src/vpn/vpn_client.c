@@ -1,10 +1,7 @@
- 
-     
 #include <linux/if_tun.h> /* tun   */
 #include <sys/ioctl.h> /* for installing vnic interface */
 #include <net/if.h> /* tun  */
 #include <string.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -20,7 +17,8 @@
 #define PORT 54321
 #define MTU 1400
 #define BIND_HOST  "0.0.0.0"
-#define SERVER_HOST "192.168.57.2"
+#define SERVER_HOST "192.168.56.1"
+#define CLIENT_IP "192.168.56.102"
 
 static int max(int a, int b)
 {
@@ -44,32 +42,33 @@ void ifconfig()
   snprintf(cmd, sizeof(cmd), "ifconfig tun0 10.0.0.4/16 mtu %d up", MTU);
   run(cmd);
 }
-void encrypt(char *plantext, char *ciphertext, int len) 
+void encrypt(char *plaintext, char *ciphertext, int len) 
 {
-  memcpy(ciphertext, plantext, len);
+  memcpy(ciphertext, plaintext, len);
 }
 
-void decrypt(char *ciphertext, char *plantext, int len) 
+void decrypt(char *ciphertext, char *plaintext, int len) 
 {
-  memcpy(plantext, ciphertext, len);
+  memcpy(plaintext, ciphertext, len);
 }
 /*
  * Setup route table via `iptables` & `ip route`
 */
+
+/* first allow forwarding, (what will happen if forwarding is disabled?
+
+
+
+) */
+
 void setup_route_table() 
 {
-    run("sysctl -w net.ipv4.ip_forward=1");
-   
-    run("iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE");
-    run("iptables -I FORWARD 1 -i tun0 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -I FORWARD 1 -o tun0 -j ACCEPT");
-
     char cmd[1024];
     run(cmd);
 
     /* all address via my tun0 */ 
     run("ip route add 0/1 dev tun0");
-    run("ip route add 128/1 dev tun0");
+    run("ip route add 192.168.56.1 dev enp0s3");
 }
  
   
@@ -80,7 +79,7 @@ int udp_bind(struct sockaddr *addr, socklen_t* addrlen)
 {
   struct addrinfo hints;
   struct addrinfo *result;
-  int sock, flags;
+  int sock, flags, reuse = 1;
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_socktype = SOCK_DGRAM;
@@ -114,6 +113,11 @@ int udp_bind(struct sockaddr *addr, socklen_t* addrlen)
     freeaddrinfo(result);
     return -1;
   }
+  if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+    {
+        perror("setsockopt");
+        return -1;
+    }
 
   freeaddrinfo(result);
 
@@ -163,6 +167,7 @@ int tun_alloc()
 
   return fd;
 }
+
 void cleanup_route_table() 
 {
   run("iptables -t nat -D POSTROUTING -o tun0 -j MASQUERADE");

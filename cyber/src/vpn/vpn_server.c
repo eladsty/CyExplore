@@ -19,6 +19,8 @@
 #define PORT 54321
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
+#define SERVER_HOST "192.168.56.1"
+#define CLIENT_IP "192.168.56.102"
 
 static int max(int a, int b)
 {
@@ -48,14 +50,15 @@ void ifconfig()
 */
 void setup_route_table() 
 {
-    run("iptables -t nat -A POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad_vpn' -j MASQUERADE");
-    run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT");
+    run("sysctl -w net.ipv4.ip_forward=1");
+    run("iptables -t nat -A POSTROUTING -j MASQUERADE");
+    /* run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
+    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); */
 }
 int udp_bind(struct sockaddr *addr, socklen_t* addrlen) {
     struct addrinfo hints;
     struct addrinfo *result;
-    int sock, flags;
+    int sock, flags, reuse = 1;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_DGRAM;
@@ -77,6 +80,11 @@ int udp_bind(struct sockaddr *addr, socklen_t* addrlen) {
     {
         perror("Cannot create socket");
         freeaddrinfo(result);
+        return -1;
+    }
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+    {
+        perror("setsockopt");
         return -1;
     }
 
@@ -152,7 +160,7 @@ void decrypt(char *ciphertext, char *plantext, int len)
 
 void cleanup_route_table() 
 {
-    run("iptables -t nat -D POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'vpndemo' -j MASQUERADE");
+    run("iptables -t nat -D POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad' -j MASQUERADE");
     run("iptables -D FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -D FORWARD -d 10.8.0.0/16 -j ACCEPT");
 }
@@ -213,9 +221,11 @@ int main()
         }
       }
 
-    if (FD_ISSET(udp_fd, &readset)) {
+    if (FD_ISSET(udp_fd, &readset)) 
+    {
       r = recvfrom(udp_fd, udp_buf, MTU, 0, (struct sockaddr *)&client_addr, &client_addrlen);
-      if (r < 0) {
+      if (r < 0) 
+      {
         perror("recvfrom udp_fd error");
         break;
       }
@@ -224,7 +234,8 @@ int main()
       printf("Writing to tun %d bytes ...\n", r);
 
       r = write(tun_fd, tun_buf, r);
-      if (r < 0) {
+      if (r < 0) 
+      {
         perror("write tun_fd error");
         break;
       }
