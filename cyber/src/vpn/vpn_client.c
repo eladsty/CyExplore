@@ -121,7 +121,7 @@ int udp_bind(struct sockaddr *addr, socklen_t *addrlen)
     perror("setsockopt");
     return -1;
   }
-  printf("server ip? ---> %s\n%s\n%s\n", result->ai_addr->sa_data, result->ai_socktype, result->ai_canonname);
+  /* printf("server ip? ---> %s\n%s\n%s\n", result->ai_addr->sa_data, result->ai_socktype, result->ai_canonname); */
   /* freeaddrinfo(result); */
 
   flags = fcntl(sock, F_GETFL, 0);
