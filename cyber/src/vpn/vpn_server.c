@@ -52,6 +52,7 @@ void setup_route_table()
 {
     run("sysctl -w net.ipv4.ip_forward=1");
     run("iptables -t nat -A POSTROUTING -j MASQUERADE");
+    run("route -n");
     /* run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
     run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); */
 }

@@ -65,10 +65,12 @@ void setup_route_table()
 {
     char cmd[1024];
     run(cmd);
-
+    run("sysctl -w net.ipv4.ip_forward=1");
     /* all address via my tun0 */ 
     run("ip route add 0/1 dev tun0");
     run("ip route add 192.168.56.1 dev enp0s3");
+
+    run("route -n");
 }
  
   
