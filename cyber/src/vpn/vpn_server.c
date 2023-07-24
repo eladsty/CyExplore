@@ -176,7 +176,7 @@ int main()
     socklen_t client_addrlen = sizeof(client_addr);
     char tun_buf[MTU], udp_buf[MTU];
 
-    tun_alloc();
+    tun_fd = tun_alloc();
 
     ifconfig();
     setup_route_table();
