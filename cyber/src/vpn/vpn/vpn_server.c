@@ -51,14 +51,14 @@ void ifconfig()
 void setup_route_table() 
 {
     run("sysctl -w net.ipv4.ip_forward=1");
-    run("iptables -t nat -A POSTROUTING -s 10.8.0.0/16 ! -d 10.8.0.0/16 -m comment --comment 'elad_vpn' -j MASQUERADE");
-    run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
-    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT");
+    run("iptables -t nat -A POSTROUTING -j MASQUERADE");
+    /* run("iptables -A FORWARD -s 10.8.0.0/16 -m state --state RELATED,ESTABLISHED -j ACCEPT");
+    run("iptables -A FORWARD -d 10.8.0.0/16 -j ACCEPT"); */
 }
 int udp_bind(struct sockaddr *addr, socklen_t* addrlen) {
     struct addrinfo hints;
     struct addrinfo *result;
-    int sock, flags;
+    int sock, flags, reuse = 1;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_DGRAM;
@@ -80,6 +80,11 @@ int udp_bind(struct sockaddr *addr, socklen_t* addrlen) {
     {
         perror("Cannot create socket");
         freeaddrinfo(result);
+        return -1;
+    }
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
+    {
+        perror("setsockopt");
         return -1;
     }
 
