@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 2
+#define _GNU_SOURCE
 #include <linux/if_tun.h> /* tun   */
 #include <sys/ioctl.h>    /* for installing vnic interface */
 #include <net/if.h>       /* tun  */
@@ -18,7 +20,6 @@
 #define MTU 1400
 #define BIND_HOST "0.0.0.0"
 #define SERVER_HOST "192.168.56.1"
-#define CLIENT_IP "192.168.56.102"
 
 static int max(int a, int b)
 {
@@ -120,8 +121,8 @@ int udp_bind(struct sockaddr *addr, socklen_t *addrlen)
     perror("setsockopt");
     return -1;
   }
-
-  freeaddrinfo(result);
+  print("server ip? ---> %s\n%s\n%s\n", result->ai_addr->sa_data, result->ai_socktype, result->ai_canonname);
+  /* freeaddrinfo(result); */
 
   flags = fcntl(sock, F_GETFL, 0);
   if (flags != -1)
