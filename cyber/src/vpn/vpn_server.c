@@ -97,16 +97,19 @@ int udp_bind(struct sockaddr *addr, socklen_t* addrlen) {
         return -1;
     }
 
-    freeaddrinfo(result);
+    /* freeaddrinfo(result); */
 
     flags = fcntl(sock, F_GETFL, 0);
     if (flags != -1) 
     {
+        printf("socket set susseccfully!!!!!!!");
         if (-1 != fcntl(sock, F_SETFL, flags | O_NONBLOCK))
-        return sock;
+        {
+          return sock;
+        }  
     }
-    perror("fcntl error");
 
+    perror("fcntl error");
     close(sock);
     return -1;
 }
@@ -194,7 +197,7 @@ int main()
       FD_SET(tun_fd, &readset);
       FD_SET(udp_fd, &readset);
       int max_fd = max(tun_fd, udp_fd) + 1;
-
+      printf("all set, waiting in select\n");
       if (-1 == select(max_fd, &readset, NULL, NULL, NULL)) 
       {
         perror("select error");
