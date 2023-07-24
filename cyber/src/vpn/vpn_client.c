@@ -265,7 +265,7 @@ int main()
   close(tun_fd);
   close(udp_fd);
 
-  cleanup_route_table();
+  /* cleanup_route_table(); */
 
   return 0;
 }
