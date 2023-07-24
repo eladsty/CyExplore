@@ -95,7 +95,7 @@ int udp_bind(struct sockaddr *addr, socklen_t *addrlen)
     perror("getaddrinfo error");
     return -1;
   }
-
+  
   if (result->ai_family == AF_INET)
     ((struct sockaddr_in *)result->ai_addr)->sin_port = htons(PORT);
   else if (result->ai_family == AF_INET6)
@@ -188,7 +188,7 @@ int main()
   socklen_t client_addrlen = sizeof(client_addr);
   char tun_buf[MTU], udp_buf[MTU];
 
-  tun_alloc();
+  tun_fd = tun_alloc();
 
   ifconfig();
   setup_route_table();
