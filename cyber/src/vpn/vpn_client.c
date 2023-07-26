@@ -84,12 +84,12 @@ int udp_bind(struct sockaddr *addr, socklen_t *addrlen)
   struct addrinfo hints;
   struct addrinfo *result;
   int sock, flags, reuse = 1;
+  const char *host = SERVER_HOST;
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_socktype = SOCK_DGRAM;
   hints.ai_protocol = IPPROTO_UDP;
 
-  const char *host = SERVER_HOST;
 
   if (0 != getaddrinfo(host, NULL, &hints, &result))
   {
@@ -228,8 +228,8 @@ int main()
         break;
       }
 
-      encrypt(tun_buf, udp_buf, r);
-      printf("Writing to UDP %d bytes ...\n", r);
+      /* encrypt(tun_buf, udp_buf, r); */
+      printf("Sending to UDP %d bytes ... from tun\n", r);
 
       r = sendto(udp_fd, udp_buf, r, 0, (const struct sockaddr *)&client_addr, client_addrlen);
       if (r < 0)
@@ -250,7 +250,7 @@ int main()
         break;
       }
 
-      decrypt(udp_buf, tun_buf, r);
+      /* decrypt(udp_buf, tun_buf, r); */
       printf("Writing to tun %d bytes ...\n", r);
 
       r = write(tun_fd, tun_buf, r);
