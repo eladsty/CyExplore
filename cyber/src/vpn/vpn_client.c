@@ -228,7 +228,7 @@ int main()
         break;
       }
 
-      /* encrypt(tun_buf, udp_buf, r); */
+      encrypt(tun_buf, udp_buf, r);
       printf("Sending to UDP %d bytes ... from tun\n", r);
 
       r = sendto(udp_fd, udp_buf, r, 0, (const struct sockaddr *)&client_addr, client_addrlen);
@@ -250,7 +250,7 @@ int main()
         break;
       }
 
-      /* decrypt(udp_buf, tun_buf, r); */
+      decrypt(udp_buf, tun_buf, r);
       printf("Writing to tun %d bytes ...\n", r);
 
       r = write(tun_fd, tun_buf, r);
