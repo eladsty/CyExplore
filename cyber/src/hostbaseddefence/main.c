@@ -96,3 +96,10 @@ void *__libc_malloc (size_t bytes)
   
   return victim;
 }
+
+
+
+(0x7fffffffdfd8) = (char ) main - 91
+
+ 
+
