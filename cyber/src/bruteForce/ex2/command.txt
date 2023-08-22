@@ -1,0 +1,1 @@
+crunch 1 1 -t d -p elad 1989 goldfish >> dict.txt && crunch 2 2 -t dd -p elad 1989 goldfish >> dict.txt && crunch 3 3 -t ddd -p elad 1989 goldfish >> dict.txt

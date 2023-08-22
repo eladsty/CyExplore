@@ -1,0 +1,2 @@
+hi Alice how was your day? I am practicing encryption and this message is encrypted so only you will be able to read it
+

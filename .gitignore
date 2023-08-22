@@ -17,6 +17,8 @@
 !*.py
 !*.sh
 !*.php
+!*.txt
+!*.pcap
 !*.html
 !*.css
 !*.h

@@ -1,0 +1,2 @@
+/var/www/html here the files for apache2 web server located.
+it is possibel to view them by browsing to my local ip or localhost /hello.php

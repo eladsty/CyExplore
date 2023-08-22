@@ -1,0 +1,35 @@
+pub   rsa3072 2023-05-30 [SC] [expires: 2025-05-29]
+      3DCE8FA711E0B86CAD3DFECECEFAB673D0BAFBB9
+uid                      Bob bobbson
+sub   rsa3072 2023-05-30 [E] [expires: 2025-05-29]
+
+
+-list-keys
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: next trustdb check due at 2024-05-29
+/home/elad/.gnupg/pubring.kbx
+-----------------------------
+pub   rsa2048 2023-05-30 [SC] [expires: 2024-05-29]
+      60120EFD2D9885868C79BB63BA3148C93CAF0F43
+uid           [ultimate] eladisbob (this is an experiment with gpg)
+sub   rsa2048 2023-05-30 [E] [expires: 2024-05-29]
+
+
+
+
+
+
+-list-keys
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: next trustdb check due at 2024-05-29
+/home/elad/.gnupg/pubring.kbx
+-----------------------------
+pub   rsa2048 2023-05-30 [SC] [expires: 2024-05-29]
+      60120EFD2D9885868C79BB63BA3148C93CAF0F43
+uid           [ultimate] eladisbob (this is an experiment with gpg)
+sub   rsa2048 2023-05-30 [E] [expires: 2024-05-29]
+

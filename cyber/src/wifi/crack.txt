@@ -1,0 +1,6 @@
+ 
+write: aircrack-ng 4wayshanshake.pcap -w passwords.txt 
+
+select: 7
+
+
